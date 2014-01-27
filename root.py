@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 import math
 from time import time
 import random as rand
-
+from pprint import PrettyPrinter
+from copy import copy
 
 ImageRoot = "/home/ank/Documents/var"
 gray = PIL.Image.open(ImageRoot + '/n4.png')
@@ -97,6 +98,14 @@ def segment(matrix):
 
     up, down, right, left = Directional_gradient(matrix)
 
+    def reverse_heritage(dict):
+        retdict = {}
+        for key,val in dict.iteritems():
+            if val not in retdict.keys():
+                retdict[val]=[]
+            retdict[val].append(key)
+        return retdict
+
     def neighbours(i_j, toRun):
         i=i_j[0]
         j=i_j[1]
@@ -108,11 +117,19 @@ def segment(matrix):
 
         return neigh2grad
 
-    def grad_walk(error_accept):
+    def grad_walk_up(error_accept):
+
         rw_matrix = np.zeros(matrix.shape)
         seeds = matrix == matrix.max()
         toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
+
+        toRun[0,:] = False
+        toRun[:,0] = False
+        toRun[:,-1] = False
+        toRun[-1,:] = False
+
         starter = (0,0)
+
         while True:
             rand_i = rand.randint(1,matrix.shape[0]-1)
             rand_j = rand.randint(1,matrix.shape[1]-1)
@@ -123,19 +140,18 @@ def segment(matrix):
         run=[starter]
         pointer=0
         flag=True
+
         while True:
-            if run[-1][0] not in range(1,matrix.shape[0]-1) or run[-1][1] not in range(1,matrix.shape[1]-1):
-                break
             nb = neighbours(run[-1],toRun)
-            sort_nb = sorted(nb.items(), key =lambda x:x[1][0] ,reverse=True)
+            sort_nb = sorted(nb.items(), key =lambda x:x[1][0])
+            flag = True
             for key,val in sort_nb:
                 grad,acc = val
-                flag = True
-                if acc and grad < 0:
+                if acc and grad > error_accept:
                     run.append(key)
                     toRun[key] = False
                     rw_matrix[key] = pointer
-                    pointer += - grad
+                    pointer += grad
                     flag = False
                     break
             if flag:
@@ -144,11 +160,20 @@ def segment(matrix):
         render_with_path(matrix, rw_matrix)
         return run
 
-    def forked_grad_walk(error_accept):
+    def forked_grad_walk(error_accept,inertia):
+
         rw_matrix = np.zeros(matrix.shape)
         seeds = matrix == matrix.max()
         toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
+        forkTree = {}
+
+        toRun[0,:] = False
+        toRun[:,0] = False
+        toRun[:,-1] = False
+        toRun[-1,:] = False
+
         starter = (0,0)
+
         while True:
             rand_i = rand.randint(1,matrix.shape[0]-1)
             rand_j = rand.randint(1,matrix.shape[1]-1)
@@ -156,36 +181,46 @@ def segment(matrix):
                 starter = (rand_i, rand_j)
                 break
 
-        Visited=[]
-        toVisit=[starter]
-        pointer=0
+        Visited = []
+        toVisit = [starter]
+        source2Energy = {starter: inertia}
 
-        flag=True
+        staging={1:[]}
+        stage = 1
+        stage_trigger = starter
 
         while toVisit!=[]:
-            random.shuffle(toVisit)
-            if run[-1][0] not in range(1,matrix.shape[0]-1) or run[-1][1] not in range(1,matrix.shape[1]-1):
-                break
-            nb = neighbours(run[-1],toRun)
-            sort_nb = sorted(nb.items(), key =lambda x:x[1][0] ,reverse=True)
+            current = toVisit.pop(0)
+            Visited.append(current)
+            nb = neighbours(current,toRun)
+            sort_nb = sorted(nb.items(), key =lambda x:x[1][0], reverse=True)
             for key,val in sort_nb:
                 grad,acc = val
-                flag = True
-                if acc and grad < -1:
-                    run.append(key)
-                    toRun[key] = False
-                    rw_matrix[key] = pointer
-                    pointer += - grad
-                    flag = False
+                if acc and grad < error_accept:
+                    if grad < 0:
+                        if source2Energy[current] < 0:
+                            continue
+                        else:
+                            source2Energy[key] = source2Energy[current]-1
+                    else:
+                        source2Energy[key] = source2Energy[current]
 
-            if flag:
-                break
+                    toVisit.append(key)
+                    forkTree[key] = current
+                    toRun[key] = False
+                    rw_matrix[key] = stage
+                    staging[stage].append(key)
+            if current == stage_trigger and toVisit!=[]:
+                stage += 1
+                staging[stage] = []
+                tpl=toVisit[-1]
+                stage_trigger = copy(tpl)
 
         render_with_path(matrix, rw_matrix)
-        return run
-
-
-
+        pp=PrettyPrinter(indent=4)
+        pp.pprint(reverse_heritage(forkTree))
+        pp.pprint(staging)
+        return Visited
 
     def initalize_clusters(to_parse):
         cluster2Dict = {}
@@ -203,7 +238,7 @@ def segment(matrix):
     def expand_clusters():
         pass
 
-    print grad_walk(10)
+    print forked_grad_walk(5,3)
 
 
 def border_detect(matrix, contrast_threshold, ising_threshold, ins_lum_thresh):
@@ -218,7 +253,7 @@ def border_detect(matrix, contrast_threshold, ising_threshold, ins_lum_thresh):
 
     non_sign_grad = dergrad < contrast_threshold
     sign_grad = dergrad > contrast_threshold
-    gradient_average = np.average(matrix[sign_grad])
+    gradient_average = np.average( matrix[sign_grad] )
     insufficent_lum = matrix < ins_lum_thresh * gradient_average
     print np.logical_and(non_sign_grad, insufficent_lum)
 
