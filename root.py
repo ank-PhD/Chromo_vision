@@ -160,11 +160,11 @@ def segment(matrix):
         render_with_path(matrix, rw_matrix)
         return run
 
-    def forked_grad_walk(error_accept,inertia):
+    def forked_grad_walk(error_accept, inertia, starter, toRun):
 
         rw_matrix = np.zeros(matrix.shape)
-        seeds = matrix == matrix.max()
-        toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
+        # seeds = matrix == matrix.max()
+        # toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
         forkTree = {}
 
         toRun[0,:] = False
@@ -172,14 +172,14 @@ def segment(matrix):
         toRun[:,-1] = False
         toRun[-1,:] = False
 
-        starter = (0,0)
-
-        while True:
-            rand_i = rand.randint(1,matrix.shape[0]-1)
-            rand_j = rand.randint(1,matrix.shape[1]-1)
-            if toRun[rand_i, rand_j]:
-                starter = (rand_i, rand_j)
-                break
+        # starter = (0,0)
+        #
+        # while True:
+        #     rand_i = rand.randint(1,matrix.shape[0]-1)
+        #     rand_j = rand.randint(1,matrix.shape[1]-1)
+        #     if toRun[rand_i, rand_j]:
+        #         starter = (rand_i, rand_j)
+        #         break
 
         Visited = []
         toVisit = [starter]
@@ -220,25 +220,32 @@ def segment(matrix):
         pp=PrettyPrinter(indent=4)
         pp.pprint(reverse_heritage(forkTree))
         pp.pprint(staging)
-        return Visited
+        return toRun, Visited
 
-    def initalize_clusters(to_parse):
-        cluster2Dict = {}
+    def initalize_seeds(init_toRun):
         seeds = matrix == matrix.max()
-        toRun = np.logical_and(to_parse, np.logical_not(seeds))
-        for i,j in np.nonzero(seeds):
-            if not any(elt in cluster2Dict.keys() for elt in neighbours(i,j)):
-                cluster2Dict[(i,j)] = [(i,j)]
-            else:
-                if sum(1 for index in (elt in cluster2Dict.keys() for elt in neighbours(i,j)) if index)>1:
-                    pass
+        toRun = init_toRun.copy()
+        # initseed = matrix == matrix[toRun].max()
+        return seeds, toRun
 
-        return toRun
+    def full_loop(max_grad, inertia):
+        initseeds, toRun = initalize_seeds(gl_toRun)
+        while True:
+            nz = np.nonzero(initseeds)
+            if len(nz[0])==0:
+                break
+            seed = (nz[0][0],nz[1][0])
+            toRun, Visited = forked_grad_walk(max_grad, inertia, seed, toRun)
+            initseeds, toRun = initalize_seeds(toRun)
+            # TODO: treat null gradient on max intensity zones
+            # TODO: treat iteration failures to initialize a forked random walk.
+
+
 
     def expand_clusters():
         pass
 
-    print forked_grad_walk(5,3)
+    print full_loop(5,3)
 
 
 def border_detect(matrix, contrast_threshold, ising_threshold, ins_lum_thresh):
