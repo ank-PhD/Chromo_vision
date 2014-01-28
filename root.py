@@ -69,6 +69,14 @@ def render_matrix(matrix):
     plt.colorbar(im)
     plt.show()
 
+def render_clusters(matrix,path_matrix):
+    im =  plt.pcolormesh(X, Y, to255(matrix).transpose(), cmap='gray')
+    im2 = plt.pcolormesh(X, Y, to255(path_matrix).transpose(), cmap='Paired')
+    im2.set_alpha(0.5)
+    plt.colorbar(im)
+    plt.colorbar(im2)
+    plt.show()
+
 def render_with_path(matrix,path_matrix):
     im =  plt.pcolormesh(X, Y, to255(matrix).transpose(), cmap='gray')
     im2 = plt.pcolormesh(X, Y, to255(path_matrix).transpose(), cmap='Reds')
@@ -94,8 +102,6 @@ def segment(matrix):
         'finished':(),
     }
 
-    gl_toRun = matrix > 0.1
-
     up, down, right, left = Directional_gradient(matrix)
 
     def reverse_heritage(dict):
@@ -117,8 +123,16 @@ def segment(matrix):
 
         return neigh2grad
 
-    def grad_walk_up(error_accept):
+    def get_geometry(reversed_heritage):
+        forks = 0
+        roots = 0
+        for key,vallist in reversed_heritage.iteritems():
+            roots += 1
+            forks += len(vallist)
+        return  roots, forks
 
+    def grad_walk_up(error_accept):
+        gl_toRun = matrix > 0.1
         rw_matrix = np.zeros(matrix.shape)
         seeds = matrix == matrix.max()
         toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
@@ -156,30 +170,15 @@ def segment(matrix):
                     break
             if flag:
                 break
-
+        print
         render_with_path(matrix, rw_matrix)
         return run
 
-    def forked_grad_walk(error_accept, inertia, starter, toRun):
+    def forked_grad_walk(error_accept, inertia, starter, toRun, white_cut_off):
 
         rw_matrix = np.zeros(matrix.shape)
-        # seeds = matrix == matrix.max()
-        # toRun = np.logical_and(gl_toRun, np.logical_not(seeds))
         forkTree = {}
-
-        toRun[0,:] = False
-        toRun[:,0] = False
-        toRun[:,-1] = False
-        toRun[-1,:] = False
-
-        # starter = (0,0)
-        #
-        # while True:
-        #     rand_i = rand.randint(1,matrix.shape[0]-1)
-        #     rand_j = rand.randint(1,matrix.shape[1]-1)
-        #     if toRun[rand_i, rand_j]:
-        #         starter = (rand_i, rand_j)
-        #         break
+        toRun[starter] = False
 
         Visited = []
         toVisit = [starter]
@@ -197,63 +196,87 @@ def segment(matrix):
             for key,val in sort_nb:
                 grad,acc = val
                 if acc and grad < error_accept:
-                    if grad < 0:
-                        if source2Energy[current] < 0:
-                            continue
-                        else:
-                            source2Energy[key] = source2Energy[current]-1
-                    else:
+                    if grad < 0.01:
                         source2Energy[key] = source2Energy[current]
-
-                    toVisit.append(key)
+                    else:
+                        if matrix[current] > white_cut_off:
+                            source2Energy[key] = source2Energy[current]
+                        else:
+                            if source2Energy[current] < 0:
+                                continue
+                            else:
+                                source2Energy[key] = source2Energy[current]-1
                     forkTree[key] = current
+                    toVisit.append(key)
                     toRun[key] = False
-                    rw_matrix[key] = stage
-                    staging[stage].append(key)
+            rw_matrix[current] = stage
+            staging[stage].append(current)
             if current == stage_trigger and toVisit!=[]:
                 stage += 1
                 staging[stage] = []
                 tpl=toVisit[-1]
                 stage_trigger = copy(tpl)
 
-        render_with_path(matrix, rw_matrix)
-        pp=PrettyPrinter(indent=4)
-        pp.pprint(reverse_heritage(forkTree))
-        pp.pprint(staging)
-        return toRun, Visited
+        i,j = get_geometry(reverse_heritage(forkTree))
+        if i<1:
+            i=1
+        avg_white = np.sum(matrix[rw_matrix > 0])/i
+
+        # print i, i/stage
+        #render_with_path(matrix, rw_matrix)
+        # print [(stage, len(staging[stage])) for stage in staging.keys() ]
+
+        return toRun, rw_matrix > 0, i, avg_white
 
     def initalize_seeds(init_toRun):
-        seeds = matrix == matrix.max()
-        toRun = init_toRun.copy()
-        # initseed = matrix == matrix[toRun].max()
-        return seeds, toRun
+        mx = matrix[init_toRun].max()
+        pre_seeds = matrix == mx
+        seeds = np.logical_and(init_toRun, pre_seeds)
+        return seeds, init_toRun.copy(), mx
 
-    def full_loop(max_grad, inertia):
-        initseeds, toRun = initalize_seeds(gl_toRun)
+    def cancel_limits(init_toRun):
+        toRun=init_toRun.copy()
+        toRun[0,:] = False
+        toRun[:,0] = False
+        toRun[:,-1] = False
+        toRun[-1,:] = False
+        return toRun
+
+    def full_loop(max_grad, inertia, black_cut_off, white_cut_off):
+        gl_toRun = matrix > black_cut_off
+        initseeds, toRun, mx = initalize_seeds(cancel_limits(gl_toRun))
+        pointer=0
+        term=np.zeros(matrix.shape)
         while True:
-            nz = np.nonzero(initseeds)
-            if len(nz[0])==0:
+            if np.nonzero(toRun)<10:
+                 break
+            if mx < 30:
                 break
+            initseeds, toRun, mx = initalize_seeds(toRun)
+            nz = np.nonzero(initseeds)
             seed = (nz[0][0],nz[1][0])
-            toRun, Visited = forked_grad_walk(max_grad, inertia, seed, toRun)
-            initseeds, toRun = initalize_seeds(toRun)
-            # TODO: treat null gradient on max intensity zones
-            # TODO: treat iteration failures to initialize a forked random walk.
+            toRun, mask, pixs, avg_white = forked_grad_walk(max_grad, inertia, seed, toRun, white_cut_off)
+            if pixs < 1000 and pixs > 10:
+                pointer+=1
+                term[mask]= pointer
+                print pixs, avg_white
+        term[term==0] = -10
+        render_clusters(matrix,term)
+        print pointer
 
+    print full_loop(255, 0, 25, 230)
 
-
-    def expand_clusters():
-        pass
-
-    print full_loop(5,3)
-
+# TODO: deparametrize
+# TODO: get a better colormap
+# TODO: troubleshoot individual misinterpretation
+# TODO: simultaneous random walk
+# TODO: correct the gradient problem
 
 def border_detect(matrix, contrast_threshold, ising_threshold, ins_lum_thresh):
     grad = np.gradient(matrix)
     absgrad = np.absolute(grad[1]) + np.absolute(grad[0])
     absgrad = absgrad * (2 ** 8 - 1) / absgrad.max()
     dergrad = Ising_Round(absgrad, 0.9, 2, ising_threshold)
-    # dergrad=absgrad
     im = plt.pcolormesh(X, Y, dergrad.transpose(), cmap='gray')
     plt.colorbar(im)
     plt.show()
