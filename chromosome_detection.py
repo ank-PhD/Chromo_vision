@@ -11,8 +11,10 @@ from pprint import PrettyPrinter
 from copy import copy
 
 ImageRoot = "/home/ank/Documents/var"
-gray = PIL.Image.open(ImageRoot + '/n4.png')
+col = PIL.Image.open(ImageRoot + '/Test2.png')
+gray=col.convert('L')
 bw = np.asarray(gray).copy()
+
 X, Y = np.meshgrid(range(bw.shape[0] + 1), range(bw.shape[1] + 1))
 
 
@@ -39,10 +41,14 @@ def to255(matrix):
 
 
 def remap(matrix, contrast_threshold, ising_threshold, ins_lum_thresh, real_ins_lum_thresh):
-    grad = np.gradient(matrix)
+    grad = np.gradient(matrix, 0.1)
     absgrad = np.absolute(grad[1]) + np.absolute(grad[0])
-    absgrad = absgrad * (2 ** 8 - 1) / absgrad.max()
+    absgrad = absgrad * float(2 ** 8 - 1) / float(absgrad.max())
     dergrad = Ising_Round(absgrad, 0.9, 2, ising_threshold)
+
+    hist_of_vals(absgrad)
+    render_matrix(absgrad)
+    render_matrix(dergrad)
 
     non_sign_grad = dergrad < contrast_threshold
     sign_grad = dergrad > contrast_threshold
@@ -64,8 +70,13 @@ def remap(matrix, contrast_threshold, ising_threshold, ins_lum_thresh, real_ins_
 
     return filtered_255_matrix
 
+def hist_of_vals(matrix):
+    array = matrix.flatten()
+    plt.hist(array)
+    plt.show()
+
 def render_matrix(matrix):
-    im = plt.pcolormesh(X, Y, matrix.transpose(), cmap='gray')
+    im = plt.pcolormesh(X, Y, matrix.transpose(), cmap = 'gray')
     plt.colorbar(im)
     plt.show()
 
@@ -298,5 +309,5 @@ def border_detect(matrix, contrast_threshold, ising_threshold, ins_lum_thresh):
 
 
 if __name__ == "__main__":
-    fmat = remap(bw,40,10, 0.7, 0.5)
-    segment(fmat)
+    fmat = remap(bw, 0, 0, 0.7, 0.5)
+    # segment(fmat)

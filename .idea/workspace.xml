@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/Cell_recognition.py" line="31" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/root.py" afterPath="$PROJECT_DIR$/root.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Cell_recognition.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/root.py" afterPath="$PROJECT_DIR$/chromosome_detection.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -26,13 +30,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="root.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/root.py">
+      <file leaf-file-name="chromosome_detection.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="240" column="14" selection-start="7929" selection-end="7929" vertical-scroll-proportion="0.34775087" vertical-offset="3399" max-vertical-offset="4275">
+            <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
               <folding>
                 <element signature="e#20#38#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cell_recognition.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="41" selection-start="833" selection-end="833" vertical-scroll-proportion="-0.9982699" vertical-offset="967" max-vertical-offset="1545">
+              <folding>
+                <element signature="e#20#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_canny.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="1968" max-vertical-offset="4080">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -56,13 +80,14 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/root.py" />
+        <option value="$PROJECT_DIR$/Cell_recognition.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1680" />
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
+    <option name="x" value="1678" />
+    <option name="width" value="1684" />
+    <option name="height" value="1054" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -143,19 +168,19 @@
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/im4sam/bin/python" />
     <property name="FullScreen" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
       <console-settings />
     </option>
   </component>
-  <component name="RunManager" selected="Python.root">
+  <component name="RunManager" selected="Python.Cell_recognition">
     <configuration default="false" name="root" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -168,11 +193,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Chromo_vision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/root.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/chromosome_detection.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PyDebugRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Cell_recognition" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Chromo_vision" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Cell_recognition.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -297,12 +340,14 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Python.root" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Cell_recognition" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Python.root" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Python.Cell_recognition" />
+        <item index="1" class="java.lang.String" itemvalue="Python.root" />
       </list>
     </recent_temporary>
   </component>
@@ -338,7 +383,15 @@
       <created>1390783280587</created>
       <updated>1390783280587</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="main loop is functional, yet buggy">
+      <created>1390785336869</created>
+      <updated>1390785336869</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Clustring functions. issues with insufficiently separated cells and ulised cells">
+      <created>1390867764465</created>
+      <updated>1390867764465</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -362,24 +415,24 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1680" y="0" width="1680" height="1050" extended-state="6" />
-    <editor active="false" />
+    <frame x="1678" y="0" width="1684" height="1054" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33038673" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32855567" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -395,15 +448,57 @@
     <MESSAGE value="finished pre-filtereing, implementyed corect gradient descent" />
     <MESSAGE value="forked gradient descent, painting, elongation" />
     <MESSAGE value="main loop is functional, yet buggy" />
-    <option name="LAST_COMMIT_MESSAGE" value="main loop is functional, yet buggy" />
+    <MESSAGE value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/root.py">
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="31" selection-start="1514" selection-end="1514" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="4785">
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3519" max-vertical-offset="4620">
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3848" max-vertical-offset="4620">
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="75" column="5" selection-start="2678" selection-end="2678" vertical-scroll-proportion="0.0" vertical-offset="968" max-vertical-offset="1740">
           <folding>
@@ -412,9 +507,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root.py">
+    <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="240" column="14" selection-start="7929" selection-end="7929" vertical-scroll-proportion="0.34775087" vertical-offset="3399" max-vertical-offset="4275">
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/numpy/core/_methods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1845">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="1968" max-vertical-offset="4080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="41" selection-start="833" selection-end="833" vertical-scroll-proportion="-0.9982699" vertical-offset="967" max-vertical-offset="1545">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
           </folding>
