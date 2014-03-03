@@ -5,25 +5,29 @@ from matplotlib import pyplot as plt
 import PIL
 from skimage import img_as_float, color
 from skimage.filter import roberts, sobel
-
 from skimage import filter, measure
 from skimage.morphology import reconstruction
 from scipy.ndimage import gaussian_filter
-
 from skimage.morphology import medial_axis
-
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
-
 from skimage.morphology import erosion, dilation, opening, closing, white_tophat
 from skimage.morphology import disk
+
+ImageRoot = "/home/ank/Documents/var/"
 
 # TODO: try a closing, white_tophat from scipy.ndimage
 # TODO: sliding saturated_sobel - skeleton
 #       In order to implement a filtering that is sufficiently precise
 # TODO: try reverse 2D fourrier transform
 
-ImageRoot = "/home/ank/Documents/var/"
+
+# TODO: try to recover the center of the cell heterogeinties by closing a saturated sobel, then determine the distance
+# Covered and delete the lines falling into the perimenter
+
+
+# TODO: try to implement a lhassoing skeleton over Sobel, that keeps only the most early detected edges and then adds
+# the newly detected edges only where it improves the path of the
 
 
 def get_image(source):
@@ -69,6 +73,7 @@ def get_chain_results(image, action_chain, optional_inputs):
         if option == None:
             retlist.append(action(retlist[-1]))
         else:
+            # TODO: add an option for superposition with an earlier result
             retlist.append(action(retlist[-1], option))
     return retlist, ['Original']+[f.__name__ for f in action_chain]
 
@@ -77,6 +82,7 @@ def get_superposition(image1, image2):
     return [image1, image2]
 
 
+# TODO:
 def render_chain(chain_res_images, chain_action_names, shape = 120):
     max_images = int(str(shape)[0])*int(str(shape)[1])
     if len(chain_res_images) > max_images or len(chain_action_names) > max_images:
@@ -88,7 +94,7 @@ def render_chain(chain_res_images, chain_action_names, shape = 120):
         plt.subplot(pos)
         plt.title(name)
         plt.imshow(image, cmap='gray')
-        # TODO: add a case for superposition later
+        # TODO: add a case for superposition and colormap options later on
         plt.colorbar()
     plt.show()
 
@@ -127,40 +133,40 @@ render_chain(resimgs, resnames)
 #
 # skel2, distance2 = medial_axis(closed, return_distance=True)
 # dist_on_skel2 = distance2 * skel2
-
-
-plt.figure()
-plt.subplot(231)
-plt.title('Original')
-plt.imshow(image, cmap = 'gray')
-plt.colorbar()
-
-
-plt.subplot(232)
-plt.title('Original+Canny')
-plt.imshow(edge_sobel, cmap = 'gray')
-plt.colorbar()
-
-plt.subplot(233)
-plt.title('Canny ')
-plt.imshow(edges1, cmap = 'gray')
-plt.colorbar()
-
-
-plt.subplot(234)
-plt.title('Saturated Sobel')
-plt.imshow(Saturated_Sobel, cmap = 'gray')
-plt.colorbar()
-
-plt.subplot(235)
-plt.title('Skeleton over Sobel')
-plt.imshow(dist_on_skel2, cmap=plt.cm.spectral, interpolation='nearest')
-plt.colorbar()
-
-plt.subplot(236)
-plt.title('Image + skeleton')
-plt.imshow(closed, cmap = 'gray')
-plt.imshow(dist_on_skel2, cmap=plt.cm.spectral, interpolation='nearest', alpha=0.5)
-plt.colorbar()
-
-plt.show()
+#
+#
+# plt.figure()
+# plt.subplot(231)
+# plt.title('Original')
+# plt.imshow(image, cmap = 'gray')
+# plt.colorbar()
+#
+#
+# plt.subplot(232)
+# plt.title('Original+Canny')
+# plt.imshow(edge_sobel, cmap = 'gray')
+# plt.colorbar()
+#
+# plt.subplot(233)
+# plt.title('Canny ')
+# plt.imshow(edges1, cmap = 'gray')
+# plt.colorbar()
+#
+#
+# plt.subplot(234)
+# plt.title('Saturated Sobel')
+# plt.imshow(Saturated_Sobel, cmap = 'gray')
+# plt.colorbar()
+#
+# plt.subplot(235)
+# plt.title('Skeleton over Sobel')
+# plt.imshow(dist_on_skel2, cmap=plt.cm.spectral, interpolation='nearest')
+# plt.colorbar()
+#
+# plt.subplot(236)
+# plt.title('Image + skeleton')
+# plt.imshow(closed, cmap = 'gray')
+# plt.imshow(dist_on_skel2, cmap=plt.cm.spectral, interpolation='nearest', alpha=0.5)
+# plt.colorbar()
+#
+# plt.show()

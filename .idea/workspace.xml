@@ -38,7 +38,7 @@
       <file leaf-file-name="Cell_recognition.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="91" column="22" selection-start="2606" selection-end="2606" vertical-scroll-proportion="0.5588235" vertical-offset="1042" max-vertical-offset="2565">
+            <state line="21" column="41" selection-start="788" selection-end="788" vertical-scroll-proportion="0.5449827" vertical-offset="0" max-vertical-offset="2655">
               <folding>
                 <element signature="e#20#38#0" expanded="true" />
               </folding>
@@ -380,7 +380,11 @@
       <created>1393720595902</created>
       <updated>1393720595902</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Improved chaining functions and their rendering">
+      <created>1393885844636</created>
+      <updated>1393885844636</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -405,23 +409,23 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1678" y="0" width="1684" height="1054" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32855567" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -438,7 +442,9 @@
     <MESSAGE value="forked gradient descent, painting, elongation" />
     <MESSAGE value="main loop is functional, yet buggy" />
     <MESSAGE value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
+    <MESSAGE value="Improved chaining functions and their rendering" />
+    <MESSAGE value="Several future things to do added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Several future things to do added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -547,7 +553,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="22" selection-start="2606" selection-end="2606" vertical-scroll-proportion="0.5588235" vertical-offset="1042" max-vertical-offset="2565">
+        <state line="21" column="41" selection-start="788" selection-end="788" vertical-scroll-proportion="0.5449827" vertical-offset="0" max-vertical-offset="2655">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
           </folding>
