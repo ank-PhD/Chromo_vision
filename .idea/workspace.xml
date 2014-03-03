@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Cell_recognition.py" line="31" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Cell_recognition.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/root.py" afterPath="$PROJECT_DIR$/chromosome_detection.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cell_recognition.py" afterPath="$PROJECT_DIR$/Cell_recognition.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -34,9 +30,7 @@
         <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
-              <folding>
-                <element signature="e#20#38#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -44,19 +38,10 @@
       <file leaf-file-name="Cell_recognition.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="41" selection-start="833" selection-end="833" vertical-scroll-proportion="-0.9982699" vertical-offset="967" max-vertical-offset="1545">
+            <state line="91" column="22" selection-start="2606" selection-end="2606" vertical-scroll-proportion="0.5588235" vertical-offset="1042" max-vertical-offset="2565">
               <folding>
                 <element signature="e#20#38#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_canny.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="1968" max-vertical-offset="4080">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -143,6 +128,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -163,17 +149,16 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
+    <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/im4sam/bin/python" />
     <property name="FullScreen" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -391,7 +376,11 @@
       <created>1390867764465</created>
       <updated>1390867764465</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Clustring functions. issues with insufficiently separated cells and ulised cells">
+      <created>1393720595902</created>
+      <updated>1393720595902</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -459,66 +448,73 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="31" selection-start="1514" selection-end="1514" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="4785">
+        <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="41" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="1545">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="2265" max-vertical-offset="4140">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="31" selection-start="1514" selection-end="1514" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="4785">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3519" max-vertical-offset="4620">
-          <folding>
-            <element signature="e#20#38#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
-          <folding />
-        </state>
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3848" max-vertical-offset="4620">
-          <folding>
-            <element signature="e#20#38#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
-          <folding />
-        </state>
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="75" column="5" selection-start="2678" selection-end="2678" vertical-scroll-proportion="0.0" vertical-offset="968" max-vertical-offset="1740">
-          <folding>
-            <element signature="e#20#38#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015">
-          <folding />
-        </state>
+        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/numpy/core/_methods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1845">
-          <folding />
-        </state>
+        <state line="16" column="0" selection-start="468" selection-end="468" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1845" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
@@ -531,15 +527,27 @@
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
-          <folding>
-            <element signature="e#20#38#0" expanded="true" />
-          </folding>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/PIL/Image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="524" column="0" selection-start="14098" selection-end="14098" vertical-scroll-proportion="0.0" vertical-offset="7607" max-vertical-offset="32805">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/color/colorconv.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="660" column="0" selection-start="19092" selection-end="19092" vertical-scroll-proportion="0.0" vertical-offset="9632" max-vertical-offset="19815">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="41" selection-start="833" selection-end="833" vertical-scroll-proportion="-0.9982699" vertical-offset="967" max-vertical-offset="1545">
+        <state line="91" column="22" selection-start="2606" selection-end="2606" vertical-scroll-proportion="0.5588235" vertical-offset="1042" max-vertical-offset="2565">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
           </folding>
