@@ -116,7 +116,9 @@ def get_fine_watershed(image):
     return labels
 
 def get_connex(image):
-    # return get_watershed(image)
+    label_im, nb_labels = ndimage.label(image)
+    print nb_labels
+    return label_im
 
 def get_double_roll(image):
     image2 = image.copy()

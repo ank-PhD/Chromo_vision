@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cell_recognition.py" afterPath="$PROJECT_DIR$/Cell_recognition.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Chromo_vision.iml" afterPath="$PROJECT_DIR$/.idea/Chromo_vision.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -39,7 +38,7 @@
       <file leaf-file-name="Cell_recognition.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="33" selection-start="3572" selection-end="3572" vertical-scroll-proportion="0.4152249" vertical-offset="1530" max-vertical-offset="5655">
+            <state line="128" column="0" selection-start="3822" selection-end="3822" vertical-scroll-proportion="0.46206897" vertical-offset="1652" max-vertical-offset="5685">
               <folding>
                 <element signature="e#20#38#0" expanded="true" />
               </folding>
@@ -154,12 +153,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/im4sam/bin/python" />
     <property name="FullScreen" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -391,7 +390,11 @@
       <created>1393886417757</created>
       <updated>1393886417757</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="supression of the nucleus noize added.">
+      <created>1394069430980</created>
+      <updated>1394069430980</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -422,11 +425,11 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.6714443" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32855567" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -451,7 +454,8 @@
     <MESSAGE value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
     <MESSAGE value="Improved chaining functions and their rendering" />
     <MESSAGE value="Several future things to do added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Several future things to do added" />
+    <MESSAGE value="supression of the nucleus noize added." />
+    <option name="LAST_COMMIT_MESSAGE" value="supression of the nucleus noize added." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -556,7 +560,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="33" selection-start="3572" selection-end="3572" vertical-scroll-proportion="0.4152249" vertical-offset="1530" max-vertical-offset="5655">
+        <state line="128" column="0" selection-start="3822" selection-end="3822" vertical-scroll-proportion="0.46206897" vertical-offset="1652" max-vertical-offset="5685">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
           </folding>
