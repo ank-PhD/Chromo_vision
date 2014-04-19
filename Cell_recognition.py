@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import PIL
 import itertools
+from time import time
 from scipy import ndimage
 from skimage import img_as_float, color
 from skimage.filter import roberts, sobel
@@ -229,9 +230,10 @@ colormap3 = ['gray', 'gray', plt.cm.jet, plt.cm.jet]
 colormap4 = ['gray', 'gray', plt.cm.jet, plt.cm.jet]
 colormap5 = ['gray', 'gray', plt.cm.jet, plt.cm.jet]
 
+t = time()
 
 resimgs, resnames = get_chain_results(image, act_chain, [None, None, None, None])
-render_chain(resimgs, resnames, 230, colormap1)
+# render_chain(resimgs, resnames, 230, colormap1)
 wshed = resimgs[-1]
 canny = resimgs[1]
 
@@ -268,7 +270,7 @@ canny = resimgs[1]
 # render_chain(resimgs, resnames, 230, colormap4)
 
 resimgs, resnames = get_chain_results(image, act_chain5, [None, None, None, None])
-render_chain(resimgs, resnames, 230, colormap5)
+# render_chain(resimgs, resnames, 230, colormap5)
 seg_canny = resimgs[-1]
 
 
@@ -306,7 +308,11 @@ plt.title('Autocorr')
 plt.imshow(get_better_autocorr(shuffle_unstable), cmap = plt.cm.jet)
 plt.colorbar()
 
+print time()-t
+
 plt.show()
+
+
 
 # seed = np.copy(image2)
 # seed[1:-1, 1:-1] = image2.min()

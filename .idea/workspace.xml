@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nucleus_inspector.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cell_recognition.py" afterPath="$PROJECT_DIR$/Cell_recognition.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -29,18 +31,29 @@
       <file leaf-file-name="chromosome_detection.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
+            <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1350" max-vertical-offset="4665">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cell_recognition.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Cell_recognition.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="128" column="0" selection-start="3822" selection-end="3822" vertical-scroll-proportion="0.46206897" vertical-offset="1652" max-vertical-offset="5685">
+            <state line="278" column="0" selection-start="8320" selection-end="8509" vertical-scroll-proportion="0.0" vertical-offset="3915" max-vertical-offset="5775">
               <folding>
                 <element signature="e#20#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="nucleus_inspector.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="103" column="15" selection-start="2863" selection-end="2863" vertical-scroll-proportion="0.56747407" vertical-offset="1217" max-vertical-offset="2100">
+              <folding>
+                <element signature="e#20#29#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -66,6 +79,8 @@
       <list>
         <option value="$PROJECT_DIR$/root.py" />
         <option value="$PROJECT_DIR$/Cell_recognition.py" />
+        <option value="$PROJECT_DIR$/nucleator_analyser.py" />
+        <option value="$PROJECT_DIR$/nucleus_inspector.py" />
       </list>
     </option>
   </component>
@@ -128,7 +143,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -149,13 +163,14 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/im4sam/bin/python" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/anaconda/bin/python" />
     <property name="FullScreen" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -165,7 +180,7 @@
       <console-settings />
     </option>
   </component>
-  <component name="RunManager" selected="Python.Cell_recognition">
+  <component name="RunManager" selected="Python.nucleus_inspector">
     <configuration default="false" name="root" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -203,6 +218,24 @@
       <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PyDebugRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="nucleus_inspector" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Chromo_vision" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nucleus_inspector.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -327,14 +360,16 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.root" />
       <item index="1" class="java.lang.String" itemvalue="Python.Cell_recognition" />
+      <item index="2" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Python.Cell_recognition" />
-        <item index="1" class="java.lang.String" itemvalue="Python.root" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Cell_recognition" />
+        <item index="2" class="java.lang.String" itemvalue="Python.root" />
       </list>
     </recent_temporary>
   </component>
@@ -394,7 +429,11 @@
       <created>1394069430980</created>
       <updated>1394069430980</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="corrected connexity detection function">
+      <created>1394122294491</created>
+      <updated>1394122294491</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -425,11 +464,11 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.6714443" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25045264" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32855567" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -455,7 +494,8 @@
     <MESSAGE value="Improved chaining functions and their rendering" />
     <MESSAGE value="Several future things to do added" />
     <MESSAGE value="supression of the nucleus noize added." />
-    <option name="LAST_COMMIT_MESSAGE" value="supression of the nucleus noize added." />
+    <MESSAGE value="corrected connexity detection function" />
+    <option name="LAST_COMMIT_MESSAGE" value="corrected connexity detection function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -463,25 +503,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="31" selection-start="1514" selection-end="1514" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="4785">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3519" max-vertical-offset="4620">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///scratch/local_home/local/lib/python2.7/lib-tk/Tkinter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="360" column="0" selection-start="12210" selection-end="12210" vertical-scroll-proportion="0.0" vertical-offset="5208" max-vertical-offset="57015" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="270" column="49" selection-start="9054" selection-end="9054" vertical-scroll-proportion="0.0" vertical-offset="3848" max-vertical-offset="4620">
@@ -513,16 +534,7 @@
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/filter/_canny.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="1968" max-vertical-offset="4080">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
-          <folding />
-        </state>
+        <state line="151" column="0" selection-start="5825" selection-end="5825" vertical-scroll-proportion="0.0" vertical-offset="1968" max-vertical-offset="4080" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/PIL/Image.py">
@@ -532,37 +544,65 @@
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/color/colorconv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="660" column="0" selection-start="19092" selection-end="19092" vertical-scroll-proportion="0.0" vertical-offset="9632" max-vertical-offset="19815">
-          <folding />
-        </state>
+        <state line="660" column="0" selection-start="19092" selection-end="19092" vertical-scroll-proportion="0.0" vertical-offset="9632" max-vertical-offset="19815" />
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/image.py">
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="406" column="0" selection-start="14164" selection-end="14164" vertical-scroll-proportion="0.0" vertical-offset="5732" max-vertical-offset="20190">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/axes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6795" column="0" selection-start="237136" selection-end="237136" vertical-scroll-proportion="0.0" vertical-offset="101612" max-vertical-offset="128520">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2376" column="0" selection-start="72221" selection-end="72221" vertical-scroll-proportion="0.0" vertical-offset="35121" max-vertical-offset="46140">
+        <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="128" column="0" selection-start="3822" selection-end="3822" vertical-scroll-proportion="0.46206897" vertical-offset="1652" max-vertical-offset="5685">
+        <state line="278" column="0" selection-start="8320" selection-end="8509" vertical-scroll-proportion="0.0" vertical-offset="3915" max-vertical-offset="5775">
           <folding>
             <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="406" column="0" selection-start="14164" selection-end="14164" vertical-scroll-proportion="0.0" vertical-offset="5733" max-vertical-offset="20190">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/axes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6795" column="0" selection-start="237136" selection-end="237136" vertical-scroll-proportion="0.0" vertical-offset="101613" max-vertical-offset="128520">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2376" column="0" selection-start="72221" selection-end="72221" vertical-scroll-proportion="0.0" vertical-offset="35122" max-vertical-offset="46140">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/scipy/linalg/basic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="382" column="0" selection-start="12822" selection-end="12822" vertical-scroll-proportion="0.0" vertical-offset="5554" max-vertical-offset="11520">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/scipy/stats/kde.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="187" column="0" selection-start="6995" selection-end="6995" vertical-scroll-proportion="0.0" vertical-offset="2629" max-vertical-offset="7785">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="103" column="15" selection-start="2863" selection-end="2863" vertical-scroll-proportion="0.56747407" vertical-offset="1217" max-vertical-offset="2100">
+          <folding>
+            <element signature="e#20#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
