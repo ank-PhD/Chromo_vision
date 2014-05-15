@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Philippe_supra.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nucleus_inspector.py" afterPath="$PROJECT_DIR$/nucleus_inspector.py" />
+    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="Added clustring; for Philippe Added the 3D reconstruction of the cell motion.">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Philippe_supra.py" afterPath="$PROJECT_DIR$/Philippe_supra.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -48,10 +47,8 @@
       <file leaf-file-name="nucleus_inspector.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="-3.1296296" vertical-offset="3101" max-vertical-offset="4980">
-              <folding>
-                <element signature="e#20#29#0" expanded="true" />
-              </folding>
+            <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="0.0" vertical-offset="3101" max-vertical-offset="4980">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -59,10 +56,19 @@
       <file leaf-file-name="Philippe_supra.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="0" selection-start="1216" selection-end="1216" vertical-scroll-proportion="0.517611" vertical-offset="397" max-vertical-offset="1050">
+            <state line="89" column="0" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.7969925" vertical-offset="805" max-vertical-offset="1485">
               <folding>
                 <element signature="e#21#30#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rdgen.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rdgen.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="0" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -139,7 +145,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="2" />
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -154,7 +160,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -175,16 +180,17 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
+    <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$USER_HOME$/Documents/Programming_common/anaconda/bin/python" />
     <property name="FullScreen" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -488,7 +494,11 @@
       <created>1397886680353</created>
       <updated>1397886680353</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added clustring; for Philippe Added the 3D reconstruction of the cell motion.">
+      <created>1399500698307</created>
+      <updated>1399500698307</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -519,11 +529,11 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24140012" sideWeight="0.75192946" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24140012" sideWeight="0.76515985" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24807057" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23484014" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -551,7 +561,8 @@
     <MESSAGE value="supression of the nucleus noize added." />
     <MESSAGE value="corrected connexity detection function" />
     <MESSAGE value="Blending z-stacks into mayavi" />
-    <option name="LAST_COMMIT_MESSAGE" value="Blending z-stacks into mayavi" />
+    <MESSAGE value="Added clustring; for Philippe Added the 3D reconstruction of the cell motion." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added clustring; for Philippe Added the 3D reconstruction of the cell motion." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -620,9 +631,7 @@
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/anaconda/lib/python2.7/site-packages/mayavi/tools/sources.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1284" column="0" selection-start="44277" selection-end="44277" vertical-scroll-proportion="0.0" vertical-offset="18901" max-vertical-offset="21555">
-          <folding />
-        </state>
+        <state line="1284" column="0" selection-start="44277" selection-end="44277" vertical-scroll-proportion="0.0" vertical-offset="18901" max-vertical-offset="21555" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/anaconda/lib/python2.7/site-packages/mayavi/tools/helper_functions.py">
@@ -630,23 +639,23 @@
         <state line="825" column="0" selection-start="29006" selection-end="29006" vertical-scroll-proportion="0.33333334" vertical-offset="11986" max-vertical-offset="17100" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rdgen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="297" selection-end="297" vertical-scroll-proportion="0.33536586" vertical-offset="0" max-vertical-offset="492" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="-3.1296296" vertical-offset="3101" max-vertical-offset="4980">
-          <folding>
-            <element signature="e#20#29#0" expanded="true" />
-          </folding>
+        <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="0.0" vertical-offset="3101" max-vertical-offset="4980">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rdgen.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="0" selection-start="1216" selection-end="1216" vertical-scroll-proportion="0.517611" vertical-offset="397" max-vertical-offset="1050">
+        <state line="89" column="0" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.7969925" vertical-offset="805" max-vertical-offset="1485">
           <folding>
             <element signature="e#21#30#0" expanded="true" />
           </folding>

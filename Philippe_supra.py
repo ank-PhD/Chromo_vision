@@ -27,7 +27,35 @@ from sklearn.preprocessing import StandardScaler
 
 from pylab import get_cmap
 
-ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/cell2"
+ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/ko fibers"
+
+
+def load_img_dict2():
+    """
+    loads and classifies images from the ImageRoot directory
+
+    :return:
+    """
+
+    name_dict = {}
+    for img in os.listdir(ImageRoot):
+        if '.png' in img:
+            print img
+            name_dict[tuple(int(element[1:]) for element in img[:-4].split('_')[1:])]=color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
+
+    z_stack = max([tpl[0] for tpl in name_dict.keys()])
+    print z_stack
+    x, y = name_dict[(z_stack,1)].shape
+
+    stack = [np.zeros((x,y,z_stack*3+3)), np.zeros((x,y,z_stack*3+3))]
+
+    for z, plane in name_dict.iteritems():
+        stack[z[1]-1][:,:,z[0]*3] = plane
+        stack[z[1]-1][:,:,z[0]*3+1] = plane
+        stack[z[1]-1][:,:,z[0]*3+2] = plane
+
+    return stack[0], stack[1]
+
 
 
 def load_img_dict():
@@ -57,9 +85,10 @@ def load_img_dict():
 
 
 if __name__ == "__main__":
-    stack = load_img_dict()
 
-    print stack
+    stack1, stack2 = load_img_dict2()
 
-    mlab.pipeline.volume(mlab.pipeline.scalar_field(stack), vmin=0.40,)
+    print stack1
+
+    mlab.pipeline.volume(mlab.pipeline.scalar_field(stack2), vmin=0.40,)
     mlab.show()
