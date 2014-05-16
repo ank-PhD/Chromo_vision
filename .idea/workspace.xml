@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="Added clustring; for Philippe Added the 3D reconstruction of the cell motion.">
+    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Philippe_supra.py" afterPath="$PROJECT_DIR$/Philippe_supra.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -26,28 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="chromosome_detection.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1350" max-vertical-offset="4785">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Cell_recognition.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="278" column="0" selection-start="8320" selection-end="8509" vertical-scroll-proportion="0.0" vertical-offset="3915" max-vertical-offset="5775">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="nucleus_inspector.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="0.0" vertical-offset="3101" max-vertical-offset="4980">
+            <state line="217" column="4" selection-start="6132" selection-end="6350" vertical-scroll-proportion="0.0" vertical-offset="2517" max-vertical-offset="4620">
               <folding />
             </state>
           </provider>
@@ -56,19 +38,10 @@
       <file leaf-file-name="Philippe_supra.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="0" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.7969925" vertical-offset="805" max-vertical-offset="1485">
+            <state line="92" column="17" selection-start="2515" selection-end="2515" vertical-scroll-proportion="0.479638" vertical-offset="1062" max-vertical-offset="1725">
               <folding>
                 <element signature="e#21#30#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rdgen.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rdgen.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -498,7 +471,11 @@
       <created>1399500698307</created>
       <updated>1399500698307</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added bi_channel representation for Philippe">
+      <created>1400178790434</created>
+      <updated>1400178790434</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -525,21 +502,21 @@
     <frame x="1678" y="0" width="1684" height="1054" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24140012" sideWeight="0.76515985" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24140012" sideWeight="0.76464087" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23484014" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23535912" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32855567" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -562,7 +539,8 @@
     <MESSAGE value="corrected connexity detection function" />
     <MESSAGE value="Blending z-stacks into mayavi" />
     <MESSAGE value="Added clustring; for Philippe Added the 3D reconstruction of the cell motion." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added clustring; for Philippe Added the 3D reconstruction of the cell motion." />
+    <MESSAGE value="Added bi_channel representation for Philippe" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added bi_channel representation for Philippe" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -578,20 +556,6 @@
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/skimage/color/colorconv.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="660" column="0" selection-start="19092" selection-end="19092" vertical-scroll-proportion="0.0" vertical-offset="9632" max-vertical-offset="19815" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="0" selection-start="3165" selection-end="3435" vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="4785">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="278" column="0" selection-start="8320" selection-end="8509" vertical-scroll-proportion="0.0" vertical-offset="3915" max-vertical-offset="5775">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/im4sam/lib/python2.7/site-packages/matplotlib/image.py">
@@ -631,7 +595,9 @@
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/anaconda/lib/python2.7/site-packages/mayavi/tools/sources.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1284" column="0" selection-start="44277" selection-end="44277" vertical-scroll-proportion="0.0" vertical-offset="18901" max-vertical-offset="21555" />
+        <state line="1284" column="0" selection-start="44277" selection-end="44277" vertical-scroll-proportion="0.0" vertical-offset="18901" max-vertical-offset="21555">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/Programming_common/anaconda/lib/python2.7/site-packages/mayavi/tools/helper_functions.py">
@@ -639,9 +605,16 @@
         <state line="825" column="0" selection-start="29006" selection-end="29006" vertical-scroll-proportion="0.33333334" vertical-offset="11986" max-vertical-offset="17100" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="218" column="12" selection-start="6166" selection-end="6181" vertical-scroll-proportion="0.0" vertical-offset="3101" max-vertical-offset="4980">
+        <state line="119" column="40" selection-start="3992" selection-end="3992" vertical-scroll-proportion="-3.5248868" vertical-offset="4002" max-vertical-offset="4665">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="84" column="0" selection-start="2559" selection-end="2559" vertical-scroll-proportion="-2.9140272" vertical-offset="2952" max-vertical-offset="5535">
           <folding />
         </state>
       </provider>
@@ -653,9 +626,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="217" column="4" selection-start="6132" selection-end="6350" vertical-scroll-proportion="0.0" vertical-offset="2517" max-vertical-offset="4620">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="0" selection-start="2211" selection-end="2211" vertical-scroll-proportion="0.7969925" vertical-offset="805" max-vertical-offset="1485">
+        <state line="92" column="17" selection-start="2515" selection-end="2515" vertical-scroll-proportion="0.479638" vertical-offset="1062" max-vertical-offset="1725">
           <folding>
             <element signature="e#21#30#0" expanded="true" />
           </folding>
