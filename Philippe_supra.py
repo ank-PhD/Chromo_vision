@@ -107,8 +107,8 @@ def render_with_cut(chan1, chan2, v_min=0.6, cut = True):
     mlab.pipeline.volume(s2, color=green, vmin=v_min, name='GREEN')
 
     if cut:
-        mlab.pipeline.scalar_cut_plane(s1, colormap = 'OrRd')
-        mlab.pipeline.scalar_cut_plane(s2, colormap = 'Greens')
+        mlab.pipeline.image_plane_widget(s1, colormap = 'OrRd')
+        mlab.pipeline.image_plane_widget(s2, colormap = 'Greens')
 
 
 
