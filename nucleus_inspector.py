@@ -321,6 +321,6 @@ if __name__ == "__main__":
     #     resdict[i] = mCh_hull_and_cluster(z_stack, z_depth, chan_shapes)
     #     cluster_show(*resdict[i])
     # pickle.dump(resdict, open(pickle_location, 'w'))
-    # sample_operations(img_dict, z_depth, chan_shapes)
+    sample_operations(img_dict, z_depth, chan_shapes)
 
 

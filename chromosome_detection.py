@@ -9,15 +9,20 @@ from time import time
 import random as rand
 from pprint import PrettyPrinter
 from copy import copy
+import mdp
 
 ImageRoot = "/home/ank/Documents/var"
-col = PIL.Image.open(ImageRoot + '/Test2.png')
+col = PIL.Image.open(ImageRoot + '/n4.jpeg')
 gray=col.convert('L')
 bw = np.asarray(gray).copy()
+
+plt.imshow(bw, cmap = 'gray')
+plt.show()
 
 X, Y = np.meshgrid(range(bw.shape[0] + 1), range(bw.shape[1] + 1))
 
 
+# Deprecated
 def Ising_Round(matrix, decay_Factor, max_dist, threshold):
     # TODO: pay attention to the range_assymetry
     start = time()
@@ -36,10 +41,11 @@ def Ising_Round(matrix, decay_Factor, max_dist, threshold):
     print time() - start
     return new_mat
 
+
 def to255(matrix):
     return (matrix-matrix.min()).copy()*255.0/(matrix-matrix.min()).max()
 
-
+# Deprecated
 def remap(matrix, contrast_threshold, ising_threshold, ins_lum_thresh, real_ins_lum_thresh):
     grad = np.gradient(matrix, 0.1)
     absgrad = np.absolute(grad[1]) + np.absolute(grad[0])
@@ -70,15 +76,18 @@ def remap(matrix, contrast_threshold, ising_threshold, ins_lum_thresh, real_ins_
 
     return filtered_255_matrix
 
+
 def hist_of_vals(matrix):
     array = matrix.flatten()
     plt.hist(array)
     plt.show()
 
+# deprecated
 def render_matrix(matrix):
     im = plt.pcolormesh(X, Y, matrix.transpose(), cmap = 'gray')
     plt.colorbar(im)
     plt.show()
+
 
 def render_clusters(matrix,path_matrix):
     im =  plt.pcolormesh(X, Y, to255(matrix).transpose(), cmap='gray')
