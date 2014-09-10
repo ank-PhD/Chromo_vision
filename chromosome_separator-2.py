@@ -19,6 +19,7 @@ from scipy import ndimage
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 from sklearn.cluster import DBSCAN
+from mayavi import mlab
 
 def import_image():
     ImageRoot = "/home/ank/Documents/var"
@@ -29,7 +30,7 @@ def import_image():
     bw = bw.astype(np.float64)/float(np.max(bw))
     return bw
 
-
+# deprec
 def sub_sample_image(bw_image):
     density = 0.25
     msk = np.random.random(bw_image.shape)*bw_image>density
@@ -71,16 +72,35 @@ def gabor(bw_image):
     sum2 = np.zeros(cim[0, 0,:,:].shape)
     col2 = np.zeros((cim[0,:,:,:].shape[0]/2, cim[0,:,:,:].shape[1], cim[0,:,:,:].shape[2]))
     for i in range(0, nfilters):
-        pr_cim = cim[0, i,:,:]
+        pr_cim = cim[0,i,:,:]
         if i%2 == 0:
             sum1 = sum1 + np.abs(pr_cim)
             col1[i/2,:,:] = pr_cim
         else:
-            pr_cim[pr_cim>0]=0
-            sum2 = sum2 + np.abs(pr_cim)
-            col2[i/2,:,:] = pr_cim
+            # pr_cim[pr_cim>0]=0
+            sum2 = sum2 - pr_cim
+            col2[i/2,:,:] = np.abs(pr_cim)
 
-    return sum1, sum2, col1, col2
+    abs1 = np.amax(col1, axis=0)
+    abs2 = np.amax(-col2, axis=0)
+
+    print np.max(col2)
+
+    red = (1.0, 0.0, 0.0)
+    green = (0.0, 1.0, 0.0)
+
+    # s1 = mlab.pipeline.scalar_field(col1/np.max(col1))
+    # s1.spacing = (5.0, 1.0, 1.0)
+    #
+    # s2 = mlab.pipeline.scalar_field(col2/np.max(col2))
+    # s2.spacing = (5.0, 1.0, 1.0)
+
+    # mlab.pipeline.volume(s1, color=green, vmin=0.1)
+    # mlab.show()
+    # mlab.pipeline.volume(s2, color=red, vmin=0.1)
+    # mlab.show()
+
+    return sum1, sum2, col1, col2, abs1, abs2
 
 
 def core_cluster(core_domains):
@@ -105,37 +125,41 @@ def core_cluster(core_domains):
     # plt.plot(xy.T[1], xy.T[0], 'ro', alpha=0.5)
     # plt.show()
 
-    # NOPE, doesn't work either
-    db = DBSCAN(eps=2, min_samples=50).fit(xy)
-    core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-    core_samples_mask[db.core_sample_indices_] = True
-    labels = db.labels_
+    # NOPE, doesn't work either.
 
-    # Number of clusters in labels, ignoring noise if present.
-    n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-
-    print('Estimated number of clusters: %d' % n_clusters_)
+    # it seems that we really need to assign nodes to gaussian activators, classify them as bright or not and build a spanning algo
 
 
-    plt.imshow(core_domains.T, cmap = 'gray', interpolation='nearest')
-    unique_labels = set(labels)
-    colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
-    for k, col in zip(unique_labels, colors):
-        if k == -1:
-            col = 'k'
-
-        class_member_mask = (labels == k)
-
-        x_y = xy[class_member_mask & core_samples_mask]
-        plt.plot(x_y[:, 0], x_y[:, 1], 'o', markerfacecolor=col,
-                 markeredgecolor='k', markersize=14)
-
-        x_y = xy[class_member_mask & ~core_samples_mask]
-        plt.plot(x_y[:, 0], x_y[:, 1], 'o', markerfacecolor=col,
-                 markeredgecolor='k', markersize=6)
-
-    plt.title('Estimated number of clusters: %d' % n_clusters_)
-    plt.show()
+    # db = DBSCAN(eps=2, min_samples=50).fit(xy)
+    # core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+    # core_samples_mask[db.core_sample_indices_] = True
+    # labels = db.labels_
+    #
+    # # Number of clusters in labels, ignoring noise if present.
+    # n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+    #
+    # print('Estimated number of clusters: %d' % n_clusters_)
+    #
+    #
+    # plt.imshow(core_domains.T, cmap = 'gray', interpolation='nearest')
+    # unique_labels = set(labels)
+    # colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+    # for k, col in zip(unique_labels, colors):
+    #     if k == -1:
+    #         col = 'k'
+    #
+    #     class_member_mask = (labels == k)
+    #
+    #     x_y = xy[class_member_mask & core_samples_mask]
+    #     plt.plot(x_y[:, 0], x_y[:, 1], 'o', markerfacecolor=col,
+    #              markeredgecolor='k', markersize=14)
+    #
+    #     x_y = xy[class_member_mask & ~core_samples_mask]
+    #     plt.plot(x_y[:, 0], x_y[:, 1], 'o', markerfacecolor=col,
+    #              markeredgecolor='k', markersize=6)
+    #
+    # plt.title('Estimated number of clusters: %d' % n_clusters_)
+    # plt.show()
 
 
 
@@ -157,20 +181,35 @@ def core_cluster(core_domains):
 
 def diffuse_clusters(data, core_clusters):
 
-    image = data.astype(np.int16)
+    # image = data.astype(np.int16)
+    #
+    # distance = ndimage.distance_transform_edt(image)
+    # local_maxi = peak_local_max(distance, indices=False, footprint=np.ones((3, 3)), labels=image)
+    # markers = ndimage.label(local_maxi)[0]
+    # labels = watershed(-distance, markers, mask=image)
 
-    distance = ndimage.distance_transform_edt(image)
-    local_maxi = peak_local_max(distance, indices=False, footprint=np.ones((3, 3)), labels=image)
-    markers = ndimage.label(local_maxi)[0]
-    labels = watershed(-distance, markers, mask=image)
 
-    labels2 = random_walker(data2, core_clusters, beta=10, mode='bf')
+    if core_clusters is not None:
+        labels2 = random_walker(data, core_clusters, beta=10, mode='bf')
 
-    plt.imshow(mark_boundaries(re_img, labels))
-    plt.show()
 
-    plt.imshow(mark_boundaries(re_img, labels2))
-    plt.show()
+    # This is most likely where we will need to diffuse our groups from
+
+    else:
+        markers = np.zeros(data.shape, dtype=np.uint)
+        markers[data < -0.3] = 1
+        markers[data > 0.6] = 2
+        # plt.imshow(markers, cmap='hot', interpolation='nearest')
+        # plt.show()
+        labels2 = random_walker(data, markers, beta=10, mode='bf')
+
+    # plt.imshow(mark_boundaries(re_img, labels))
+    # plt.show()
+
+    # plt.imshow(mark_boundaries((data-np.min(data))/(np.max(data)-np.min(data)), labels2))
+    # plt.show()
+
+    return labels2
 
 
 if __name__ == "__main__":
@@ -178,15 +217,27 @@ if __name__ == "__main__":
     plt.imshow(bw, cmap = 'gray', interpolation='nearest')
     plt.colorbar()
     plt.show()
-    sum1, sum2, _, _ = gabor(bw)
+    sum1, sum2, _, _, amax1, amax2 = gabor(bw)
 
     plt.imshow(sum1, cmap = 'gray', interpolation='nearest')
     plt.colorbar()
-
     plt.show()
+
     plt.imshow(sum2, cmap = 'gray', interpolation='nearest')
     plt.colorbar()
     plt.show()
 
-    core_cluster(sum2)
+
+    # core_cluster(sum2)
+    d_c = diffuse_clusters(sum2, None)
+
+    rebw = bw[4:, :][:,4:]
+
+    print rebw.shape
+    print d_c.shape
+
+
+    plt.imshow(mark_boundaries(rebw, d_c))
+    plt.show()
+
     # sub_sample_image(bw)

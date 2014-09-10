@@ -29,8 +29,10 @@ from sklearn.preprocessing import StandardScaler
 
 from pylab import get_cmap
 
+
 ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/ko fibers"
 scaling_factor = (1.0, 1.0, 3.0)
+
 
 def load_img_dict2(load_filter=0.4):
     """
