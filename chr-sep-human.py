@@ -11,6 +11,9 @@ from skimage.morphology import label, convex_hull_image
 from skimage.filter import gaussian_filter
 from skimage.measure import perimeter
 from math import pow
+from matplotlib import colors, cm
+from pylab import get_cmap
+from itertools import product
 
 # TODO: try inducing a finer separator set
 # TODO: try using the data for the edge detection by assigning a null label to all the edge detectors, so that the data is recovered by diffusion from a skeleton
@@ -19,7 +22,7 @@ from math import pow
 def import_image():
     ImageRoot = "/home/ank/Documents/var"
     # suffix = '/n4.jpeg'
-    suffix = '/img_4jpg.jpeg'
+    suffix = '/img_19jpg.jpeg'
     col = PIL.Image.open(ImageRoot + suffix)
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
@@ -27,6 +30,14 @@ def import_image():
     bw = bw.astype(np.float64)/float(np.max(bw))
     return bw
 
+
+def import_edited():
+    col = PIL.Image.open("/home/ank/projects_files/2014/Image_recognition/EDIT_ME2.jpg")
+    gray = col.convert('L')
+    bw = np.asarray(gray).copy()
+    bw[bw<=120] = 0
+    bw[bw>120] = 1
+    return bw
 
 def gabor(bw_image, freq, scale, scale_distortion=1., self_cross=False, field=10):
 
@@ -85,23 +96,42 @@ def cluster_by_diffusion(data):
     return labels2
 
 def cluster_process(labels):
+    # plt.imshow(labels, cmap='gray', interpolation='nearest')
+    # plt.colorbar()
+    # plt.show()
     rbase = np.zeros(labels.shape)
     for i in range(1, int(np.max(labels))):
         base = np.zeros(labels.shape)
         base[labels==i] = 1
+        # plt.imshow(base, cmap='gray', interpolation='nearest')
+        # plt.colorbar()
+        # plt.show()
         li = len(base.nonzero()[0])
-        hull = convex_hull_image(base)
-        lh =len(hull.nonzero()[0])
-        cond = li>4000 and float(lh)/float(li)<1.05
-        print i, li, float(lh)/float(li), cond, pow(perimeter(base), 3.0)/li
-        if cond:
-            rbase = rbase + base
+        # print li
+        if li>0:
+            hull = convex_hull_image(base)
+            lh =len(hull.nonzero()[0])
+            cond = li>4000 and float(lh)/float(li)<1.07
+            print i, li, float(lh)/float(li), cond, pow(perimeter(base), 2.0)/li
+            if cond:
+                rbase = rbase + base
     return rbase
 
 
+def repaint_culsters(clusterNo=100):
+    prism_cmap = get_cmap('prism')
+    prism_vals = prism_cmap(np.arange(clusterNo+1))
+    prism_vals[0] = [0, 0, 0, 1]
+    costum_cmap = colors.LinearSegmentedColormap.from_list('my_colormap', prism_vals)
+    return costum_cmap
+
+
 if __name__ == "__main__":
+    import_edited()
     start = time()
     bw = import_image()
+    # plt.imshow(bw, cmap='gray', interpolation='nearest')
+    # plt.show()
     # sum1, sum2, _, _= gabor(bw, 1/4., 0.5)
     sum1, sum2, _, _ = gabor(bw, 1/8., 1, self_cross=True, field=20)
 
@@ -116,6 +146,7 @@ if __name__ == "__main__":
     bwth = np.zeros(bw_blur.shape)
     bwth[bw_blur>0.3] = 1
     clsts = label(bwth)*bwth
+
     rbase = cluster_process(clsts)[9:,:][:,9:][:-10,:][:,:-10]
 
     plt.subplot(2,2,1)
@@ -141,7 +172,23 @@ if __name__ == "__main__":
     sum22 = np.copy(sum2)
     sum22[sum2<0] = 0
     d_c = cluster_by_diffusion(sum2)
-    seg_dc = label(d_c, background=0)*(d_c-1)
+    rebw = bw[9:,:][:,9:][:-10,:][:,:-10]
+
+    reim = PIL.Image.fromarray((rebw/np.max(rebw)*254).astype(np.uint8))
+    reim.save("/home/ank/projects_files/2014/Image_recognition/I_AM_THE_ORIGINAL.bmp")
+
+    int_arr = np.asarray(np.dstack(((d_c-1)*254, (d_c-1)*254, d_c *0)), dtype=np.uint8)
+
+    msk = PIL.Image.fromarray(int_arr)
+    msk.save("/home/ank/projects_files/2014/Image_recognition/EDIT_ME.bmp")
+    # modify d_c by the user here
+
+    raw_input("Please manually edit the mask image, save it. Once you are done, press enter to continue ")
+
+    d_c = import_edited()
+
+    seg_dc = label(d_c, background=0)*d_c
+    colormap = repaint_culsters(int(np.max(seg_dc)))
     redd = set(seg_dc[rbase>0.01].tolist())
 
     print redd
@@ -150,7 +197,7 @@ if __name__ == "__main__":
 
     # align to same shape
     # rebw = bw[4:, :][:,4:]
-    rebw = bw[9:,:][:,9:][:-10,:][:,:-10]
+
 
     plt.subplot(2,2,1)
     plt.title('Original image')
@@ -171,6 +218,8 @@ if __name__ == "__main__":
     plt.imshow(mark_boundaries(rebw, d_c))
     plt.show()
 
+
+
     plt.subplot(2,2,1)
     plt.title('Original image')
     plt.imshow(bw, cmap='gray', interpolation='nearest')
@@ -183,7 +232,13 @@ if __name__ == "__main__":
 
     plt.subplot(2,2,3)
     plt.title('Segmentation - total time %s, clusters: %s'%("{0:.2f}".format(time()-start), len(set(seg_dc.flatten().tolist()))) )
-    plt.imshow(seg_dc, cmap='spectral', interpolation='nearest')
+    plt.imshow(seg_dc, cmap=colormap, interpolation='nearest')
+    plt.colorbar()
+
+    plt.subplot(2,2,4)
+    plt.title('Segmentation - total time %s, clusters: %s'%("{0:.2f}".format(time()-start), len(set(seg_dc.flatten().tolist()))) )
+    plt.imshow(rebw, cmap='gray', interpolation='nearest')
+    plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
     plt.colorbar()
 
     plt.show()
