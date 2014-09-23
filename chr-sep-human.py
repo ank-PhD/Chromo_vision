@@ -5,25 +5,18 @@ import matplotlib.pyplot as plt
 import PIL
 from time import time
 import mdp
-from itertools import product
 from skimage.segmentation import random_walker, mark_boundaries
 from skimage.morphology import label, convex_hull_image
 from skimage.filter import gaussian_filter
 from skimage.measure import perimeter
 from math import pow
-from matplotlib import colors, cm
+from matplotlib import colors
 from pylab import get_cmap
 from itertools import product
-
-# TODO: try inducing a finer separator set
-# TODO: try using the data for the edge detection by assigning a null label to all the edge detectors, so that the data is recovered by diffusion from a skeleton
-
+from configs import image_directory, image_to_load, buffer_directory
 
 def import_image():
-    ImageRoot = "/home/ank/Documents/var"
-    # suffix = '/n4.jpeg'
-    suffix = '/img_19jpg.jpeg'
-    col = PIL.Image.open(ImageRoot + suffix)
+    col = PIL.Image.open(image_directory + image_to_load)
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
     bw = bw - np.min(bw)
@@ -32,7 +25,7 @@ def import_image():
 
 
 def import_edited():
-    col = PIL.Image.open("/home/ank/projects_files/2014/Image_recognition/EDIT_ME2.jpg")
+    col = PIL.Image.open(buffer_directory+"EDIT_ME2.jpg")
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
     bw[bw<=120] = 0
@@ -112,7 +105,7 @@ def cluster_process(labels):
             hull = convex_hull_image(base)
             lh =len(hull.nonzero()[0])
             cond = li>4000 and float(lh)/float(li)<1.07
-            print i, li, float(lh)/float(li), cond, pow(perimeter(base), 2.0)/li
+            # print i, li, float(lh)/float(li), cond, pow(perimeter(base), 2.0)/li
             if cond:
                 rbase = rbase + base
     return rbase
@@ -120,7 +113,7 @@ def cluster_process(labels):
 
 def repaint_culsters(clusterNo=100):
     prism_cmap = get_cmap('prism')
-    prism_vals = prism_cmap(np.arange(clusterNo+1))
+    prism_vals = prism_cmap(np.arange(clusterNo))
     prism_vals[0] = [0, 0, 0, 1]
     costum_cmap = colors.LinearSegmentedColormap.from_list('my_colormap', prism_vals)
     return costum_cmap
@@ -154,17 +147,17 @@ if __name__ == "__main__":
     plt.imshow(bw, cmap='gray', interpolation='nearest')
 
     plt.subplot(2,2,2)
-    plt.title('Gabor - line detector')
+    plt.title('blurred image')
     plt.imshow(bw_blur, cmap='gray', interpolation='nearest')
     plt.colorbar()
 
     plt.subplot(2,2,3)
-    plt.title('Gabor - line detector, positive compound only')
+    plt.title('blurred thresholded clusters')
     plt.imshow(clsts, cmap='spectral', interpolation='nearest')
     plt.colorbar()
 
     plt.subplot(2,2,4)
-    plt.title('Segmentation - total time %s'%"{0:.2f}".format(time()-start))
+    plt.title('Clusters that look like cells')
     plt.imshow(rbase, cmap='gray', interpolation='nearest')
     plt.colorbar()
     plt.show()
@@ -175,12 +168,12 @@ if __name__ == "__main__":
     rebw = bw[9:,:][:,9:][:-10,:][:,:-10]
 
     reim = PIL.Image.fromarray((rebw/np.max(rebw)*254).astype(np.uint8))
-    reim.save("/home/ank/projects_files/2014/Image_recognition/I_AM_THE_ORIGINAL.bmp")
+    reim.save(buffer_directory+"I_AM_THE_ORIGINAL.bmp")
 
     int_arr = np.asarray(np.dstack(((d_c-1)*254, (d_c-1)*254, d_c *0)), dtype=np.uint8)
 
     msk = PIL.Image.fromarray(int_arr)
-    msk.save("/home/ank/projects_files/2014/Image_recognition/EDIT_ME.bmp")
+    msk.save(buffer_directory+"EDIT_ME.bmp")
     # modify d_c by the user here
 
     raw_input("Please manually edit the mask image, save it. Once you are done, press enter to continue ")
@@ -199,36 +192,34 @@ if __name__ == "__main__":
     # rebw = bw[4:, :][:,4:]
 
 
+    # plt.subplot(2,2,1)
+    # plt.title('Original image')
+    # plt.imshow(bw, cmap='gray', interpolation='nearest')
+    #
+    # plt.subplot(2,2,2)
+    # plt.title('Gabor - line detector')
+    # plt.imshow(sum2, cmap='gray', interpolation='nearest')
+    # plt.colorbar()
+    #
+    # plt.subplot(2,2,3)
+    # plt.title('Gabor - line detector, positive compound only')
+    # plt.imshow(sum22, cmap='gray', interpolation='nearest')
+    # plt.colorbar()
+    #
+    # plt.subplot(2,2,4)
+    # plt.title('Segmentation - total time %s'%"{0:.2f}".format(time()-start))
+    # plt.imshow(mark_boundaries(rebw, d_c))
+    # plt.show()
+
+
+
     plt.subplot(2,2,1)
     plt.title('Original image')
     plt.imshow(bw, cmap='gray', interpolation='nearest')
 
     plt.subplot(2,2,2)
-    plt.title('Gabor - line detector')
-    plt.imshow(sum2, cmap='gray', interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,3)
-    plt.title('Gabor - line detector, positive compound only')
-    plt.imshow(sum22, cmap='gray', interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,4)
-    plt.title('Segmentation - total time %s'%"{0:.2f}".format(time()-start))
+    plt.title('chromosome mask')
     plt.imshow(mark_boundaries(rebw, d_c))
-    plt.show()
-
-
-
-    plt.subplot(2,2,1)
-    plt.title('Original image')
-    plt.imshow(bw, cmap='gray', interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,2)
-    plt.title('Segmentation - total time %s'%"{0:.2f}".format(time()-start))
-    plt.imshow(d_c, cmap='gray', interpolation='nearest')
-    plt.colorbar()
 
     plt.subplot(2,2,3)
     plt.title('Segmentation - total time %s, clusters: %s'%("{0:.2f}".format(time()-start), len(set(seg_dc.flatten().tolist()))) )
@@ -236,7 +227,7 @@ if __name__ == "__main__":
     plt.colorbar()
 
     plt.subplot(2,2,4)
-    plt.title('Segmentation - total time %s, clusters: %s'%("{0:.2f}".format(time()-start), len(set(seg_dc.flatten().tolist()))) )
+    plt.title('Segmentation-image overlay')
     plt.imshow(rebw, cmap='gray', interpolation='nearest')
     plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
     plt.colorbar()
