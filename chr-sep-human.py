@@ -120,7 +120,6 @@ def repaint_culsters(clusterNo=100):
 
 
 if __name__ == "__main__":
-    import_edited()
     start = time()
     bw = import_image()
     # plt.imshow(bw, cmap='gray', interpolation='nearest')
@@ -170,27 +169,23 @@ if __name__ == "__main__":
     reim = PIL.Image.fromarray((rebw/np.max(rebw)*254).astype(np.uint8))
     reim.save(buffer_directory+"I_AM_THE_ORIGINAL.bmp")
 
-    int_arr = np.asarray(np.dstack(((d_c-1)*254, (d_c-1)*254, d_c *0)), dtype=np.uint8)
-
-    msk = PIL.Image.fromarray(int_arr)
-    msk.save(buffer_directory+"EDIT_ME.bmp")
-    # modify d_c by the user here
-
-    raw_input("Please manually edit the mask image, save it. Once you are done, press enter to continue ")
-
-    d_c = import_edited()
-
     seg_dc = label(d_c, background=0)*d_c
-    colormap = repaint_culsters(int(np.max(seg_dc)))
     redd = set(seg_dc[rbase>0.01].tolist())
 
-    print redd
+    # print redd
     for i in redd:
-        seg_dc[seg_dc==i] = 1
+        seg_dc[seg_dc==i] = 0
+    d_c = d_c*0
+    d_c[seg_dc>0] = 1
 
-    # align to same shape
-    # rebw = bw[4:, :][:,4:]
+    int_arr = np.asarray(np.dstack((d_c*254, d_c*254, d_c*0)), dtype=np.uint8)
+    msk = PIL.Image.fromarray(int_arr)
+    msk.save(buffer_directory+"EDIT_ME.bmp")
+    raw_input("Please manually edit the mask image, save it. Once you are done, press enter to continue ")
+    d_c = import_edited()
 
+    seg_dc = (label(d_c)+1)*d_c
+    colormap = repaint_culsters(int(np.max(seg_dc)))
 
     # plt.subplot(2,2,1)
     # plt.title('Original image')
@@ -228,7 +223,7 @@ if __name__ == "__main__":
 
     plt.subplot(2,2,4)
     plt.title('Segmentation-image overlay')
-    plt.imshow(rebw, cmap='gray', interpolation='nearest')
+    plt.imshow(mark_boundaries(rebw, d_c))
     plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
     plt.colorbar()
 

@@ -9,4 +9,4 @@ image_to_load = 'img19jpg.jpeg'
 image_directory = '/home/ank/Documents/var/'
 buffer_directory = '/home/ank/projects_files/2014/Image_recognition/'
 
-image_to_load =  'img_19jpg.jpeg'
+image_to_load =  'img_12jpg.jpeg'
