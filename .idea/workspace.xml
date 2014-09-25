@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kivy_app.py" afterPath="$PROJECT_DIR$/kivy_app.py" />
+    <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="Added  the GUI. Seems to work fine">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kivy_GUI.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/loader.kv" />
+      <change type="DELETED" beforePath="C:\Users\ank\PycharmProjects\Chromo_vision\chooser.kv" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\ank\PycharmProjects\Chromo_vision\kivy_app.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/chr_sep_human.py" afterPath="$PROJECT_DIR$/chr_sep_human.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/configs.py" afterPath="$PROJECT_DIR$/configs.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -25,70 +30,100 @@
     <favorites_list name="Chromo_vision" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="nucleus_inspector.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5270" max-vertical-offset="5644">
-              <caret line="310" column="102" selection-start-line="310" selection-start-column="65" selection-end-line="310" selection-end-column="102" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="chr_sep_mouse.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chr_sep_mouse.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="2108">
-              <caret line="115" column="75" selection-start-line="115" selection-start-column="45" selection-end-line="115" selection-end-column="75" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="chr_sep_human.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2958" max-vertical-offset="3230">
-              <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="configs.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/configs.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31828195" vertical-offset="0" max-vertical-offset="908">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-              <folding>
-                <element signature="e#20#73#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Cell_recognition.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4080" max-vertical-offset="6545">
-              <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Philippe_supra.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="2227">
-              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.46903154">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="nucleus_inspector.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="5270" max-vertical-offset="5644">
+                  <caret line="310" column="102" selection-start-line="310" selection-start-column="65" selection-end-line="310" selection-end-column="102" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="chr_sep_mouse.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/chr_sep_mouse.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="2108">
+                  <caret line="115" column="75" selection-start-line="115" selection-start-column="45" selection-end-line="115" selection-end-column="75" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="chr_sep_human.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-12.22807" vertical-offset="2363" max-vertical-offset="3230">
+                  <caret line="180" column="44" selection-start-line="180" selection-start-column="44" selection-end-line="180" selection-end-column="44" />
+                  <folding>
+                    <element signature="e#20#38#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="configs.py" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/configs.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.14049587" vertical-offset="0" max-vertical-offset="1326">
+                  <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="loader.kv" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/loader.kv">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="612">
+                  <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Cell_recognition.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="4080" max-vertical-offset="6545">
+                  <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Philippe_supra.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="646" max-vertical-offset="2227">
+                  <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="kivy_GUI.py" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/kivy_GUI.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.508046" vertical-offset="0" max-vertical-offset="935">
+                  <caret line="26" column="45" selection-start-line="26" selection-start-column="45" selection-end-line="26" selection-end-column="45" />
+                  <folding>
+                    <element signature="e#0#24#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -122,15 +157,21 @@
         <option value="$PROJECT_DIR$/kivy_app.py" />
         <option value="$PROJECT_DIR$/chr-sep-mouse.py" />
         <option value="$PROJECT_DIR$/chr-sep-human.py" />
+        <option value="$PROJECT_DIR$/my.kv.py" />
+        <option value="$PROJECT_DIR$/my.kv" />
+        <option value="$PROJECT_DIR$/kivy_improved_loader.py" />
+        <option value="$PROJECT_DIR$/chooser.kv" />
+        <option value="$PROJECT_DIR$/kivy_GUI.py" />
         <option value="$PROJECT_DIR$/chr_sep_human.py" />
         <option value="$PROJECT_DIR$/configs.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="960" />
-    <option name="width" value="960" />
-    <option name="height" value="1080" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -186,6 +227,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -206,7 +248,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -228,7 +269,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.configs">
+  <component name="RunManager" selected="Python.kivy_GUI">
     <configuration default="false" name="chr-sep-human" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -242,24 +283,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Chromo_vision" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/chr_sep_human.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="sitk4chr" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Chromo_vision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sitk4chr.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -301,7 +324,7 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
-    <configuration default="false" name="chr-sep-mouse" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="kivy_improved_loader" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -313,7 +336,25 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Chromo_vision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/chr_sep_mouse.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\ank\PycharmProjects\Chromo_vision\kivy_GUI.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="kivy_GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Chromo_vision" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/kivy_GUI.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -442,18 +483,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.chr-sep-human" />
-      <item index="1" class="java.lang.String" itemvalue="Python.sitk4chr" />
-      <item index="2" class="java.lang.String" itemvalue="Python.configs" />
-      <item index="3" class="java.lang.String" itemvalue="Python.kivy_app" />
-      <item index="4" class="java.lang.String" itemvalue="Python.chr-sep-mouse" />
+      <item index="1" class="java.lang.String" itemvalue="Python.configs" />
+      <item index="2" class="java.lang.String" itemvalue="Python.kivy_app" />
+      <item index="3" class="java.lang.String" itemvalue="Python.kivy_improved_loader" />
+      <item index="4" class="java.lang.String" itemvalue="Python.kivy_GUI" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.configs" />
-        <item index="1" class="java.lang.String" itemvalue="Python.chr-sep-human" />
-        <item index="2" class="java.lang.String" itemvalue="Python.chr-sep-mouse" />
+        <item index="0" class="java.lang.String" itemvalue="Python.kivy_GUI" />
+        <item index="1" class="java.lang.String" itemvalue="Python.configs" />
+        <item index="2" class="java.lang.String" itemvalue="Python.kivy_improved_loader" />
         <item index="3" class="java.lang.String" itemvalue="Python.kivy_app" />
-        <item index="4" class="java.lang.String" itemvalue="Python.sitk4chr" />
+        <item index="4" class="java.lang.String" itemvalue="Python.chr-sep-human" />
       </list>
     </recent_temporary>
   </component>
@@ -567,7 +608,11 @@
       <created>1411604600694</created>
       <updated>1411604600694</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="attempting kivy_app integration for fasttracking analysis">
+      <created>1411604717772</created>
+      <updated>1411604717772</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -591,27 +636,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="960" y="0" width="960" height="1080" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291714" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.091093116" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2404661" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.075" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44650206" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43927124" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3276644" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3276644" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -653,7 +698,8 @@
     <MESSAGE value="Improved UI and corrected bugs" />
     <MESSAGE value="attempting kivy" />
     <MESSAGE value="attempting kivy_app integration for fasttracking analysis" />
-    <option name="LAST_COMMIT_MESSAGE" value="attempting kivy_app integration for fasttracking analysis" />
+    <MESSAGE value="Added  the GUI. Seems to work fine" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added  the GUI. Seems to work fine" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -679,9 +725,79 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1394" max-vertical-offset="3417">
+          <caret line="82" column="49" selection-start-line="82" selection-start-column="49" selection-end-line="82" selection-end-column="49" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/configs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="751" max-vertical-offset="1377">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loader.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="612">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4080" max-vertical-offset="6545">
+          <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="646" max-vertical-offset="2227">
+          <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kivy_GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="935">
+          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5644">
+          <caret line="310" column="102" selection-start-line="310" selection-start-column="65" selection-end-line="310" selection-end-column="102" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chr_sep_mouse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="2108">
+          <caret line="115" column="75" selection-start-line="115" selection-start-column="45" selection-end-line="115" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2958" max-vertical-offset="3230">
           <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -689,9 +805,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="816">
           <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="e#20#73#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -832,22 +946,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1965">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3042" max-vertical-offset="5535">
-          <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sitk4chr.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22277227" vertical-offset="0" max-vertical-offset="606">
@@ -863,20 +961,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1295" max-vertical-offset="1785">
+          <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3042" max-vertical-offset="5535">
+          <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loader.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="612">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2850">
-          <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="-12.22807" vertical-offset="2363" max-vertical-offset="3230">
+          <caret line="180" column="44" selection-start-line="180" selection-start-column="44" selection-end-line="180" selection-end-column="44" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/configs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31828195" vertical-offset="0" max-vertical-offset="908">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.14049587" vertical-offset="0" max-vertical-offset="1326">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kivy_GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.508046" vertical-offset="0" max-vertical-offset="935">
+          <caret line="26" column="45" selection-start-line="26" selection-start-column="45" selection-end-line="26" selection-end-column="45" />
           <folding>
-            <element signature="e#20#73#0" expanded="true" />
+            <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>

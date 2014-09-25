@@ -1,0 +1,30 @@
+#:kivy 1.8.0
+
+#:import lv kivy.uix.listview
+#:import la kivy.adapters.listadapter
+
+<MyWidget>:
+    drives_list: drives_list
+    file_chooser: file_chooser
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        ListView:
+            id: drives_list
+            adapter:
+                la.ListAdapter(data=root.get_win_drives(), selection_mode='single', allow_empty_selection=False, cls=lv.ListItemButton)
+        FileChooserListView:
+            id: file_chooser
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: "Preprocess"
+                on_release: root.load(file_chooser.path, file_chooser.selection, False)
+            Button:
+                text: "Process after correction"
+                on_release: root.load(file_chooser.path, file_chooser.selection, True)
+    BoxLayout:
+        ProgressBar:
+            max: 1000
+            value: root.progress_bar.value
+
