@@ -9,14 +9,14 @@ from skimage.segmentation import random_walker, mark_boundaries
 from skimage.morphology import label, convex_hull_image
 from skimage.filter import gaussian_filter
 from skimage.measure import perimeter
-from math import pow
 from matplotlib import colors
 from pylab import get_cmap
 from itertools import product
-from configs import image_directory, image_to_load, buffer_directory
+from pickle import load, dump
 
-def import_image():
-    col = PIL.Image.open(image_directory + image_to_load)
+
+def import_image(image_to_load):
+    col = PIL.Image.open(image_to_load)
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
     bw = bw - np.min(bw)
@@ -24,8 +24,8 @@ def import_image():
     return bw
 
 
-def import_edited():
-    col = PIL.Image.open(buffer_directory+"EDIT_ME2.jpg")
+def import_edited(buffer_directory):
+    col = PIL.Image.open(buffer_directory+"EDIT_ME.tif")
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
     bw[bw<=120] = 0
@@ -55,29 +55,21 @@ def gabor(bw_image, freq, scale, scale_distortion=1., self_cross=False, field=10
             arr=np.minimum(arr,mdp.utils.gabor(size, alpha+pi/2, phi, freq, sgm))
         arr = check_integral(arr)
         gabors[i,:,:] = arr
-    #     plt.subplot(6,6,i+1)
-    #     plt.title('%s, %s, %s, %s'%('{0:.2f}'.format(alpha), '{0:.2f}'.format(phi), freq, sgm))
-    #     plt.imshow(arr, cmap = 'gray', interpolation='nearest')
-    # plt.show()
     node = mdp.nodes.Convolution2DNode(gabors, mode='valid', boundary='fill', fillvalue=0, output_2d=False)
-    cim = node.execute(bw[np.newaxis, :, :])
+    cim = node.execute(bw_image[np.newaxis, :, :])
     sum1 = np.zeros(cim[0, 0,:,:].shape)
-    col1 = np.zeros((cim[0,:,:,:].shape[0]/2, cim[0,:,:,:].shape[1], cim[0,:,:,:].shape[2]))
     sum2 = np.zeros(cim[0, 0,:,:].shape)
-    col2 = np.zeros((cim[0,:,:,:].shape[0]/2, cim[0,:,:,:].shape[1], cim[0,:,:,:].shape[2]))
     for i in range(0, nfilters):
         pr_cim = cim[0,i,:,:]
         if i%2 == 0:
             sum1 = sum1 + np.abs(pr_cim)
-            col1[i/2,:,:] = pr_cim
         else:
             sum2 = sum2 - pr_cim
-            col2[i/2,:,:] = np.abs(pr_cim)
 
     sum2[sum2>0] = sum2[sum2>0]/np.max(sum2)
     sum2[sum2<0] = -sum2[sum2<0]/np.min(sum2)
 
-    return sum1/np.max(sum1), sum2, col1, col2, # two last ones just in case.
+    return sum1/np.max(sum1), sum2
 
 
 def cluster_by_diffusion(data):
@@ -85,27 +77,23 @@ def cluster_by_diffusion(data):
     markers[data < -0.15] = 1
     markers[data > 0.15] = 2
     labels2 = random_walker(data, markers, beta=10, mode='bf')
-
     return labels2
 
 def cluster_process(labels):
-    # plt.imshow(labels, cmap='gray', interpolation='nearest')
-    # plt.colorbar()
-    # plt.show()
     rbase = np.zeros(labels.shape)
+    rubase = np.zeros(labels.shape)
+    rubase[range(0,20),:] = 1
+    rubase[:,range(0,20)] = 1
+    rubase[range(-20,-1),:] = 1
+    rubase[:,range(-20,-1)] = 1
     for i in range(1, int(np.max(labels))):
         base = np.zeros(labels.shape)
         base[labels==i] = 1
-        # plt.imshow(base, cmap='gray', interpolation='nearest')
-        # plt.colorbar()
-        # plt.show()
         li = len(base.nonzero()[0])
-        # print li
         if li>0:
             hull = convex_hull_image(base)
             lh =len(hull.nonzero()[0])
-            cond = li>4000 and float(lh)/float(li)<1.07
-            # print i, li, float(lh)/float(li), cond, pow(perimeter(base), 2.0)/li
+            cond = (li>4000 and float(lh)/float(li)<1.07 and perimeter(base)**2.0/li<20) or np.max(base*rubase)>0.5
             if cond:
                 rbase = rbase + base
     return rbase
@@ -119,47 +107,25 @@ def repaint_culsters(clusterNo=100):
     return costum_cmap
 
 
-if __name__ == "__main__":
+def human_loop(buffer_directory, image_to_import):
     start = time()
-    bw = import_image()
-    # plt.imshow(bw, cmap='gray', interpolation='nearest')
-    # plt.show()
-    # sum1, sum2, _, _= gabor(bw, 1/4., 0.5)
-    sum1, sum2, _, _ = gabor(bw, 1/8., 1, self_cross=True, field=20)
+    bw = import_image(image_to_import)
+    sum1, sum2 = gabor(bw, 1/8., 1, self_cross=True, field=20)
 
     # The separator is acting here:
-    sum10, sum20, _, _ = gabor(bw, 1/4., 0.5, field=20)
-    # plt.imshow(sum20, cmap='gray', interpolation='nearest')
-    # plt.show()
+    sum10, sum20 = gabor(bw, 1/4., 0.5, field=20)
     sum20[sum20>-0.15] = 0
     sum2  = sum2 + sum20
 
     bw_blur = gaussian_filter(bw, 10)
     bwth = np.zeros(bw_blur.shape)
     bwth[bw_blur>0.3] = 1
-    clsts = label(bwth)*bwth
+    clsts = (label(bwth)+1)*bwth
 
     rbase = cluster_process(clsts)[9:,:][:,9:][:-10,:][:,:-10]
 
-    plt.subplot(2,2,1)
-    plt.title('Original image')
-    plt.imshow(bw, cmap='gray', interpolation='nearest')
-
-    plt.subplot(2,2,2)
-    plt.title('blurred image')
-    plt.imshow(bw_blur, cmap='gray', interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,3)
-    plt.title('blurred thresholded clusters')
-    plt.imshow(clsts, cmap='spectral', interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,4)
-    plt.title('Clusters that look like cells')
-    plt.imshow(rbase, cmap='gray', interpolation='nearest')
-    plt.colorbar()
-    plt.show()
+    rim = PIL.Image.fromarray((rbase*254).astype(np.uint8))
+    rim.save(buffer_directory+"I_AM_UNBROKEN_NUCLEUS.bmp")
 
     sum22 = np.copy(sum2)
     sum22[sum2<0] = 0
@@ -167,12 +133,11 @@ if __name__ == "__main__":
     rebw = bw[9:,:][:,9:][:-10,:][:,:-10]
 
     reim = PIL.Image.fromarray((rebw/np.max(rebw)*254).astype(np.uint8))
-    reim.save(buffer_directory+"I_AM_THE_ORIGINAL.bmp")
+    reim.save(buffer_directory+"I_AM_THE_ORIGINAL.tif")
 
-    seg_dc = label(d_c, background=0)*d_c
+    seg_dc = (label(d_c)+1)*d_c
     redd = set(seg_dc[rbase>0.01].tolist())
 
-    # print redd
     for i in redd:
         seg_dc[seg_dc==i] = 0
     d_c = d_c*0
@@ -180,51 +145,41 @@ if __name__ == "__main__":
 
     int_arr = np.asarray(np.dstack((d_c*254, d_c*254, d_c*0)), dtype=np.uint8)
     msk = PIL.Image.fromarray(int_arr)
-    msk.save(buffer_directory+"EDIT_ME.bmp")
-    raw_input("Please manually edit the mask image, save it. Once you are done, press enter to continue ")
-    d_c = import_edited()
+    msk.save(buffer_directory+"EDIT_ME.tif")
+    dump(rebw,open(buffer_directory+'DO_NOT_TOUCH_ME.dmp','wb'))
 
+    return time()-start
+
+
+def human_afterloop(output_directory, pre_time, fle_name, buffer_directory):
+    start2 = time()
+
+    d_c = import_edited(buffer_directory)
+    rebw = load(open(buffer_directory+'DO_NOT_TOUCH_ME.dmp','rb'))
     seg_dc = (label(d_c)+1)*d_c
     colormap = repaint_culsters(int(np.max(seg_dc)))
 
-    # plt.subplot(2,2,1)
-    # plt.title('Original image')
-    # plt.imshow(bw, cmap='gray', interpolation='nearest')
-    #
-    # plt.subplot(2,2,2)
-    # plt.title('Gabor - line detector')
-    # plt.imshow(sum2, cmap='gray', interpolation='nearest')
-    # plt.colorbar()
-    #
-    # plt.subplot(2,2,3)
-    # plt.title('Gabor - line detector, positive compound only')
-    # plt.imshow(sum22, cmap='gray', interpolation='nearest')
-    # plt.colorbar()
-    #
-    # plt.subplot(2,2,4)
-    # plt.title('Segmentation - total time %s'%"{0:.2f}".format(time()-start))
-    # plt.imshow(mark_boundaries(rebw, d_c))
-    # plt.show()
+    segs = len(set(seg_dc.flatten().tolist()))-1
 
+    print fle_name+'\t - clusters: %s,\t total time : %s'%(segs, "{0:.2f}".format(time()-start2+pre_time))
 
-
-    plt.subplot(2,2,1)
+    # shows the result before saving the clustering and printing to the user the number of the images
+    plt.subplot(1,2,1)
     plt.title('Original image')
-    plt.imshow(bw, cmap='gray', interpolation='nearest')
+    plt.imshow(rebw, cmap='gray', interpolation='nearest')
 
-    plt.subplot(2,2,2)
-    plt.title('chromosome mask')
-    plt.imshow(mark_boundaries(rebw, d_c))
-
-    plt.subplot(2,2,3)
-    plt.title('Segmentation - total time %s, clusters: %s'%("{0:.2f}".format(time()-start), len(set(seg_dc.flatten().tolist()))) )
-    plt.imshow(seg_dc, cmap=colormap, interpolation='nearest')
-    plt.colorbar()
-
-    plt.subplot(2,2,4)
-    plt.title('Segmentation-image overlay')
+    plt.subplot(1,2,2)
+    plt.title('Segmentation - clusters: %s'%str(segs))
     plt.imshow(mark_boundaries(rebw, d_c))
     plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
-    plt.colorbar()
 
     plt.show()
+
+    plt.imshow(mark_boundaries(rebw, d_c))
+    plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
+
+    plt.savefig(output_directory+fle_name+'_%s_clusters.png'%str(segs), dpi=500, bbox_inches='tight', pad_inches=0.0)
+
+
+if __name__ == "__main__":
+    pass

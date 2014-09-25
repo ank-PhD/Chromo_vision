@@ -14,8 +14,8 @@ from skimage.segmentation import random_walker, mark_boundaries
 
 
 def import_image():
-    ImageRoot = "/home/ank/Documents/var"
-    suffix = '/n4.jpeg'
+    ImageRoot = '/home/ank/projects_files/2014/Image_recognition/'
+    suffix = '/img_11.tif'
     # suffix = '/img_4jpg.jpeg'
     col = PIL.Image.open(ImageRoot + suffix)
     gray = col.convert('L')
