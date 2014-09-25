@@ -1,0 +1,43 @@
+#:kivy 1.1.0
+
+Root:
+
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: 90
+            height: 30
+            Button:
+                text: 'Load'
+                on_release: root.show_load()
+        BoxLayout:
+            size_hint_y: 90
+            height: 30
+            CheckBox:
+                center: self.parent.center
+                on_active: root.activate_checkbox
+            Label:
+                font_size: 20
+                center_x: self.parent.width / 4
+                top: self.parent.top - 50
+                text: 'Faster'
+
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
