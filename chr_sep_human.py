@@ -6,8 +6,8 @@ import PIL
 from time import time
 import mdp
 from skimage.segmentation import random_walker, mark_boundaries
-from skimage.morphology import convex_hull_image
-from skimage.measure import label
+from skimage.morphology import convex_hull_image, label
+# from skimage.measure import label
 from skimage.filter import gaussian_filter
 from skimage.measure import perimeter
 from matplotlib import colors
@@ -16,6 +16,26 @@ from itertools import product
 from pickle import load, dump
 from os import path
 
+debug = False
+
+def rs(matrix, name):
+    plt.title(name)
+    plt.imshow(matrix, interpolation='nearest')
+    plt.colorbar()
+    plt.show()
+    plt.clf()
+
+def debug_wrapper(funct):
+
+    def check_matrix(*args,**kwargs):
+        result = funct(*args, **kwargs)
+        if debug:
+            rs(result, funct.__name__)
+        return result
+
+    return check_matrix
+
+@debug_wrapper
 def import_image(image_to_load):
     col = PIL.Image.open(image_to_load)
     gray = col.convert('L')
@@ -24,12 +44,12 @@ def import_image(image_to_load):
     bw = bw.astype(np.float64)/float(np.max(bw))
     return bw
 
-
+@debug_wrapper
 def import_edited(buffer_directory):
-    if path.exists(buffer_directory+"EDIT_ME2.tif"):
-        col = PIL.Image.open(buffer_directory+"EDIT_ME2.tif")
+    if path.exists(path.join(buffer_directory,"EDIT_ME2.tif")):
+        col = PIL.Image.open(path.join(buffer_directory,"EDIT_ME2.tif"))
     else:
-        col = PIL.Image.open(buffer_directory+"EDIT_ME.tif")
+        col = PIL.Image.open(path.join(buffer_directory,"EDIT_ME.tif"))
     gray = col.convert('L')
     bw = np.asarray(gray).copy()
     bw[bw<=120] = 0
@@ -72,18 +92,18 @@ def gabor(bw_image, freq, scale, scale_distortion=1., self_cross=False, field=10
 
     sum2[sum2>0] = sum2[sum2>0]/np.max(sum2)
     sum2[sum2<0] = -sum2[sum2<0]/np.min(sum2)
-
     return sum1/np.max(sum1), sum2
 
-
+@debug_wrapper
 def cluster_by_diffusion(data):
-    markers = np.zeros(data.shape, dtype=np.uint)
+    markers = np.zeros(data.shape, dtype=np.uint8)
     markers[data < -0.15] = 1
     markers[data > 0.15] = 2
     labels2 = random_walker(data, markers, beta=10, mode='bf')
-    print 1
     return labels2
 
+
+@debug_wrapper
 def cluster_process(labels):
     rbase = np.zeros(labels.shape)
     rubase = np.zeros(labels.shape)
@@ -101,6 +121,7 @@ def cluster_process(labels):
             cond = (li>4000 and float(lh)/float(li)<1.07 and perimeter(base)**2.0/li<20) or np.max(base*rubase)>0.5
             if cond:
                 rbase = rbase + base
+    rbase[rubase.astype(np.bool)] = 1
     return rbase
 
 
@@ -130,15 +151,15 @@ def human_loop(buffer_directory, image_to_import):
     rbase = cluster_process(clsts)[9:,:][:,9:][:-10,:][:,:-10]
 
     rim = PIL.Image.fromarray((rbase*254).astype(np.uint8))
-    rim.save(buffer_directory+"I_AM_UNBROKEN_NUCLEUS.bmp")
+    rim.save(path.join(buffer_directory,"I_AM_UNBROKEN_NUCLEUS.bmp"))
 
     sum22 = np.copy(sum2)
     sum22[sum2<0] = 0
     d_c = cluster_by_diffusion(sum2)
     rebw = bw[9:,:][:,9:][:-10,:][:,:-10]
     reim = PIL.Image.fromarray((rebw/np.max(rebw)*254).astype(np.uint8))
-    reim.save(buffer_directory+"I_AM_THE_ORIGINAL.tif")
-    seg_dc = (label(d_c, neighbors=4)+1)*d_c
+    reim.save(path.join(buffer_directory,"I_AM_THE_ORIGINAL.tif"))
+    seg_dc = (label(d_c, neighbors=4)+1)*(d_c-1)
     redd = set(seg_dc[rbase>0.01].tolist())
     for i in redd:
         seg_dc[seg_dc==i] = 0
@@ -146,8 +167,8 @@ def human_loop(buffer_directory, image_to_import):
     d_c[seg_dc>0] = 1
     int_arr = np.asarray(np.dstack((d_c*254, d_c*254, d_c*0)), dtype=np.uint8)
     msk = PIL.Image.fromarray(int_arr)
-    msk.save(buffer_directory+"EDIT_ME.tif")
-    dump(rebw,open(buffer_directory+'DO_NOT_TOUCH_ME.dmp','wb'))
+    msk.save(path.join(buffer_directory,"EDIT_ME.tif"))
+    dump(rebw ,open(path.join(buffer_directory,'DO_NOT_TOUCH_ME.dmp'),'wb'))
     return time()-start
 
 
@@ -155,31 +176,33 @@ def human_afterloop(output_directory, pre_time, fle_name, buffer_directory):
     start2 = time()
 
     d_c = import_edited(buffer_directory)
-    rebw = load(open(buffer_directory+'DO_NOT_TOUCH_ME.dmp','rb'))
+    rebw = load(open(path.join(buffer_directory,'DO_NOT_TOUCH_ME.dmp'),'rb'))
     seg_dc = (label(d_c,neighbors=4)+1)*d_c
+    if np.max(seg_dc)<4:
+        return 'FAILED: mask for %s looks unsegmented' % fle_name
+
     colormap = repaint_culsters(int(np.max(seg_dc)))
 
     segs = len(set(seg_dc.flatten().tolist()))-1
 
-    print fle_name+'\t clusters: %s,\t total time : %s'%(segs, "{0:.2f}".format(time()-start2+pre_time))
-
     # shows the result before saving the clustering and printing to the user the number of the images
-    # plt.subplot(1,2,1)
-    # plt.title('Original image')
-    # plt.imshow(rebw, cmap='gray', interpolation='nearest')
-    #
-    # plt.subplot(1,2,2)
-    # plt.title('Segmentation - clusters: %s'%str(segs))
-    # plt.imshow(mark_boundaries(rebw, d_c))
-    # plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
-    #
-    # plt.show()
+    plt.subplot(1,2,1)
+    plt.title('Original image')
+    plt.imshow(rebw, cmap='gray', interpolation='nearest')
+
+    plt.subplot(1,2,2)
+    plt.title('Segmentation - clusters: %s'%str(segs))
+    plt.imshow(mark_boundaries(rebw, d_c))
+    plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
+
+    plt.show()
 
     plt.imshow(mark_boundaries(rebw, d_c))
     plt.imshow(seg_dc, cmap=colormap, interpolation='nearest', alpha=0.3)
 
     plt.savefig(path.join(output_directory, fle_name+'_%s_clusters.png'%str(segs)), dpi=500, bbox_inches='tight', pad_inches=0.0)
 
+    return fle_name+'\t clusters: %s,\t total time : %s'%(segs, "{0:.2f}".format(time()-start2+pre_time))
 
 if __name__ == "__main__":
     pass

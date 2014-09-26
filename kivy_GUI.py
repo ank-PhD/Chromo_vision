@@ -1,13 +1,17 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.progressbar import ProgressBar
+from kivy.uix.textinput import TextInput
 from kivy.utils import platform
 from configs import loop_dir, loop_fle, afterloop
+from kivy.properties import ObjectProperty
 
-import os, errno
+import os
+from time import sleep
 
 class MyWidget(BoxLayout):
     progress_bar = ProgressBar(max=1000)
+    text_field = TextInput()
 
     def __init__(self, **kwargs):
         super(MyWidget, self).__init__(**kwargs)
@@ -30,16 +34,24 @@ class MyWidget(BoxLayout):
 
     def load(self,  path, filename, Fast):
         if Fast:
-            afterloop(self.progress_bar)
+            afterloop(self.progress_bar, self.text_field)
+            t_to_add = 'will try to post-process files pre-processed since the previous >>>'
+            self.text_field.text = self.text_field.text+t_to_add+'\n'
+            self.text_field._update_graphics()
+            sleep(0.5)
         else:
             if filename:
-                print 'user chose: %s' % os.path.join(path, filename[0])
-                print path,
-                print filename[0].split('\\')[-1]
-                loop_fle(path, filename[0].split('\\')[-1], self.progress_bar)
+                t_to_add = '>>> will try to pre-process file %s at %s'%(filename, path)
+                self.text_field.text = self.text_field.text+t_to_add+'\n'
+                self.text_field._update_graphics()
+                sleep(0.5)
+                loop_fle(path, filename[0].split('\\')[-1], self.progress_bar, self.text_field)
             else:
-                print 'user chose: %s' % path
-                loop_dir(path, self.progress_bar)
+                t_to_add = '>>> will try to pre-process all images at %s'%path
+                self.text_field.text = self.text_field.text+t_to_add+'\n'
+                self.text_field._update_graphics()
+                sleep(0.5)
+                loop_dir(path, self.progress_bar, self.text_field)
 
 
 class Loader(App):

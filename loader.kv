@@ -24,7 +24,11 @@
                 text: "Process after correction"
                 on_release: root.load(file_chooser.path, file_chooser.selection, True)
     BoxLayout:
+        orientation: 'vertical'
         ProgressBar:
             max: 1000
             value: root.progress_bar.value
+        TextInput:
+            id: text_field
+            text: root.text_field.text
 
