@@ -21,6 +21,18 @@ from time import time
 
 timing = True
 
+def create_timer():
+    inner_time = [time()]
+
+    def _time(msg):
+        print msg, time() - inner_time[0]
+        inner_time[0] = time()
+
+    return _time
+
+timer1 = create_timer()
+timer2 = create_timer()
+
 def time_wrapper(funct):
 
     def time_execution(*args,**kwargs):
@@ -61,6 +73,7 @@ def render_single_color(_3D_matrix, v_min=0.95):
     s1.spacing = scaling_factor
     mlab.pipeline.volume(s1, color=red, vmin=v_min, name='RED')
 
+
 def align_plane(reference, corrected, align_quality = 10):
     MIN_MATCH_COUNT = align_quality
 
@@ -84,13 +97,11 @@ def align_plane(reference, corrected, align_quality = 10):
         if m.distance < 0.7*n.distance:
             good.append(m)
 
-
     if len(good) > MIN_MATCH_COUNT:
         src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
         dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
         M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-
         return M
 
     else:
@@ -103,32 +114,33 @@ def flatten_xy(_3D_array):
         return res
 
 
-def align_xy(ref_3D, img_3D):
-
-    def fct(img1):
-        img1 = img1[0, :, :]
-        return cv2.warpPerspective(img1, M, img1.T.shape)[np.newaxis, :, :]
-
-    M = align_plane(flatten_xy(ref_3D), flatten_xy(img_3D))
-
-    resmat = np.concatenate(tuple(map(fct, np.split(img_3D, img_3D.shape[0]))))
-    return resmat
-
-
 def align_z():
     pass
 
+
 def basic_aligner():
+
+    def fct(img1):
+        img1 = img1[0, :, :]
+        return cv2.warpPerspective(img1, Multi_M, img1.T.shape)[np.newaxis, :, :]
+
     reader = create_image_reader_by_z_stack(1)
-    time_volume_0 = reader.next()
-    im_stack = [flatten_xy(time_volume_0)]
+    prev_time_volume = reader.next()
+    im_stack = [flatten_xy(prev_time_volume)]
 
     Multi_M = 0
-    ltime = time()
-    for _i, time_volume_1 in enumerate(reader):
-        print _i, time() - ltime
-        ltime = time()
-        im_stack.append(flatten_xy(align_xy(time_volume_0, time_volume_1)))
+    timer1('setup')
+    for _i, current_time_volume in enumerate(reader):
+        print _i,
+        M = align_plane(flatten_xy(prev_time_volume), flatten_xy(current_time_volume))
+        if _i == 0:
+            Multi_M = M
+        else:
+            Multi_M = np.dot(Multi_M, M)
+        resmat = np.concatenate(tuple(map(fct, np.split(current_time_volume, current_time_volume.shape[0]))))
+        im_stack.append(flatten_xy(resmat))
+        prev_time_volume = current_time_volume
+        timer1('full loop')
 
     return im_stack
 
@@ -170,13 +182,13 @@ def PIL_render(img):
     return Image.fromarray(cm.gist_earth(img, bytes=True))
 
 if __name__ == '__main__':
-    # frames = basic_aligner()
-    # dump(frames, open('temp_dump.dmp', 'w'))
-    frames = load(open('temp_dump.dmp', 'r'))
+    frames = basic_aligner()
+    dump(frames, open('temp_dump.dmp', 'w'))
+    # frames = load(open('temp_dump.dmp', 'r'))
     re_frames = map(PIL_render, frames)
     print re_frames
 
-    writeGif('stabilized_flattened_balls.gif', re_frames, duration=0.2)
+    writeGif('stabilized_flattened_balls.gif', re_frames, duration=0.3)
 
     # reader = create_image_reader_by_z_stack(1)
 
