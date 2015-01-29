@@ -70,8 +70,8 @@
       <file leaf-file-name="Moving_ball_aligner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0817518" vertical-offset="534" max-vertical-offset="4522">
-              <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.7526718" vertical-offset="0" max-vertical-offset="4488">
+              <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
               <folding>
                 <element signature="e#20#29#0" expanded="true" />
               </folding>
@@ -79,12 +79,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="images2gif.py" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Anaconda/Lib/site-packages/images2gif/images2gif.py">
+      <file leaf-file-name="chromosome_detection.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4085" max-vertical-offset="18581">
-              <caret line="261" column="31" selection-start-line="261" selection-start-column="31" selection-end-line="261" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="113" max-vertical-offset="5423">
+              <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chr_sep_human.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2023" max-vertical-offset="5423">
+              <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+              <folding>
+                <element signature="e#20#38#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -98,6 +110,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="unstalbe_refactoring" />
+      </map>
+    </option>
   </component>
   <component name="GitLogSettings">
     <option name="myDateState">
@@ -115,10 +132,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1096" />
+    <option name="width" value="960" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -637,10 +652,22 @@
       <option name="project" value="LOCAL" />
       <updated>1421800571499</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Made it incremental now. The only problem that might remain now is with z-stack stabilization. &#10;Will do it later on: slice the stabilized xyz plane deterministically and stabilize the result">
+      <created>1421804632466</created>
+      <option name="number" value="00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1421804632467</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Made it incremental now. The only problem that might remain now is with z-stack stabilization. &#10;Will do it later on: slice the stabilized xyz plane deterministically and stabilize the result">
+      <created>1422328252528</created>
+      <option name="number" value="00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1422328252528</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
-  <component name="TodoView" selected-index="4">
+  <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
       <are-packages-shown value="false" />
       <are-modules-shown value="false" />
@@ -661,28 +688,28 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="0" y="0" width="960" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19331984" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25813448" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19283456" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2611399" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291714" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.057955742" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32665965" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2665964" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3256059" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -701,7 +728,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="main loop is functional, yet buggy" />
     <MESSAGE value="Clustring functions. issues with insufficiently separated cells and ulised cells" />
     <MESSAGE value="Improved chaining functions and their rendering" />
     <MESSAGE value="Several future things to do added" />
@@ -726,7 +752,8 @@
     <MESSAGE value="Added  the GUI. Seems to work fine" />
     <MESSAGE value="Added the .gitignore and the most up-to-date elements from the Chromosome_counter module, except for the" />
     <MESSAGE value="Added moving ball aligner. Need to make it incremental instead" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added moving ball aligner. Need to make it incremental instead" />
+    <MESSAGE value="Made it incremental now. The only problem that might remain now is with z-stack stabilization. &#10;Will do it later on: slice the stabilized xyz plane deterministically and stabilize the result" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made it incremental now. The only problem that might remain now is with z-stack stabilization. &#10;Will do it later on: slice the stabilized xyz plane deterministically and stabilize the result" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -735,37 +762,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/loader.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="680">
-          <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4012" max-vertical-offset="6273">
-          <caret line="252" column="18" selection-start-line="252" selection-start-column="18" selection-end-line="252" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/kivy_GUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1105" max-vertical-offset="1479">
-          <caret line="65" column="51" selection-start-line="64" selection-start-column="8" selection-end-line="65" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loader.kv">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="680">
@@ -977,13 +973,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32178217" vertical-offset="225" max-vertical-offset="4920">
-          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sitk4chr.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22277227" vertical-offset="0" max-vertical-offset="606">
@@ -1083,6 +1072,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="113" max-vertical-offset="5423">
+          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/core_app_methods.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887">
@@ -1091,18 +1088,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/lib/shape_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="8222" max-vertical-offset="14654">
+          <caret line="506" column="0" selection-start-line="506" selection-start-column="0" selection-end-line="506" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2023" max-vertical-offset="5423">
+          <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://C:/Anaconda/Lib/site-packages/images2gif/images2gif.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4085" max-vertical-offset="18581">
-          <caret line="261" column="31" selection-start-line="261" selection-start-column="31" selection-end-line="261" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="9036" max-vertical-offset="18581">
+          <caret line="545" column="0" selection-start-line="545" selection-start-column="0" selection-end-line="545" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Anaconda/Lib/pickle.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41666666" vertical-offset="22959" max-vertical-offset="23647">
+          <caret line="1373" column="37" selection-start-line="1373" selection-start-column="37" selection-end-line="1373" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stabilized_flattened_balls.gif">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0817518" vertical-offset="534" max-vertical-offset="4522">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7526718" vertical-offset="0" max-vertical-offset="4488">
+          <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
           <folding>
             <element signature="e#20#29#0" expanded="true" />
           </folding>
