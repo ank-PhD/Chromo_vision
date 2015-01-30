@@ -57,25 +57,11 @@ def show_IO(funct):
 
     return IO_shower
 
-
-def show_IO_2(funct):
-
-    def IO_shower(*args, **kwargs):
-        ret = funct(*args, **kwargs)
-        if type(args[0]) == np.ndarray and time() - showtime[0] > 5:
-            plt.imshow(np.squeeze(ret) - np.squeeze(args[0]))
-            plt.show()
-            showtime[0] = time()
-
-        return ret
-
-    return IO_shower
-
 ######################################################################################################################
 
 buffer_directory = 'H:/buffer_folder'
 directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/01.14.2015/tiff'
-scaling_factor = (1.0, 1.0, 3.0)
+scaling_factor = (1.0, 1.0, 1.0)
 
 def name_image(t, z, c):
     return path.join(directory, 'redt%sz%sc%s.tif'%( format(t, "02d"), format(z, "02d"), c))
@@ -103,7 +89,22 @@ def render_single_color(_3D_matrix, v_min=0.95):
     mlab.pipeline.volume(s1, color=red, vmin=v_min, name='RED')
 
 
-@show_IO
+def render_2_colors(_3D_matrix_1, _3D_matrix_2, v_min=0.95):
+    s1 = mlab.pipeline.scalar_field(_3D_matrix_1)
+    s1.spacing = scaling_factor
+
+    s2 = mlab.pipeline.scalar_field(_3D_matrix_2)
+    s2.spacing = scaling_factor
+
+    red = (1.0, 0.0, 0.0)
+    green = (0.0, 1.0, 0.0)
+
+    mlab.pipeline.volume(s1, color=red, vmin=v_min, name='RED')
+    mlab.pipeline.volume(s2, color=green, vmin=v_min, name='GREEN')
+
+    mlab.show()
+
+# @show_IO
 def align_plane(reference, corrected, align_quality = 10):
     MIN_MATCH_COUNT = align_quality
 
@@ -154,10 +155,7 @@ def transform_volume(_3D_array, Multi_M_xy, axis):
 
 
 def basic_aligner(reader, axis = 0):
-
     prev_time_volume = reader.next()
-    # yield prev_time_volume
-
     Multi_M_xy = 0
     timer1('setup')
     for _i, current_time_volume in enumerate(reader):
@@ -169,59 +167,31 @@ def basic_aligner(reader, axis = 0):
             Multi_M_xy = np.dot(Multi_M_xy, M_xy)
 
         prev_time_volume = current_time_volume
-        timer1('full loop')
+        timer1('.')
         yield Multi_M_xy
 
 
-def detect_local_minima(arr):
+def detect_local_maxima(arr):
     # http://stackoverflow.com/questions/3684484/peak-detection-in-a-2d-array/3689710#3689710
     """
     Takes an array and detects the troughs using the local maximum filter.
     Returns a boolean mask of the troughs (i.e. 1 when
     the pixel's value is the neighborhood maximum, 0 otherwise)
     """
-    # define an connected neighborhood
-    # http://www.scipy.org/doc/api_docs/SciPy.ndimage.morphology.html#generate_binary_structure
-    neighborhood = morphology.generate_binary_structure(len(arr.shape),2)
-    # apply the local minimum filter; all locations of minimum value
-    # in their neighborhood are set to 1
-    # http://www.scipy.org/doc/api_docs/SciPy.ndimage.filters.html#minimum_filter
-    local_min = (filters.minimum_filter(arr, footprint=neighborhood)==arr)
-    # local_min is a mask that contains the peaks we are
-    # looking for, but also the background.
-    # In order to isolate the peaks we must remove the background from the mask.
-    #
-    # we create the mask of the background
+    neighborhood = morphology.generate_binary_structure(len(arr.shape), 2)
+    local_max = (filters.maximum_filter(arr, footprint=neighborhood)==arr)
     background = (arr==0)
-    #
-    # a little technicality: we must erode the background in order to
-    # successfully subtract it from local_min, otherwise a line will
-    # appear along the background border (artifact of the local minimum filter)
-    # http://www.scipy.org/doc/api_docs/SciPy.ndimage.morphology.html#binary_erosion
-    eroded_background = morphology.binary_erosion(
-        background, structure=neighborhood, border_value=1)
-    #
-    # we obtain the final mask, containing only peaks,
-    # by removing the background from the local_min mask
-    detected_minima = local_min - eroded_background
+    eroded_background = morphology.binary_erosion(background, structure=neighborhood, border_value=1)
+    detected_minima = local_max - eroded_background
     return np.where(detected_minima)
+
 
 def flatten_image(img):
     return flatten_array(img, 0)
 
+
 def PIL_render(img):
     return Image.fromarray(cm.gist_earth(img/np.max(img), bytes=True))
-
-#
-# def dumper(_3D_image, image_prefix='0',cargo=[0]):
-#     dump(_3D_image, open(os.path.join(buffer_directory, '3D_dump_%s_%s.dmp'%(image_prefix, str(cargo[0]).zfill(2))), 'wb'))
-#     cargo[0] += 1
-#
-#
-# def undumper(image_prefix):
-#     for fname in sorted(os.listdir(buffer_directory)):
-#         if len(fname.split('_')) == 4 and fname.split('_')[2] == image_prefix:
-#             yield load(open(os.path.join(buffer_directory, fname), 'rb'))
 
 
 def transform_reader_flow(reader, transformation_matrix_list, axis):
@@ -232,27 +202,62 @@ def transform_reader_flow(reader, transformation_matrix_list, axis):
 
 
 if __name__ == '__main__':
-    rdr1 = create_image_reader_by_z_stack(color_channel = 1)
-    rdr2 = create_image_reader_by_z_stack(color_channel = 1)
-    rdr3 = create_image_reader_by_z_stack(color_channel = 1)
-    rdr4 = create_image_reader_by_z_stack(color_channel = 1)
-    rdr5 = create_image_reader_by_z_stack(color_channel = 1)
-    rdr6 = create_image_reader_by_z_stack(color_channel = 1)
+    rdr0 = create_image_reader_by_z_stack(color_channel=1)
+    _3D_vol = rdr0.next()
+    _3D_vol = filters.gaussian_filter(_3D_vol, sigma = 4)
+    neighborhood = morphology.generate_binary_structure(len(_3D_vol.shape), 1)
+    _3D_vol[_3D_vol < np.percentile(_3D_vol, 99)] = 0.0
+    # _3D_vol = morphology.grey_opening(_3D_vol, structure=neighborhood)
+    _3D_vol /= np.max(_3D_vol)
+    plmins = detect_local_maxima(_3D_vol)
+    lmins = np.array(plmins)
+    lis_mns = np.split(lmins.T, lmins.T.shape[0])
+    shape_3D = _3D_vol.shape
+    print shape_3D[0] * shape_3D[1] * shape_3D[2]
+    print len(lis_mns)
+    _3D_maxs = np.zeros(_3D_vol.shape)
+    _3D_maxs[plmins] = 1
+    _3D_maxs = morphology.binary_closing(_3D_maxs).astype(np.float32)
+    # _3D_maxs = morphology.binary_propagation(morphology.binary_erosion(_3D_maxs, neighborhood), mask=_3D_maxs).astype(np.float32)
+    nz = np.nonzero(_3D_maxs)
+    # final_points = nz
+    msk = _3D_vol[nz] > 0.1
+    nzs = np.array(nz).T[msk, :]
+    final_points = tuple(nzs.T.tolist())
+    _3D_maxs[:, :, :] = 0
+    _3D_maxs[final_points] = 1
 
-    zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
-    ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
-    xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
+    render_2_colors(_3D_vol, _3D_maxs)
 
+    # for x, y, z in nzs.tolist():
+    #     print x, y, z, '\t', _3D_vol[x, y, z]
 
-    in_frames = map(flatten_image, rdr4)
-    in_frames = map(PIL_render, in_frames)
+    # render_2_colors(_3D_vol, _3D_maxs)
 
-    inter_frames = map(flatten_image, transform_reader_flow(rdr6, zy_T_mats, axis=1))
-    inter_frames = map(PIL_render, inter_frames)
-
-    fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
-    fin_frames = map(PIL_render, fin_frames)
-
-    writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
-    writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
-    writeGif('stabilized_flattened_balls.gif', fin_frames, duration=0.3)
+    #
+    #
+    # rdr1 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr2 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr3 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr4 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr5 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr6 = create_image_reader_by_z_stack(color_channel=1)
+    #
+    # zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
+    # # ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
+    # xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
+    #
+    #
+    # # in_frames = map(flatten_image, rdr4)
+    # # in_frames = map(PIL_render, in_frames)
+    # #
+    # # inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=1))
+    # # inter_frames = map(PIL_render, inter_frames)
+    #
+    # fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
+    #
+    # fin_frames = map(PIL_render, fin_frames)
+    #
+    # # writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
+    # # writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
+    # writeGif('stabilized_flattened_balls.gif', fin_frames, duration=0.3)
