@@ -154,7 +154,7 @@ def transform_volume(_3D_array, Multi_M_xy, axis):
         retim = cv2.warpPerspective(_img,  Multi_M_xy, _img.T.shape)
         return np.reshape(retim, img.shape)
 
-    return np.concatenate(tuple(map(fct1, np.split(_3D_array, _3D_array.shape[axis], axis))), axis=axis)
+    return  np.concatenate(tuple(map(fct1, np.split(_3D_array, _3D_array.shape[axis], axis))), axis=axis)
 
 
 def basic_aligner(reader, axis = 0):
@@ -267,22 +267,23 @@ def sorting_inspector(distance_matrix, best_hits_to_show):
     def inner_round(n_1Darray, init_state=[0]):
 
         def inner_printer(best_argument):
-            print best_argument, '|', "{0:.2f}".format(n_1Darray[best_argument]), '\t',
+            # print best_argument, '|', "{0:.2f}".format(n_1Darray[best_argument]), '\t',
+            pass
 
         sorting_args = np.argsort(n_1Darray)
         first_sorting_args = sorting_args.tolist()
-        print init_state[0], '\t|\t',
+        # print init_state[0], '\t|\t',
         init_state[0] += 1
         map(inner_printer, first_sorting_args[:best_hits_to_show])
         if n_1Darray[first_sorting_args[0]] < 9.0:
             if n_1Darray[first_sorting_args[1]] > 9.0:
-                print ''
+                # print ''
                 return first_sorting_args[0]
             else:
-                print 'failed!'
+                # print 'failed!'
                 return -first_sorting_args[0]
         else:
-            print 'failed!'
+            # print 'failed!'
             return -10000
 
     index_map = np.apply_along_axis(inner_round, arr=distance_matrix, axis=0)
@@ -291,34 +292,38 @@ def sorting_inspector(distance_matrix, best_hits_to_show):
 
 
 def calculate_alignement_and_vectors(final_points, final_points2):
-    img = cdist(np.array(final_points).T, np.array(final_points2).T)
+    a_final_points = np.array(final_points).T
+    a_final_points2 = np.array(final_points2).T
+    img = cdist(a_final_points, a_final_points2)
     # get all the forward mappings.
     #    -10 000 are dissapearing, mappings;
     #    indexes that are not in the "mapped to" are the appearing ones
     #    -N are the mappings that can be attributed to several points at the same time => We ignore them for now
-    map = np.abs(sorting_inspector(img, 2))
-    init_idx = np.arange(0, map.shape[0], 1)
-    init_idx = init_idx[map != 10000]
-    map = map[map != 10000]
+    _map = np.abs(sorting_inspector(img, 2))
+    init_idx = np.arange(0, _map.shape[0], 1)
+    init_idx = init_idx[_map != 10000]
+    _map = _map[_map != 10000]
 
-    vects = np.array(final_points2).T[init_idx, :] - np.array(final_points).T[map, :]
+    vects = a_final_points2[init_idx, :] - a_final_points[_map, :]
     compensation = np.median(vects, 0)
     vects = np.apply_along_axis(lambda x: x - compensation, 1, vects)
 
     vector_lengths = np.apply_along_axis(np.linalg.norm, 1, vects)
     sigvects = vects[vector_lengths > 1.74]  #circle pixel-> out
-    sigbases = final_points[vector_lengths > 1.74]
+    sigbases = a_final_points[vector_lengths > 1.74]
 
-    print sigvects
-
-    return init_idx, map, sigbases, sigvects
+    return init_idx, _map, sigbases, sigvects
 
 
 if __name__ == '__main__':
 
     # create_tri_alignement()
 
-    zy_T_mats, xy_T_mats = create_stabilized_matrices()
+    # zy_T_mats, xy_T_mats = create_stabilized_matrices()
+    # dump((zy_T_mats, xy_T_mats), open('loc1_dmp.dmp', 'w'))
+
+    zy_T_mats, xy_T_mats = load(open('loc1_dmp.dmp'))
+
     rdr3 = create_image_reader_by_z_stack(color_channel=1)
     rdr0 = transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0)
 
@@ -326,12 +331,15 @@ if __name__ == '__main__':
     final_points = extract_ball_center(_3D_vol)
 
     fpoints_list = [final_points]
-
-    for _3D_vol in rdr0.next():
+    timer1('setup')
+    for _3D_vol in rdr0:
         final_points2 = extract_ball_center(_3D_vol)
         calculate_alignement_and_vectors(final_points, final_points2)
         final_points = final_points2
         fpoints_list.append(final_points)
+        timer1('.')
 
-    dump(fpoints_list, open('loc_dmp.dmp', 'w'))
+    dump(fpoints_list, open('loc2_dmp.dmp', 'w'))\
+
+    # TODO: now we need to visualize the vectors and points
 
