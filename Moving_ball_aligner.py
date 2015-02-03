@@ -15,6 +15,9 @@ import scipy.ndimage.filters as filters
 import scipy.ndimage.morphology as morphology
 from pickle import dump, load
 from time import time
+from scipy.spatial.distance import cdist, pdist, squareform
+from chiffatools.Linalg_routines import hierchical_clustering
+
 
 timing = True
 
@@ -179,8 +182,8 @@ def detect_local_maxima(arr):
     the pixel's value is the neighborhood maximum, 0 otherwise)
     """
     neighborhood = morphology.generate_binary_structure(len(arr.shape), 2)
-    local_max = (filters.maximum_filter(arr, footprint=neighborhood)==arr)
-    background = (arr==0)
+    local_max = (filters.maximum_filter(arr, footprint=neighborhood) == arr)
+    background = (arr == 0)
     eroded_background = morphology.binary_erosion(background, structure=neighborhood, border_value=1)
     detected_minima = local_max - eroded_background
     return np.where(detected_minima)
@@ -200,64 +203,135 @@ def transform_reader_flow(reader, transformation_matrix_list, axis):
         yield transform_volume(reader.next(), T_mat, axis)
 
 
+def create_tri_alignement():
+    rdr1 = create_image_reader_by_z_stack(color_channel=1)
+    rdr2 = create_image_reader_by_z_stack(color_channel=1)
+    rdr3 = create_image_reader_by_z_stack(color_channel=1)
+    rdr4 = create_image_reader_by_z_stack(color_channel=1)
+    rdr5 = create_image_reader_by_z_stack(color_channel=1)
+    rdr6 = create_image_reader_by_z_stack(color_channel=1)
 
-if __name__ == '__main__':
-    rdr0 = create_image_reader_by_z_stack(color_channel=1)
-    _3D_vol = rdr0.next()
-    _3D_vol = filters.gaussian_filter(_3D_vol, sigma = 4)
-    neighborhood = morphology.generate_binary_structure(len(_3D_vol.shape), 1)
+    zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
+    ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
+    xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
+
+    in_frames = map(flatten_image, rdr4)
+    in_frames = map(PIL_render, in_frames)
+
+    inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=1))
+    inter_frames = map(PIL_render, inter_frames)
+
+    fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
+
+    fin_frames = map(PIL_render, fin_frames)
+
+    writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
+    writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
+    writeGif('stabilized_flattened_balls.gif', fin_frames, duration=0.3)
+
+
+def create_stabilized_matrices():
+    rdr1 = create_image_reader_by_z_stack(color_channel=1)
+    rdr2 = create_image_reader_by_z_stack(color_channel=1)
+
+    zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
+    xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
+
+    return zy_T_mats, xy_T_mats
+
+
+def extract_ball_center(_3D_vol):
+    _3D_vol = filters.gaussian_filter(_3D_vol, sigma = 3)
+    # neighborhood = morphology.generate_binary_structure(len(_3D_vol.shape), 1)
     _3D_vol[_3D_vol < np.percentile(_3D_vol, 99)] = 0.0
     # _3D_vol = morphology.grey_opening(_3D_vol, structure=neighborhood)
     _3D_vol /= np.max(_3D_vol)
-    plmins = detect_local_maxima(_3D_vol)
-    lmins = np.array(plmins)
-    lis_mns = np.split(lmins.T, lmins.T.shape[0])
-    shape_3D = _3D_vol.shape
-    print shape_3D[0] * shape_3D[1] * shape_3D[2]
-    print len(lis_mns)
+    plmaxs = detect_local_maxima(_3D_vol)
     _3D_maxs = np.zeros(_3D_vol.shape)
-    _3D_maxs[plmins] = 1
+    _3D_maxs[plmaxs] = 1
     _3D_maxs = morphology.binary_closing(_3D_maxs).astype(np.float32)
-    # _3D_maxs = morphology.binary_propagation(morphology.binary_erosion(_3D_maxs, neighborhood), mask=_3D_maxs).astype(np.float32)
     nz = np.nonzero(_3D_maxs)
-    # final_points = nz
     msk = _3D_vol[nz] > 0.1
     nzs = np.array(nz).T[msk, :]
-    final_points = tuple(nzs.T.tolist())
-    _3D_maxs[:, :, :] = 0
-    _3D_maxs[final_points] = 1
+    return tuple(nzs.T.tolist())
 
+
+def show_ball_centers(_3D_vol, final_points):
+    _3D_maxs = np.zeros(_3D_vol.shape)
+    _3D_maxs[final_points] = 1
     render_2_colors(_3D_vol, _3D_maxs)
 
-    # for x, y, z in nzs.tolist():
-    #     print x, y, z, '\t', _3D_vol[x, y, z]
 
-    # render_2_colors(_3D_vol, _3D_maxs)
+def sorting_inspector(distance_matrix, best_hits_to_show):
 
-    #
-    #
-    # rdr1 = create_image_reader_by_z_stack(color_channel=1)
-    # rdr2 = create_image_reader_by_z_stack(color_channel=1)
-    # rdr3 = create_image_reader_by_z_stack(color_channel=1)
-    # rdr4 = create_image_reader_by_z_stack(color_channel=1)
-    # rdr5 = create_image_reader_by_z_stack(color_channel=1)
-    # rdr6 = create_image_reader_by_z_stack(color_channel=1)
-    #
-    # zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
-    # # ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
-    # xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
-    #
-    #
-    # # in_frames = map(flatten_image, rdr4)
-    # # in_frames = map(PIL_render, in_frames)
-    # #
-    # # inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=1))
-    # # inter_frames = map(PIL_render, inter_frames)
-    #
-    # fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
-    #
-    # fin_frames = map(PIL_render, fin_frames)
-    #
-    # # writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
-    # # writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
-    # writeGif('stabilized_flattened_balls.gif', fin_frames, duration=0.3)
+    def inner_round(n_1Darray, init_state=[0]):
+
+        def inner_printer(best_argument):
+            print best_argument, '|', "{0:.2f}".format(n_1Darray[best_argument]), '\t',
+
+        sorting_args = np.argsort(n_1Darray)
+        first_sorting_args = sorting_args.tolist()
+        print init_state[0], '\t|\t',
+        init_state[0] += 1
+        map(inner_printer, first_sorting_args[:best_hits_to_show])
+        if n_1Darray[first_sorting_args[0]] < 9.0:
+            if n_1Darray[first_sorting_args[1]] > 9.0:
+                print ''
+                return first_sorting_args[0]
+            else:
+                print 'failed!'
+                return -first_sorting_args[0]
+        else:
+            print 'failed!'
+            return -10000
+
+    index_map = np.apply_along_axis(inner_round, arr=distance_matrix, axis=0)
+
+    return index_map
+
+
+def calculate_alignement_and_vectors(final_points, final_points2):
+    img = cdist(np.array(final_points).T, np.array(final_points2).T)
+    # get all the forward mappings.
+    #    -10 000 are dissapearing, mappings;
+    #    indexes that are not in the "mapped to" are the appearing ones
+    #    -N are the mappings that can be attributed to several points at the same time => We ignore them for now
+    map = np.abs(sorting_inspector(img, 2))
+    init_idx = np.arange(0, map.shape[0], 1)
+    init_idx = init_idx[map != 10000]
+    map = map[map != 10000]
+
+    vects = np.array(final_points2).T[init_idx, :] - np.array(final_points).T[map, :]
+    compensation = np.median(vects, 0)
+    vects = np.apply_along_axis(lambda x: x - compensation, 1, vects)
+
+    vector_lengths = np.apply_along_axis(np.linalg.norm, 1, vects)
+    sigvects = vects[vector_lengths > 1.74]  #circle pixel-> out
+    sigbases = final_points[vector_lengths > 1.74]
+
+    print sigvects
+
+    return init_idx, map, sigbases, sigvects
+
+
+if __name__ == '__main__':
+
+    # create_tri_alignement()
+
+    zy_T_mats, xy_T_mats = create_stabilized_matrices()
+    rdr3 = create_image_reader_by_z_stack(color_channel=1)
+    rdr0 = transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0)
+
+    _3D_vol = rdr0.next()
+    final_points = extract_ball_center(_3D_vol)
+
+    fpoints_list = [final_points]
+
+    for _3D_vol in rdr0.next():
+        final_points2 = extract_ball_center(_3D_vol)
+        calculate_alignement_and_vectors(final_points, final_points2)
+        final_points = final_points2
+        fpoints_list.append(final_points)
+
+    dump(fpoints_list, open('loc_dmp.dmp', 'w'))
+
