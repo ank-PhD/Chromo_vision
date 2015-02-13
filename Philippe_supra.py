@@ -10,7 +10,7 @@ from time import time
 from copy import copy
 from scipy import ndimage
 from scipy.sparse.linalg import eigsh
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 from os.path import isfile
 from skimage import img_as_float, color
 from skimage import filter, measure
@@ -22,6 +22,9 @@ from scipy import stats
 from mayavi import mlab
 from scipy.spatial import ConvexHull
 
+import scipy.ndimage.filters as filters
+import scipy.ndimage.morphology as morphology
+
 from tvtk.util.ctf import load_ctfs, rescale_ctfs, save_ctfs
 
 from sklearn import metrics
@@ -30,7 +33,9 @@ from sklearn.preprocessing import StandardScaler
 from pylab import get_cmap
 
 
-ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/ko fibers"
+# ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/ko fibers"
+ImageRoot = "L:/ank/supra from Linhao"
+rev_depth = 2
 scaling_factor = (1.0, 1.0, 3.0)
 
 
@@ -40,12 +45,12 @@ def load_img_dict2(load_filter=0.4):
 
     :return:
     """
-
     name_dict = {}
     for img in os.listdir(ImageRoot):
         if '.png' in img:
             print '%s image was parsed' % img
-            name_dict[tuple(int(element[1:]) for element in img[:-4].split('_')[1:])]=color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
+            print tuple(int(element[1:]) for element in img[:-4].split('_')[-rev_depth:])
+            name_dict[tuple(int(element[1:]) for element in img[:-4].split('_')[-rev_depth:])]=color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
 
     z_stack = max([tpl[0] for tpl in name_dict.keys()])
     print 'focal planes detected: %s' % z_stack
@@ -60,14 +65,12 @@ def load_img_dict2(load_filter=0.4):
         flter = sub_stack < sub_stack.max()*load_filter
         sub_stack[flter] = 0.0
 
-
     return stack[0], stack[1]
-
 
 
 def load_img_dict(load_filter=0.4):
     """
-   loads and classifies images from the ImageRoot directory, assuming that there is only one channel
+    loads and classifies images from the ImageRoot directory, assuming that there is only one channel
 
     :return:
     """
@@ -116,11 +119,17 @@ def render_with_cut(chan1, chan2, v_min=0.6, cut = True):
 
 if __name__ == "__main__":
 
-    stack1, stack2 = load_img_dict2(0.60)
+    stack1, stack2 = load_img_dict2(0.050)
     # stack1 = load_img_dict(0.0)
+
+    # stack1 = filters.gaussian_filter(stack1, sigma = 1)
+    # stack2 = filters.gaussian_filter(stack2, sigma = 2)
 
     # mlab.pipeline.volume(stack1, vmin=0.40)
     # mlab.pipeline.volume(stack2, vmin=0.40)
-    render_with_cut(stack1, stack2, True)
+
+
+
+    render_with_cut(stack1, stack2, v_min=0.1, cut=False)
 
     mlab.show()
