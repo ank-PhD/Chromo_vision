@@ -4,13 +4,13 @@ __author__ = 'ank'
 import os
 import PIL
 import itertools
+import mdp
 import numpy as np
 import pickle
 from time import time
 from copy import copy
 from scipy import ndimage
 from scipy.sparse.linalg import eigsh
-# from matplotlib import pyplot as plt
 from os.path import isfile
 from skimage import img_as_float, color
 from skimage import filter, measure
@@ -21,17 +21,19 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 from mayavi import mlab
 from scipy.spatial import ConvexHull
-
+from matplotlib import pyplot as plt
 import scipy.ndimage.filters as filters
 import scipy.ndimage.morphology as morphology
-
 from tvtk.util.ctf import load_ctfs, rescale_ctfs, save_ctfs
-
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
-
 from pylab import get_cmap
+from chiffatools.wrappers import time_wrapper, debug_wrapper
 
+
+debug = False
+timing = False
+plt.figure(figsize=(20.0, 15.0))
 
 # ImageRoot = "/home/ank/Documents/projects_files/2014/supra_Philippe/ko fibers"
 ImageRoot = "L:/ank/supra from Linhao"
@@ -116,10 +118,108 @@ def render_with_cut(chan1, chan2, v_min=0.6, cut = True):
         mlab.pipeline.image_plane_widget(s2, colormap = 'Greens')
 
 
+def _2D_Gabor(bw_image, freq=1/32., scale=2, scale_distortion=1., field=10, phi=np.pi, quality = 16):
+    '''
+    Size-stable Gabor transform of an image
+
+    :param bw_image:
+    :param freq:
+    :param scale:
+    :param scale_distortion:
+    :param field:
+    :param phi:
+    :return:
+    '''
+
+
+    def check_integral(gabor_filter):
+        ones = np.ones(gabor_filter.shape)
+        avg = np.average(ones * gabor_filter)
+        return gabor_filter - avg
+
+
+    pi = np.pi
+    orientations = np.arange(0., pi, pi/quality).tolist()
+    size = (field, field)
+    sgm = (5*scale, 3*scale*scale_distortion)
+
+    nfilters = len(orientations)
+    gabors = np.empty((nfilters, size[0], size[1]))
+    for i, alpha in enumerate(orientations):
+        arr = mdp.utils.gabor(size, alpha, phi, freq, sgm)
+        arr = check_integral(arr)
+        gabors[i, :, :] = arr
+        if debug:
+            plt.subplot(6, 6, i+1)
+            plt.title('%s, %s, %s, %s'%('{0:.2f}'.format(alpha), '{0:.2f}'.format(phi), freq, sgm))
+            plt.imshow(arr, cmap = 'gray', interpolation='nearest')
+    if debug:
+        plt.show()
+        # plt.clf()
+    node = mdp.nodes.Convolution2DNode(gabors, mode='valid', boundary='fill', fillvalue=0, output_2d=False)
+
+    cim = node.execute(bw_image[np.newaxis, :, :])[0, :, :, :]
+    re_cim = np.zeros((cim.shape[0], cim.shape[1] + field - 1, cim.shape[2] + field - 1))
+    re_cim[:, field/2-1:-field/2, field/2-1:-field/2] = cim
+    cim = re_cim
+
+    return cim
+
+# @debug_wrapper
+def sq_activation(activations_stack):
+    sum2 = - np.sum(activations_stack, axis=0)
+    sum2[sum2>0] /= np.max(sum2)
+    sum2[sum2<0] /= -np.min(sum2)
+    return sum2
+
+
+@debug_wrapper
+def optical_dominance(activation_stack):
+
+    def funct_1d(_1D_arr):
+        return np.argmax(_1D_arr)
+
+    return np.apply_along_axis(funct_1d, 0, np.abs(activation_stack))
+
+
+@debug_wrapper
+def optical_dominance_strength(activation_stack):
+
+    def funct_1d(_1D_arr):
+        mx = np.max(_1D_arr)
+        ref = np.percentile(_1D_arr, 25)
+        if mx > 0.01:
+            return mx / np.min((0.1*mx, ref*mx))
+        else:
+            return 1
+
+    return np.apply_along_axis(funct_1d, 0, np.abs(activation_stack))
+
+
+def activation_in_stack(channel):
+
+    acc = []
+    for item in np.split(channel, channel.shape[2], axis=2):
+        acti_stack = _2D_Gabor(item.squeeze())
+        acti_flat = np.abs(sq_activation(acti_stack))
+        acc.append(acti_flat)
+        optical_dominance(acti_stack)
+        optical_dominance_strength(acti_stack)
+    ret_arr = np.array(acc)
+    print ret_arr.shape
+    ret_arr = np.rollaxis(ret_arr, 2)
+    print ret_arr.shape
+    ret_arr = np.rollaxis(ret_arr, 2)
+    print ret_arr.shape
+    return ret_arr
 
 if __name__ == "__main__":
 
     stack1, stack2 = load_img_dict2(0.050)
+    stack1 = activation_in_stack(stack1)
+    # stack2 = activation_in_stack(stack2)
+    print 1, stack1.shape
+    print 2, stack2.shape
     # stack1 = load_img_dict(0.0)
 
     # stack1 = filters.gaussian_filter(stack1, sigma = 1)
@@ -127,8 +227,6 @@ if __name__ == "__main__":
 
     # mlab.pipeline.volume(stack1, vmin=0.40)
     # mlab.pipeline.volume(stack2, vmin=0.40)
-
-
 
     render_with_cut(stack1, stack2, v_min=0.1, cut=False)
 

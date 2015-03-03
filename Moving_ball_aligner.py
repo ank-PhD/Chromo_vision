@@ -18,6 +18,7 @@ from time import time
 from scipy.spatial.distance import cdist, pdist, squareform
 from chiffatools.Linalg_routines import hierchical_clustering
 
+# TODO: show where the agorithm finds the image centers
 
 timing = True
 
@@ -25,8 +26,10 @@ def create_timer():
     inner_time = [time()]
 
     def _time(msg):
-        print msg, time() - inner_time[0]
+        kptime = time() - inner_time[0]
+        print msg, kptime
         inner_time[0] = time()
+        return kptime
 
     return _time
 
@@ -62,19 +65,26 @@ def show_IO(funct):
 
 ######################################################################################################################
 
-buffer_directory = 'H:/buffer_folder'
-directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/01.14.2015/tiff'
+# buffer_directory = 'H:/buffer_folder'
+directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/02.18.2015/TIFF/4'
 scaling_factor = (1.0, 1.0, 1.0)
+# prefix = 'red'
+prefix = 'ko npc beads gel 0.6kpa007'
+
 
 def name_image(t, z, c):
-    return path.join(directory, 'redt%sz%sc%s.tif'%( format(t, "02d"), format(z, "02d"), c))
+    return path.join(directory, prefix + 't%sz%sc%s.tif' % ( format(t, "01d"), format(z, "02d"), c))
 
 
 def create_image_reader_by_z_stack(color_channel):
     _stack = []
     for im_name in os.listdir(directory):
         if '.tif' in im_name:
-            coordinates = (int(im_name[4:6]), int(im_name[7:9]), int(im_name[10]))
+            # use prefix length
+            lp = len(prefix)
+            tl = 1
+            zl = 2
+            coordinates = (int(im_name[lp+1:lp+1+tl]), int(im_name[lp+2+tl:lp+2+zl+tl]), int(im_name[lp+3+zl+tl]))
             _stack.append(coordinates)
     t, z, c = tuple(np.max(np.array(_stack), axis=0).tolist())
     print 'maximum', t, z
@@ -131,14 +141,22 @@ def align_plane(reference, corrected, align_quality = 10):
         if m.distance < 0.7*n.distance:
             good.append(m)
 
+
+
+
     if len(good) > MIN_MATCH_COUNT:
-        src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
-        dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
+        src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1, 1, 2)
+        dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1, 1, 2)
 
         M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
         return M
 
     else:
+        plt.subplot(211)
+        plt.imshow(img1, interpolation='nearest')
+        plt.subplot(212)
+        plt.imshow(img2, interpolation='nearest')
+        plt.show()
         raise Exception('Match not good!')
 
 
@@ -158,16 +176,40 @@ def transform_volume(_3D_array, Multi_M_xy, axis):
 
 
 def basic_aligner(reader, axis = 0):
+
+    def debug_render():
+        plt.subplot(321)
+        plt.imshow(flatten_array(prev_time_volume), interpolation='nearest')
+        plt.subplot(322)
+        plt.imshow(flatten_array(prev_time_volume, 1), interpolation='nearest', aspect='auto')
+        plt.subplot(323)
+        plt.imshow(flatten_array(current_time_volume), interpolation='nearest')
+        plt.subplot(324)
+        plt.imshow(flatten_array(current_time_volume, 1), interpolation='nearest', aspect='auto')
+        plt.subplot(325)
+        plt.imshow(flatten_array(transform_volume(current_time_volume, Multi_M_xy, axis)), interpolation='nearest')
+        plt.subplot(326)
+        plt.imshow(flatten_array(transform_volume(current_time_volume, Multi_M_xy, axis), 1), interpolation='nearest', aspect='auto')
+        plt.savefig('transformation.axis%s.z%s.%s.png'%(axis, _i, int(time()-tint)))
+        plt.clf()
+
     prev_time_volume = reader.next()
     Multi_M_xy = 0
     timer1('setup')
+    tint = time()
     for _i, current_time_volume in enumerate(reader):
         print _i,
-        M_xy = align_plane(flatten_array(prev_time_volume), flatten_array(current_time_volume))
+        try:
+            M_xy = align_plane(flatten_array(prev_time_volume), flatten_array(current_time_volume))
+        except Exception:
+            render_2_colors(prev_time_volume, current_time_volume)
+            raise
         if _i == 0:
             Multi_M_xy = M_xy
         else:
             Multi_M_xy = np.dot(Multi_M_xy, M_xy)
+
+        debug_render()
 
         prev_time_volume = current_time_volume
         timer1('.')
@@ -204,12 +246,14 @@ def transform_reader_flow(reader, transformation_matrix_list, axis):
 
 
 def create_tri_alignement():
-    rdr1 = create_image_reader_by_z_stack(color_channel=1)
-    rdr2 = create_image_reader_by_z_stack(color_channel=1)
-    rdr3 = create_image_reader_by_z_stack(color_channel=1)
-    rdr4 = create_image_reader_by_z_stack(color_channel=1)
-    rdr5 = create_image_reader_by_z_stack(color_channel=1)
-    rdr6 = create_image_reader_by_z_stack(color_channel=1)
+    c_chan = 2
+
+    rdr1 = create_image_reader_by_z_stack(color_channel=c_chan)
+    rdr2 = create_image_reader_by_z_stack(color_channel=c_chan)
+    rdr3 = create_image_reader_by_z_stack(color_channel=c_chan)
+    rdr4 = create_image_reader_by_z_stack(color_channel=c_chan)
+    rdr5 = create_image_reader_by_z_stack(color_channel=c_chan)
+    rdr6 = create_image_reader_by_z_stack(color_channel=c_chan)
 
     zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
     ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
@@ -218,11 +262,10 @@ def create_tri_alignement():
     in_frames = map(flatten_image, rdr4)
     in_frames = map(PIL_render, in_frames)
 
-    inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=1))
+    inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=0))
     inter_frames = map(PIL_render, inter_frames)
 
     fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
-
     fin_frames = map(PIL_render, fin_frames)
 
     writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
@@ -231,8 +274,10 @@ def create_tri_alignement():
 
 
 def create_stabilized_matrices():
-    rdr1 = create_image_reader_by_z_stack(color_channel=1)
-    rdr2 = create_image_reader_by_z_stack(color_channel=1)
+    c_chan = 2
+
+    rdr1 = create_image_reader_by_z_stack(color_channel=2)
+    rdr2 = create_image_reader_by_z_stack(color_channel=2)
 
     zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
     xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
@@ -308,38 +353,68 @@ def calculate_alignement_and_vectors(final_points, final_points2):
     compensation = np.median(vects, 0)
     vects = np.apply_along_axis(lambda x: x - compensation, 1, vects)
 
-    vector_lengths = np.apply_along_axis(np.linalg.norm, 1, vects)
-    sigvects = vects[vector_lengths > 1.74]  #circle pixel-> out
-    sigbases = a_final_points[vector_lengths > 1.74]
+    vector_lengths = np.apply_along_axis(np.linalg.norm, 1, vects[1:])
+    sigvects = vects[vector_lengths > 1.41]  #circle pixel-> out
+    sigbases = a_final_points[vector_lengths > 1.41]
 
     return init_idx, _map, sigbases, sigvects
 
 
 if __name__ == '__main__':
 
-    # create_tri_alignement()
+    create_tri_alignement()
 
     # zy_T_mats, xy_T_mats = create_stabilized_matrices()
     # dump((zy_T_mats, xy_T_mats), open('loc1_dmp.dmp', 'w'))
 
-    zy_T_mats, xy_T_mats = load(open('loc1_dmp.dmp'))
+    # zy_T_mats, xy_T_mats = load(open('loc1_dmp.dmp'))
 
-    rdr3 = create_image_reader_by_z_stack(color_channel=1)
-    rdr0 = transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0)
+    # rdr3 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr0 = transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0)
+    #
+    # _3D_vol = rdr0.next()
+    # final_points = extract_ball_center(_3D_vol)
+    #
+    # fpoints_list = [final_points]
+    # av_list = []
+    # timer1('setup')
+    # for _3D_vol in rdr0:
+    #     final_points2 = extract_ball_center(_3D_vol)
+    #     a_v = calculate_alignement_and_vectors(final_points, final_points2)
+    #     av_list.append(a_v)
+    #     final_points = final_points2
+    #     fpoints_list.append(final_points)
+    #     timer1('.')
+    #
+    # dump(fpoints_list, open('loc2_dmp.dmp', 'w'))
 
-    _3D_vol = rdr0.next()
-    final_points = extract_ball_center(_3D_vol)
+    # dump(av_list, open('loc3_dmp.dmp', 'w'))
 
-    fpoints_list = [final_points]
-    timer1('setup')
-    for _3D_vol in rdr0:
-        final_points2 = extract_ball_center(_3D_vol)
-        calculate_alignement_and_vectors(final_points, final_points2)
-        final_points = final_points2
-        fpoints_list.append(final_points)
-        timer1('.')
+    # av_list = load(open('loc3_dmp.dmp'))
 
-    dump(fpoints_list, open('loc2_dmp.dmp', 'w'))\
+    # rdr4 = create_image_reader_by_z_stack(color_channel=1)
+    # rdr0 = transform_reader_flow(transform_reader_flow(rdr4, zy_T_mats, axis=1), xy_T_mats, axis=0)
+    # fin_frames = map(flatten_image, rdr0)
+    # dump(fin_frames, open('loc4_dmp.dmp', 'w'))
 
-    # TODO: now we need to visualize the vectors and points
+    # fin_frames = load(open('loc4_dmp.dmp'))
 
+    # corrval = 10
+    #
+    # for _i, (frame, (_, _, sigbases, sigvects)) in enumerate(zip(fin_frames, av_list)):
+    #     plt.imshow(frame, cmap='gray', interpolation='nearest')
+    #     for sigbase, sigvect in zip(sigbases, sigvects):
+    #         sigbase = np.roll(sigbase[1:], 1)
+    #         sigvect = np.roll(sigvect[1:], 1)*corrval
+    #         plt.arrow(sigbase[0], sigbase[1], sigvect[0], sigvect[1], fc="r", ec="r",
+    #                   head_width=0.5*corrval, head_length=corrval)
+    #     plt.savefig('temp%s.png'%format(_i, "02d"))
+    #     plt.clf()
+
+    # imported_frames = []
+    # for f_name in sorted(os.listdir('.')):
+    #     if 'temp' and '.png' in f_name:
+    #         print f_name
+    #         imported_frames.append(PIL.Image.open(f_name))
+    #
+    # writeGif('Stabilized_alls_with_vectors.gif', imported_frames, duration=0.3)

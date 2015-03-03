@@ -1,7 +1,12 @@
 __author__ = 'ank'
 
+import sip
+sip.setapi('QString', 2)
+
+
 import os
 import PIL
+import mdp
 import itertools
 import numpy as np
 import pickle
@@ -9,19 +14,19 @@ from time import time
 from copy import copy
 from scipy import ndimage
 from scipy.sparse.linalg import eigsh
-from matplotlib import pyplot as plt
 from os.path import isfile
 from skimage import img_as_float, color
 from skimage import filter, measure
 from collections import namedtuple, defaultdict
 from sklearn.feature_extraction import image
 from sklearn.cluster import spectral_clustering, DBSCAN
-from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 from mayavi import mlab
 from scipy.spatial import ConvexHull
+from matplotlib import pyplot as plt
 
-from sklearn import metrics
+# from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 
 from pylab import get_cmap
@@ -31,7 +36,8 @@ from pylab import get_cmap
 # Global_idea: recognise shapes, render them individually, then plot lines in
 
 
-ImageRoot = "/n/projects/ank/2014/Chromo_Motility/confocal-ank/2Apr_chopped_png"
+# ImageRoot = "/n/projects/ank/2014/Chromo_Motility/confocal-ank/2Apr_chopped_png"
+ImageRoot = "L:/ank/supra from Linhao"
 pickle_location = '3_D_dict.dump'
 # titles = namedtuple('img',['t','z','c'])
 
@@ -65,8 +71,10 @@ def load_img_dict():
     name_dict = defaultdict(lambda : defaultdict(dict))
     for img in os.listdir(ImageRoot):
         coords = [wd[1:] for wd in img.split('.')[0].split('_')[2:]]
+        print 1, coords
         if isfile(ImageRoot+'/'+img):
-            imge = color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
+            print 2, os.path.join(ImageRoot, img)
+            imge = color.rgb2gray(img_as_float(PIL.Image.open(os.path.join(ImageRoot, img))))
             name_dict[int(coords[0])][int(coords[1])][int(coords[2])] = imge
 
 

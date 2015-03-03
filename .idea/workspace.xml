@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Map_Reduce_simple.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Moving_ball_aligner.py" afterPath="$PROJECT_DIR$/Moving_ball_aligner.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Philippe_supra.py" afterPath="$PROJECT_DIR$/Philippe_supra.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nucleus_inspector.py" afterPath="$PROJECT_DIR$/nucleus_inspector.py" />
@@ -28,24 +29,14 @@
     <favorites_list name="Chromo_vision" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.49201742">
+    <splitter split-orientation="horizontal" split-proportion="0.7828572">
       <split-first>
         <leaf>
-          <file leaf-file-name="configs.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/configs.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="759" max-vertical-offset="1428">
-                  <caret line="65" column="51" selection-start-line="64" selection-start-column="8" selection-end-line="65" selection-end-column="51" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="Cell_recognition.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="5270" max-vertical-offset="6273">
-                  <caret line="257" column="1" selection-start-line="257" selection-start-column="1" selection-end-line="257" selection-end-column="1" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="3016" max-vertical-offset="6273">
+                  <caret line="206" column="25" selection-start-line="206" selection-start-column="23" selection-end-line="206" selection-end-column="25" />
                   <folding />
                 </state>
               </provider>
@@ -61,40 +52,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Philippe_supra.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.8206278" vertical-offset="1695" max-vertical-offset="2380">
-                  <caret line="132" column="45" selection-start-line="132" selection-start-column="45" selection-end-line="132" selection-end-column="45" />
-                  <folding>
-                    <element signature="e#21#30#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="nucleus_inspector.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="865" max-vertical-offset="5763">
-                  <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="34" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Vol_slicer.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Vol_slicer.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="2734" max-vertical-offset="3417">
-                  <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
-                  <folding>
-                    <element signature="e#138#156#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="chromosome_detection.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
               <provider selected="true" editor-type-id="text-editor">
@@ -105,13 +62,37 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="chr_sep_human.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+          <file leaf-file-name="Philippe_supra.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="2023" max-vertical-offset="5423">
-                  <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="3055" max-vertical-offset="4046">
+                  <caret line="193" column="20" selection-start-line="193" selection-start-column="20" selection-end-line="193" selection-end-column="20" />
+                  <folding>
+                    <element signature="e#21#30#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Map_Reduce_simple.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Map_Reduce_simple.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="110" max-vertical-offset="1054">
+                  <caret line="41" column="25" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
                   <folding>
                     <element signature="e#20#38#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Moving_ball_aligner.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.4620887" vertical-offset="2805" max-vertical-offset="7242">
+                  <caret line="184" column="24" selection-start-line="184" selection-start-column="24" selection-end-line="184" selection-end-column="24" />
+                  <folding>
+                    <element signature="e#20#29#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -121,12 +102,14 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="Moving_ball_aligner.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
+          <file leaf-file-name="chr_sep_human.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.3611111" vertical-offset="0" max-vertical-offset="6460">
-                  <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="14" selection-end-column="45" />
-                  <folding />
+                <state vertical-scroll-proportion="0.14868805" vertical-offset="1122" max-vertical-offset="5423">
+                  <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#20#38#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -159,15 +142,19 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/OpenCV_testing.py" />
         <option value="$PROJECT_DIR$/cv2_debug.py" />
-        <option value="$PROJECT_DIR$/Moving_ball_aligner.py" />
         <option value="$PROJECT_DIR$/nucleus_inspector.py" />
+        <option value="C:/Anaconda/Lib/site-packages/chiffatools/wrappers.py" />
         <option value="$PROJECT_DIR$/Philippe_supra.py" />
+        <option value="$PROJECT_DIR$/Map_Reduce_simple.py" />
+        <option value="$PROJECT_DIR$/Moving_ball_aligner.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="960" />
-    <option name="height" value="1080" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -266,26 +253,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Philippe_supra">
-    <configuration default="false" name="kivy_GUI" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Chromo_vision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/kivy_GUI.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.Moving_ball_aligner">
     <configuration default="false" name="OpenCV_testing" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -356,6 +324,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Chromo_vision" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nucleus_inspector.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="wrappers" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="C:/Anaconda/Lib/site-packages/chiffatools" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Chromo_vision" />
+      <option name="SCRIPT_NAME" value="C:/Anaconda/Lib/site-packages/chiffatools/wrappers.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <RunnerSettings RunnerId="PythonRunner" />
@@ -485,19 +472,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.kivy_GUI" />
-      <item index="1" class="java.lang.String" itemvalue="Python.OpenCV_testing" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Moving_ball_aligner" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Philippe_supra" />
-      <item index="4" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
+      <item index="0" class="java.lang.String" itemvalue="Python.OpenCV_testing" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Moving_ball_aligner" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Philippe_supra" />
+      <item index="3" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
+      <item index="4" class="java.lang.String" itemvalue="Python.wrappers" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Philippe_supra" />
-        <item index="1" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Moving_ball_aligner" />
-        <item index="3" class="java.lang.String" itemvalue="Python.OpenCV_testing" />
-        <item index="4" class="java.lang.String" itemvalue="Python.kivy_GUI" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Moving_ball_aligner" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Philippe_supra" />
+        <item index="2" class="java.lang.String" itemvalue="Python.wrappers" />
+        <item index="3" class="java.lang.String" itemvalue="Python.nucleus_inspector" />
+        <item index="4" class="java.lang.String" itemvalue="Python.OpenCV_testing" />
       </list>
     </recent_temporary>
   </component>
@@ -722,7 +709,13 @@
       <option name="project" value="LOCAL" />
       <updated>1422987816329</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Configured supra_render for Linhao">
+      <created>1423787197852</created>
+      <option name="number" value="00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1423787197852</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -746,19 +739,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1080" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2527115" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19283456" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5003018" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25184405" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24663213" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11327714" sideWeight="0.7649123" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32455215" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -767,7 +761,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3253886" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -786,7 +779,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="corrected connexity detection function" />
     <MESSAGE value="Blending z-stacks into mayavi" />
     <MESSAGE value="Added clustring; for Philippe Added the 3D reconstruction of the cell motion." />
     <MESSAGE value="Added bi_channel representation for Philippe" />
@@ -811,7 +803,8 @@
     <MESSAGE value="Finished a more or less robust algorithms for balls detection." />
     <MESSAGE value="Added the algorithms for balls detection and additional final points alignements" />
     <MESSAGE value="Now need to add the visualization of displacement vectors, bright-field stabilization and cell edges recognition." />
-    <option name="LAST_COMMIT_MESSAGE" value="Now need to add the visualization of displacement vectors, bright-field stabilization and cell edges recognition." />
+    <MESSAGE value="Configured supra_render for Linhao" />
+    <option name="LAST_COMMIT_MESSAGE" value="Configured supra_render for Linhao" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -820,50 +813,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4080" max-vertical-offset="6545">
-          <caret line="240" column="14" selection-start-line="240" selection-start-column="14" selection-end-line="240" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="646" max-vertical-offset="2227">
-          <caret line="38" column="79" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/kivy_GUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="935">
-          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5644">
-          <caret line="310" column="102" selection-start-line="310" selection-start-column="65" selection-end-line="310" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chr_sep_mouse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="2108">
-          <caret line="115" column="75" selection-start-line="115" selection-start-column="45" selection-end-line="115" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="816">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4080" max-vertical-offset="6545">
@@ -1029,7 +978,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="680">
           <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1044,33 +992,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="759" max-vertical-offset="1428">
           <caret line="65" column="51" selection-start-line="64" selection-start-column="8" selection-end-line="65" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6273">
-          <caret line="257" column="1" selection-start-line="257" selection-start-column="1" selection-end-line="257" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="113" max-vertical-offset="5423">
-          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2023" max-vertical-offset="5423">
-          <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
-          <folding>
-            <element signature="e#20#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1088,29 +1009,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stabilized_flattened_balls.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://C:/Anaconda/Lib/site-packages/traits/trait_handlers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.76372" vertical-offset="8401" max-vertical-offset="56627">
           <caret line="168" column="0" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/core/fromnumeric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="14513" max-vertical-offset="49742">
-          <caret line="877" column="0" selection-start-line="877" selection-start-column="0" selection-end-line="877" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/lib/shape_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32564843" vertical-offset="1440" max-vertical-offset="14654">
-          <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1125,17 +1027,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="33361" max-vertical-offset="36210">
           <caret line="1979" column="0" selection-start-line="1979" selection-start-column="0" selection-end-line="1979" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vol_slicer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2734" max-vertical-offset="3417">
-          <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
-          <folding>
-            <element signature="e#138#156#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1143,7 +1034,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
           <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1151,7 +1041,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18328446" vertical-offset="3581" max-vertical-offset="18445">
           <caret line="237" column="69" selection-start-line="237" selection-start-column="69" selection-end-line="237" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1159,15 +1048,49 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3328446" vertical-offset="4601" max-vertical-offset="6562">
           <caret line="286" column="0" selection-start-line="286" selection-start-column="0" selection-end-line="286" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chromosome_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="113" max-vertical-offset="5423">
+          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Vol_slicer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7801494" vertical-offset="0" max-vertical-offset="3417">
+          <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nucleus_inspector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="865" max-vertical-offset="5763">
-          <caret line="76" column="33" selection-start-line="76" selection-start-column="33" selection-end-line="76" selection-end-column="34" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5780">
+          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/mdp/nodes/convolution_nodes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2425" max-vertical-offset="3927">
+          <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/mdp/signal_node.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="10691" max-vertical-offset="13379">
+          <caret line="642" column="0" selection-start-line="642" selection-start-column="0" selection-end-line="642" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/chiffatools/wrappers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="697">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1179,20 +1102,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
+    <entry file="file://$PROJECT_DIR$/Cell_recognition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3611111" vertical-offset="0" max-vertical-offset="6460">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="14" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3016" max-vertical-offset="6273">
+          <caret line="206" column="25" selection-start-line="206" selection-start-column="23" selection-end-line="206" selection-end-column="25" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/core/_methods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="2261">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/core/fromnumeric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="37201" max-vertical-offset="49742">
+          <caret line="2212" column="0" selection-start-line="2212" selection-start-column="0" selection-end-line="2212" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda/Lib/site-packages/numpy/lib/shape_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8440629" vertical-offset="1059" max-vertical-offset="14654">
+          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Philippe_supra.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8206278" vertical-offset="1695" max-vertical-offset="2380">
-          <caret line="132" column="45" selection-start-line="132" selection-start-column="45" selection-end-line="132" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3055" max-vertical-offset="4046">
+          <caret line="193" column="20" selection-start-line="193" selection-start-column="20" selection-end-line="193" selection-end-column="20" />
           <folding>
             <element signature="e#21#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Map_Reduce_simple.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="110" max-vertical-offset="1054">
+          <caret line="41" column="25" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src2.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chr_sep_human.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14868805" vertical-offset="1122" max-vertical-offset="5423">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Moving_ball_aligner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4620887" vertical-offset="2805" max-vertical-offset="7242">
+          <caret line="184" column="24" selection-start-line="184" selection-start-column="24" selection-end-line="184" selection-end-column="24" />
+          <folding>
+            <element signature="e#20#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
