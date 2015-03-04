@@ -66,23 +66,22 @@ def show_IO(funct):
 ######################################################################################################################
 
 # buffer_directory = 'H:/buffer_folder'
-directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/02.18.2015/TIFF/4'
+directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/02.18.2015/TIFF/1'
 scaling_factor = (1.0, 1.0, 1.0)
 # prefix = 'red'
-prefix = 'ko npc beads gel 0.6kpa007'
+prefix = 'wt npc beads gel 0.6kpa002'
 
 
 def name_image(t, z, c):
-    return path.join(directory, prefix + 't%sz%sc%s.tif' % ( format(t, "01d"), format(z, "02d"), c))
+    return path.join(directory, prefix + 't%sz%sc%s.tif' % ( format(t, "02d"), format(z, "02d"), c))
 
 
 def create_image_reader_by_z_stack(color_channel):
     _stack = []
     for im_name in os.listdir(directory):
         if '.tif' in im_name:
-            # use prefix length
             lp = len(prefix)
-            tl = 1
+            tl = 2
             zl = 2
             coordinates = (int(im_name[lp+1:lp+1+tl]), int(im_name[lp+2+tl:lp+2+zl+tl]), int(im_name[lp+3+zl+tl]))
             _stack.append(coordinates)
@@ -178,18 +177,32 @@ def transform_volume(_3D_array, Multi_M_xy, axis):
 def basic_aligner(reader, axis = 0):
 
     def debug_render():
-        plt.subplot(321)
+        fig = plt.subplot(321)
+        plt.title('xy projection')
         plt.imshow(flatten_array(prev_time_volume), interpolation='nearest')
-        plt.subplot(322)
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
+        fig =plt.subplot(322)
+        plt.title('zx projection')
         plt.imshow(flatten_array(prev_time_volume, 1), interpolation='nearest', aspect='auto')
-        plt.subplot(323)
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
+        fig =plt.subplot(323)
         plt.imshow(flatten_array(current_time_volume), interpolation='nearest')
-        plt.subplot(324)
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
+        fig =plt.subplot(324)
         plt.imshow(flatten_array(current_time_volume, 1), interpolation='nearest', aspect='auto')
-        plt.subplot(325)
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
+        fig =plt.subplot(325)
         plt.imshow(flatten_array(transform_volume(current_time_volume, Multi_M_xy, axis)), interpolation='nearest')
-        plt.subplot(326)
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
+        fig =plt.subplot(326)
         plt.imshow(flatten_array(transform_volume(current_time_volume, Multi_M_xy, axis), 1), interpolation='nearest', aspect='auto')
+        fig.set_xticklabels([])
+        fig.set_yticklabels([])
         plt.savefig('transformation.axis%s.z%s.%s.png'%(axis, _i, int(time()-tint)))
         plt.clf()
 
@@ -200,7 +213,7 @@ def basic_aligner(reader, axis = 0):
     for _i, current_time_volume in enumerate(reader):
         print _i,
         try:
-            M_xy = align_plane(flatten_array(prev_time_volume), flatten_array(current_time_volume))
+            M_xy = align_plane(flatten_array(prev_time_volume, axis), flatten_array(current_time_volume, axis))
         except Exception:
             render_2_colors(prev_time_volume, current_time_volume)
             raise
@@ -255,21 +268,19 @@ def create_tri_alignement():
     rdr5 = create_image_reader_by_z_stack(color_channel=c_chan)
     rdr6 = create_image_reader_by_z_stack(color_channel=c_chan)
 
-    zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
-    ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
-    xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
-
     in_frames = map(flatten_image, rdr4)
     in_frames = map(PIL_render, in_frames)
+    writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)\
 
+    ini_xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(rdr5, axis=0)]
     inter_frames = map(flatten_image, transform_reader_flow(rdr6, ini_xy_T_mats, axis=0))
     inter_frames = map(PIL_render, inter_frames)
+    writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
 
+    zy_T_mats = [zy_T_mat for zy_T_mat in basic_aligner(rdr1, axis=1)]
+    xy_T_mats = [xy_T_mat for xy_T_mat in basic_aligner(transform_reader_flow(rdr2, zy_T_mats, axis=1), axis=0)]
     fin_frames = map(flatten_image, transform_reader_flow(transform_reader_flow(rdr3, zy_T_mats, axis=1), xy_T_mats, axis=0))
     fin_frames = map(PIL_render, fin_frames)
-
-    writeGif('non-stabilized_flattened_balls.gif', in_frames, duration=0.3)
-    writeGif('xy-stabilized_flattened_balls.gif', inter_frames, duration=0.3)
     writeGif('stabilized_flattened_balls.gif', fin_frames, duration=0.3)
 
 
