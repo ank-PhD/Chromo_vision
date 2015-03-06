@@ -20,6 +20,7 @@ from chiffatools.Linalg_routines import hierchical_clustering
 
 # TODO: show where the agorithm finds the image centers
 
+debug = True
 timing = True
 
 def create_timer():
@@ -66,10 +67,10 @@ def show_IO(funct):
 ######################################################################################################################
 
 # buffer_directory = 'H:/buffer_folder'
-directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/02.18.2015/TIFF/1'
+directory = 'L:/Philippe/experiments/migration assay on polyacrylamide gels/gels loaded with beads/02.18.2015/TIFF/3'
 scaling_factor = (1.0, 1.0, 1.0)
 # prefix = 'red'
-prefix = 'wt npc beads gel 0.6kpa002'
+prefix = 'ko npc beads gel 0.6kpa008'
 
 
 def name_image(t, z, c):
@@ -222,7 +223,8 @@ def basic_aligner(reader, axis = 0):
         else:
             Multi_M_xy = np.dot(Multi_M_xy, M_xy)
 
-        debug_render()
+        if debug:
+            debug_render()
 
         prev_time_volume = current_time_volume
         timer1('.')
