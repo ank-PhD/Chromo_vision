@@ -35,32 +35,40 @@ def preprocess(current_image):
 
     current_image = np.array(stack)
 
-    # print np.max(current_image), np.min(current_image), np.median(current_image)
+    # line below removed because we are interested only in the intensity of x inside the y
 
-    stabilized = (current_image - np.min(current_image)) / \
-                 float(np.max(current_image) - np.min(current_image))
+    # # print np.max(current_image), np.min(current_image), np.median(current_image)
+    #
+    # stabilized = (current_image - np.min(current_image)) / \
+    #              float(np.max(current_image) - np.min(current_image))
 
-    stabilized[stabilized < 5*np.median(stabilized)] = 0
+    stabilized = (current_image - np.min(current_image))/(float(2**16) - np.min(current_image))
+    stabilized[stabilized < 10*np.median(stabilized)] = 0
+
+    # line below removed because we are interested only in the intensity of x inside the y
 
     for i in range(0, stabilized.shape[0]):
         stabilized[i, :, :] = gaussian_filter(stabilized[i, :, :], smoothing_px,
                                               mode='constant')
-    # print np.max(stabilized), np.min(stabilized), np.median(stabilized), np.mean(stabilized)
 
-    stabilized = (current_image - np.min(current_image)) / \
-                 float(np.max(current_image) - np.min(current_image))
+    stabilized[stabilized < 5*np.mean(stabilized)] = 0
+
+    # # print np.max(stabilized), np.min(stabilized), np.median(stabilized), np.mean(stabilized)
+    #
+    # stabilized = (current_image - np.min(current_image)) / \
+    #              float(np.max(current_image) - np.min(current_image))
 
     # smooth_histogram(stabilized.flatten())
     # plt.show()
 
     # for i in range(0, stabilized.shape[0]):
-    #     plt.imshow(stabilized[i, :, :], cmap='gray', vmin=0., vmax=1.)
+    #     plt.imshow(stabilized[i, :, :] > mcc_cutoff, cmap='gray', vmin=0., vmax=1.)
     #     plt.show()
 
     return stabilized
 
 
-replicas = defaultdict(lambda : [0, 0])
+replicas = defaultdict(lambda: [0, 0])
 
 for img in os.listdir(ImageRoot):
     if '.TIF' in img and '_thumb_' not in img:
@@ -76,12 +84,17 @@ for img in os.listdir(ImageRoot):
 for replica, (w1448, w2561) in replicas.iteritems():
     print replica
     # reference for the quantities calculated: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3074624/
+    print 'L2 stats'
     print '\t w1448: %s \n\t w2561: %s \n\t cross: %s' % (np.sum(w1448*w1448),
                                                           np.sum(w2561*w2561),
                                                           np.sum(w1448*w2561))
-    print '\t PCC: %s, p-val: %s' % pearsonr(w1448.flatten(), w2561.flatten())
-    print '\t KS: %s, p-val: %s' % ks_2samp(w1448.flatten(), w2561.flatten())
-    print '\t MOC:', np.sum(w1448*w2561)/np.sqrt(np.sum(w1448*w1448)*np.sum(w2561*w2561))
-    print '\t MCC \n\t\t w2561 in w1448:', np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561)*100, '%'
-    print '\t\t w1448 in w2561:', np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)*100, '%'
+    # print '\t PCC: %s, p-val: %s' % pearsonr(w1448.flatten(), w2561.flatten())
+    # print '\t KS: %s, p-val: %s' % ks_2samp(w1448.flatten(), w2561.flatten())
+    # print '\t MOC:', np.sum(w1448*w2561)/np.sqrt(np.sum(w1448*w1448)*np.sum(w2561*w2561))
+    print 'current cutoff:', mcc_cutoff*100, '% of max intensity'
+    print 'MCC \n\t w2561 in w1448:', np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561)*100, '%'
+    print '\t > w1448 in w2561:', np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)*100, '%'
+    print 'average qualifying voxel intensity:'
+    print '\t w1448', np.mean(w1448[w2561 > mcc_cutoff])
+    print '\t w2561', np.mean(w2561[w2561 > mcc_cutoff])
     print '\n'
