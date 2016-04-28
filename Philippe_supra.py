@@ -56,12 +56,12 @@ def load_img_dict2(load_filter=0.4):
 
     z_stack = max([tpl[0] for tpl in name_dict.keys()])
     print 'focal planes detected: %s' % z_stack
-    x, y = name_dict[(z_stack,1)].shape
+    x, y = name_dict[(z_stack, 1)].shape
 
     stack = [np.zeros((x,y,z_stack+1)), np.zeros((x,y,z_stack+1))]
 
     for z, plane in name_dict.iteritems():
-        stack[z[1]-1][:,:,z[0]] = plane
+        stack[z[1]-1][:, : ,z[0]] = plane
 
     for sub_stack in stack:
         flter = sub_stack < sub_stack.max()*load_filter
@@ -80,7 +80,7 @@ def load_img_dict(load_filter=0.4):
     name_dict = {}
     for img in os.listdir(ImageRoot):
         print '%s image was parsed' % img
-        name_dict[int(img[-6:-4])]=color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
+        name_dict[int(img[-6:-4])] = color.rgb2gray(img_as_float(PIL.Image.open(ImageRoot+'/'+img)))
 
     z_stack = max(name_dict.keys())
     print 'focal planes detected: %s' % z_stack
@@ -89,17 +89,17 @@ def load_img_dict(load_filter=0.4):
     stack = np.zeros((x,y,z_stack*3+3))
 
     for z, plane in name_dict.iteritems():
-        stack[:,:,z*3] = plane
-        stack[:,:,z*3+1] = plane
-        stack[:,:,z*3+2] = plane
+        stack[:, :, z*3] = plane
+        stack[:, :, z*3+1] = plane
+        stack[:, :, z*3+2] = plane
 
-    flter = stack < stack.max()*load_filter
+    flter = stack < stack.max() * load_filter
     stack[flter] = 0.0
 
     return stack
 
 
-def render_with_cut(chan1, chan2, v_min=0.6, cut = True):
+def render_with_cut(chan1, chan2, v_min=0.6, cut=True):
 
     s1 = mlab.pipeline.scalar_field(chan1)
     s1.spacing = scaling_factor
