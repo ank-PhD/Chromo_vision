@@ -110,9 +110,9 @@ def test_run():
 def main_traversal(path):
     replicas = defaultdict(lambda: [0, 0])
 
-    header = ['w1448', 'w2561', 'cross',
-              'MCC w2561 in w1448', 'MCC w1448 in w2561',
-              'AQVI w1448', 'AQVI w2561']
+    header = ['name pattern', 'GFP', 'mito marker', 'cross',
+              'MCC mito in GFP %%', 'MCC GFP in mito %%',
+              'AQVI GFP', 'AQVI mito']
 
     results_collector = []
     sucker_list = []
@@ -155,12 +155,13 @@ def main_traversal(path):
             # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our detection back-bone
             print name_pattern
             try:
+                seg0 = [name_pattern]
                 seg1 = [np.sum(w1448*w1448), np.sum(w2561*w2561), np.sum(w1448*w2561)]
                 seg2 = [np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561)*100,
                         np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)*100]
                 seg3 = [np.mean(w1448[w2561 > mcc_cutoff]),
                         np.mean(w2561[w2561 > mcc_cutoff])]
-                results_collector.append(seg1+seg2+seg3)
+                results_collector.append(seg0+seg1+seg2+seg3)
             except Exception as my_exception:
                 print traceback.print_exc(my_exception)
                 sucker_list.append(name_pattern)
