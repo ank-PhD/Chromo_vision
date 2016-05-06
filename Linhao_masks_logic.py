@@ -2,23 +2,18 @@ import os
 from PIL import Image
 import numpy as np
 from matplotlib import pyplot as plt
-from chiffatools.dataviz import smooth_histogram
-from chiffatools.stats import tukey_outliers
 from scipy.ndimage.filters import gaussian_filter
 from scipy import stats
 from collections import defaultdict
-from scipy.stats import pearsonr, ks_2samp
 from csv import writer
 import traceback
 from chiffatools.high_level_os_methods import safe_dir_create
-
 from skimage.segmentation import random_walker
-from skimage.morphology import opening, closing, erosion
+from skimage.morphology import closing
 from scipy import ndimage as ndi
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 from skimage.morphology import disk
-from skimage.feature import blob_dog, blob_log, blob_doh
 
 
 ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
@@ -111,34 +106,7 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
     return stabilized
 
 
-def segment_out_ill_cells(name_pattern, base, debug=False):
-    selem = disk(2)
-
-    GFP_collector = np.sum(base, axis=0)
-    markers = np.zeros(GFP_collector.shape, dtype=np.uint8)
-    # watershed segment
-    markers[GFP_collector > np.mean(GFP_collector)*2] = 2
-    markers[GFP_collector < np.mean(GFP_collector)*0.20] = 1
-    labels = random_walker(GFP_collector, markers, beta=10, mode='bf')
-    # round up the labels and set the background to 0 from 1.
-    labels = closing(labels, selem)
-    labels -= 1
-    # prepare distances for the watershed
-    distance = ndi.distance_transform_edt(labels)
-    local_maxi = peak_local_max(distance,
-                                indices=False,  # we want the image mask, not peak position
-                                min_distance=10,  # about half of a bud with our size
-                                threshold_abs=10,  # allows to clear the noise
-                                labels=labels)
-    # we fuse the labels that are close together that escaped the min distance in local_maxi
-    local_maxi = ndi.convolve(local_maxi, np.ones((5, 5)), mode='constant', cval=0.0)
-    # finish the watershed
-    markers2 = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
-    labels2 = watershed(-distance, markers2, mask=labels)
-    # there is still the problem with first element not being labeled properly.
-
-    # calculating the excessively luminous outliers
-    # => Wrap into an another function
+def determine_dynamic_outliers(labels2, GFP_collector):
     segments = []
     labels3 = np.zeros_like(labels2).astype(np.float64)
     qualifying_GFP = GFP_collector > np.median(GFP_collector[GFP_collector > 0])
@@ -185,7 +153,47 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         for idx in closure.tolist():
             labels4[labels2 == idx+1] = 1  # indexing starts from 1, not 0 for the labels
             print 'updated %s' % (idx+1)
-    # <= Stop the wrap here
+
+    return labels4, qualifying_GFP, segments, predicted, labels3, stderr
+
+
+def segment_out_ill_cells(name_pattern, base, debug=False):
+    """
+    Logic to segment out overly lumiscent cells
+
+    :param name_pattern:
+    :param base:
+    :param debug:
+    :return:
+    """
+    selem = disk(2)
+
+    GFP_collector = np.sum(base, axis=0)
+    markers = np.zeros(GFP_collector.shape, dtype=np.uint8)
+    # watershed segment
+    markers[GFP_collector > np.mean(GFP_collector)*2] = 2
+    markers[GFP_collector < np.mean(GFP_collector)*0.20] = 1
+    labels = random_walker(GFP_collector, markers, beta=10, mode='bf')
+    # round up the labels and set the background to 0 from 1.
+    labels = closing(labels, selem)
+    labels -= 1
+    # prepare distances for the watershed
+    distance = ndi.distance_transform_edt(labels)
+    local_maxi = peak_local_max(distance,
+                                indices=False,  # we want the image mask, not peak position
+                                min_distance=10,  # about half of a bud with our size
+                                threshold_abs=10,  # allows to clear the noise
+                                labels=labels)
+    # we fuse the labels that are close together that escaped the min distance in local_maxi
+    local_maxi = ndi.convolve(local_maxi, np.ones((5, 5)), mode='constant', cval=0.0)
+    # finish the watershed
+    markers2 = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
+    labels2 = watershed(-distance, markers2, mask=labels)
+    # there is still the problem with first element not being labeled properly.
+
+    # calculating the excessively luminous outliers
+    labels4, qualifying_GFP, segments, predicted, labels3, stderr = \
+        determine_dynamic_outliers(labels2, GFP_collector)
 
     if debug:
         plt.figure(figsize=(20.0, 15.0))
@@ -226,28 +234,38 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
     return labels4
 
 
-def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
+def analyze(name_pattern, marked_prot, organelle_marker, prefilter=True, debug=False):
+    """
+    Stitches the analysis pipeline together
+
+    :param name_pattern:
+    :param marked_prot:
+    :param organelle_marker:
+    :param prefilter:
+    :param debug:
+    :return:
+    """
 
     if debug:
-        GFP_collector_1 = np.sum(w1448, axis=0)
-        mCh_collector_1 = np.sum(w2561, axis=0)
+        GFP_collector_1 = np.sum(marked_prot, axis=0)
+        mCh_collector_1 = np.sum(organelle_marker, axis=0)
 
     # GFP-unhealthy cells detection logic
     if prefilter:
-        cancellation_mask = segment_out_ill_cells(name_pattern, w1448, debug)
+        cancellation_mask = segment_out_ill_cells(name_pattern, marked_prot, debug)
 
-        new_w1448 = np.zeros_like(w1448)
-        new_w2561 = np.zeros_like(w2561)
+        new_w1448 = np.zeros_like(marked_prot)
+        new_w2561 = np.zeros_like(organelle_marker)
 
-        new_w1448[:, np.logical_not(cancellation_mask)] = w1448[:, np.logical_not(cancellation_mask)]
-        new_w2561[:, np.logical_not(cancellation_mask)] = w2561[:, np.logical_not(cancellation_mask)]
+        new_w1448[:, np.logical_not(cancellation_mask)] = marked_prot[:, np.logical_not(cancellation_mask)]
+        new_w2561[:, np.logical_not(cancellation_mask)] = organelle_marker[:, np.logical_not(cancellation_mask)]
 
-        w1448 = new_w1448
-        w2561 = new_w2561
+        marked_prot = new_w1448
+        organelle_marker = new_w2561
 
     if debug:
-        GFP_collector = np.sum(w1448, axis=0)
-        mCh_collector = np.sum(w2561, axis=0)
+        GFP_collector = np.sum(marked_prot, axis=0)
+        mCh_collector = np.sum(organelle_marker, axis=0)
 
         plt.subplot(221)
         plt.imshow(GFP_collector_1, cmap='Greens')
@@ -265,12 +283,13 @@ def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
         # plt.show()
         plt.clf()
 
-    # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our detection back-bone
+    # TODO: normalize 2561 channel to span 0-1. This is not necessary needed since the mitochondria
+    # appeared to be well above thershold in practice.
     seg0 = [name_pattern]
-    seg1 = [np.sum(w1448*w1448), np.sum(w2561*w2561), np.sum(w1448*w2561)]
-    seg2 = [np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561),
-            np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)]
-    seg3 = [np.mean(w1448[w2561 > mcc_cutoff]), np.mean(w2561[w2561 > mcc_cutoff])]
+    seg1 = [np.sum(marked_prot * marked_prot), np.sum(organelle_marker * organelle_marker), np.sum(marked_prot * organelle_marker)]
+    seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
+            np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
+    seg3 = [np.mean(marked_prot[organelle_marker > mcc_cutoff]), np.mean(organelle_marker[organelle_marker > mcc_cutoff])]
 
     return seg0 + seg1 + seg2 + seg3
 
@@ -298,8 +317,6 @@ def mammalian_traversal():
                     replicas[name_pattern][color] = pre_process(current_image)
 
             for name_pattern, (w1448, w2561) in replicas.iteritems():
-                # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is
-                #  our detection back-bone
                 print name_pattern
                 try:
                     results_collector.append(analyze(name_pattern, w1448, w2561,
@@ -342,8 +359,6 @@ def yeast_traversal():
                     replicas[name_pattern][color] = pre_process(current_image)
 
             for name_pattern, (w1448, w2561) in replicas.iteritems():
-                # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our
-                #  detection back-bone
                 print name_pattern
                 try:
                     results_collector.append(analyze(name_pattern, w1448, w2561,
