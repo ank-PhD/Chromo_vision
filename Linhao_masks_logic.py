@@ -10,6 +10,7 @@ from collections import defaultdict
 from scipy.stats import pearsonr, ks_2samp
 from csv import writer
 import traceback
+from chiffatools.high_level_os_methods import safe_dir_create
 
 from skimage.segmentation import random_walker
 from skimage.morphology import opening, closing, erosion
@@ -22,6 +23,8 @@ from skimage.feature import blob_dog, blob_log, blob_doh
 
 ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
 main_root = "L:\\Users\\linghao\\Data for quantification"
+
+safe_dir_create('verification_bank')
 scaling_factor = (1.0, 1.0, 3.5)
 
 red = (1.0, 0.0, 0.0)
@@ -216,7 +219,7 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         plt.subplot(248)
         plt.imshow(qualifying_GFP)
 
-        plt.savefig('verification_bank/%s.png'%name_pattern)
+        plt.savefig('verification_bank/%s.png' % name_pattern)
         # plt.show()
         plt.clf()
 
@@ -239,7 +242,6 @@ def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
     seg3 = [np.mean(w1448[w2561 > mcc_cutoff]), np.mean(w2561[w2561 > mcc_cutoff])]
 
     return seg0 + seg1 + seg2 + seg3
-
 
 
 def test_yeast():
@@ -330,6 +332,14 @@ def yeast_traversal():
                     sucker_list.append(name_pattern)
 
             replicas = defaultdict(lambda: [0, 0])
+
+    with open('results-nn.csv', 'wb') as output:
+        csv_writer = writer(output, )
+        csv_writer.writerow(header)
+        for item in results_collector:
+            csv_writer.writerow(item)
+
+    print sucker_list
 
 
 def main_traversal(path):
