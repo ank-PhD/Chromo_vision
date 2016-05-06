@@ -82,7 +82,7 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
 
     if debug:
         print np.max(current_image), np.min(current_image), np.median(current_image)
-        plt.histogram(current_image.flatten(), 100)
+        plt.hist(current_image.flatten(), 100)
         plt.show()
 
     stabilized = (current_image - np.min(current_image))/(float(2**bits) - np.min(current_image))
@@ -90,7 +90,7 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
 
     if debug:
         print np.max(current_image), np.min(current_image), np.median(current_image)
-        plt.histogram(current_image.flatten(), 100)
+        plt.hist(current_image.flatten(), 100)
         plt.show()
 
     if smoothing_px:
@@ -101,7 +101,7 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
 
     if debug:
         print np.max(current_image), np.min(current_image), np.median(current_image)
-        plt.histogram(current_image.flatten(), 100)
+        plt.hist(current_image.flatten(), 100)
         plt.show()
 
         for i in range(0, stabilized.shape[0]):
@@ -234,6 +234,22 @@ def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
         w1448[:, cancellation_mask] = 0
         w2561[:, cancellation_mask] = 0
 
+    if debug:
+        GFP_collector = np.sum(w1448, axis=0)
+        mCh_collector = np.sum(w2561, axis=0)
+
+        plt.title(name_pattern)
+
+        plt.subplot(121)
+        plt.imshow(GFP_collector, cmap='Greens')
+
+        plt.subplot(122)
+        plt.imshow(mCh_collector, cmap='Reds')
+
+        plt.savefig('verification_bank/core-%s.png' % name_pattern)
+        # plt.show()
+        plt.clf()
+
     # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our detection back-bone
     seg0 = [name_pattern]
     seg1 = [np.sum(w1448*w1448), np.sum(w2561*w2561), np.sum(w1448*w2561)]
@@ -244,52 +260,48 @@ def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
     return seg0 + seg1 + seg2 + seg3
 
 
-def test_yeast():
-    replicas = defaultdict(lambda: [0, 0])
-
-    for img in os.listdir(ImageRoot):
-        if '.TIF' in img and '_thumb_' not in img:
-            img_codename = img.split(' ')[0].split('_')
-
-            print '%s image was parsed, code: %s' % (img, img_codename)
-
-            current_image = Image.open(os.path.join(ImageRoot, img))
-            replicas[img_codename[0]+'-'+img_codename[1]][translator[img_codename[2]]] =\
-                pre_process(current_image)
-
-    for replica, (w1448, w2561) in replicas.iteritems():
-        print analyze(replica, w1448, w2561, debug=True)
-        # print replica
-        # # reference for the quantities calculated: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3074624/
-        # print 'L2 stats'
-        # print '\t w1448: %s \n\t w2561: %s \n\t cross: %s' % (np.sum(w1448*w1448),
-        #                                                       np.sum(w2561*w2561),
-        #                                                       np.sum(w1448*w2561))
-        # # print '\t PCC: %s, p-val: %s' % pearsonr(w1448.flatten(), w2561.flatten())
-        # # print '\t KS: %s, p-val: %s' % ks_2samp(w1448.flatten(), w2561.flatten())
-        # # print '\t MOC:', np.sum(w1448*w2561)/np.sqrt(np.sum(w1448*w1448)*np.sum(w2561*w2561))
-        # print 'current cutoff:', mcc_cutoff*100, '% of max intensity'
-        # print 'MCC \n\t w2561 in w1448:', np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561)*100, '%'
-        # print '\t > w1448 in w2561:', np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)*100, '%'
-        # print 'average qualifying voxel intensity:'
-        # print '\t w1448', np.mean(w1448[w2561 > mcc_cutoff])
-        # print '\t w2561', np.mean(w2561[w2561 > mcc_cutoff])
-        # print '\n'
-
-
-def test_mammalians():
-    ImageRoot = "L:\\Users\\linghao\\Data for quantification\\Mammalian\\DM_Splitted channels"
-
-    for img in os.listdir(ImageRoot):
-        if '.tif' in img:
-            img_codename = img.split(' ')[0].split('_')
-            print '%s image was parsed, code: %s' % (img, img_codename)
-            current_image = Image.open(os.path.join(ImageRoot, img))
-            pre_process(current_image, 30, 0)
-
-
 def mammalian_traversal():
     main_root = "L:\\Users\\linghao\\Data for quantification\\Mammalian"
+    replicas = defaultdict(lambda: [0, 0])
+    results_collector = []
+    sucker_list = []
+
+    for current_location, sub_directories, files in os.walk(main_root):
+        print current_location
+        print '\t', files
+        color = None
+        name_pattern = None
+        if files and 'Splitted' in current_location:
+            for img in files:  # TODO: remove the debug flag here
+                if '.tif' in img and '_thumb_' not in img:
+                    img_codename = img.split('-')
+                    prefix = current_location.split('\\')[4:]
+                    color = translator[img_codename[0]]
+                    name_pattern = ' - '.join(prefix+img_codename[1:])
+                    current_image = Image.open(os.path.join(current_location, img))
+                    print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
+                    replicas[name_pattern][color] = pre_process(current_image)
+
+            for name_pattern, (w1448, w2561) in replicas.iteritems():
+                # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is
+                #  our detection back-bone
+                print name_pattern
+                try:
+                    results_collector.append(analyze(name_pattern, w1448, w2561,
+                                                     prefilter=False, debug=True))
+                except Exception as my_exception:
+                    print traceback.print_exc(my_exception)
+                    sucker_list.append(name_pattern)
+
+            replicas = defaultdict(lambda: [0, 0])
+
+    with open('results-nn-mammalian.csv', 'wb') as output:
+        csv_writer = writer(output, )
+        csv_writer.writerow(header)
+        for item in results_collector:
+            csv_writer.writerow(item)
+
+    print sucker_list
 
 
 def yeast_traversal():
@@ -307,22 +319,16 @@ def yeast_traversal():
             for img in files:
                 if '.TIF' in img and '_thumb_' not in img:
                     img_codename = img.split(' ')[0].split('_')
-
-                    print '%s image was parsed, code: %s' % (img, img_codename)
-
-                    current_image = Image.open(os.path.join(current_location, img))
-                    replicas[img_codename[0]+'-'+img_codename[1]][translator[img_codename[2]]] =\
-                        pre_process(current_image)
-
-                    img_codename = img.split(' ')[0].split('_')
                     prefix = current_location.split('\\')[4:]
                     color = translator[img_codename[-1]]
                     name_pattern = ' - '.join(prefix+img_codename[:-1])
                     current_image = Image.open(os.path.join(current_location, img))
+                    print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
                     replicas[name_pattern][color] = pre_process(current_image)
 
             for name_pattern, (w1448, w2561) in replicas.iteritems():
-                # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our detection back-bone
+                # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our
+                #  detection back-bone
                 print name_pattern
                 try:
                     results_collector.append(analyze(name_pattern, w1448, w2561,
@@ -333,7 +339,7 @@ def yeast_traversal():
 
             replicas = defaultdict(lambda: [0, 0])
 
-    with open('results-nn.csv', 'wb') as output:
+    with open('results-nn-yeast.csv', 'wb') as output:
         csv_writer = writer(output, )
         csv_writer.writerow(header)
         for item in results_collector:
@@ -341,81 +347,7 @@ def yeast_traversal():
 
     print sucker_list
 
-
-def main_traversal(path):
-    replicas = defaultdict(lambda: [0, 0])
-
-    results_collector = []
-    sucker_list = []
-
-    for current_location, sub_directories, files in os.walk(path):
-        print current_location
-        print '\t', files
-        color = None
-        name_pattern = None
-
-        # TODO: re-implement the iterator as matching pair poppinq queue to save up on RAM
-
-        if files:
-            if 'Mammalian' in current_location:
-                if 'Splitted' not in current_location:
-                    continue
-                else:
-                    print 'case 2'
-                    for img in files:
-                        if ('.TIF' in img or '.tif' in img) and '_thumb_' not in img:
-                            print img,
-                            img_codename = img.split('-')
-                            prefix = current_location.split('\\')[4:]
-                            color = translator[img_codename[0]]
-                            name_pattern = ' - '.join(prefix+img_codename[1:])
-                            current_image = Image.open(os.path.join(current_location, img))
-                            replicas[name_pattern][color] = pre_process(current_image, 30, 0)
-                            print '-', name_pattern, color
-            else:
-                print 'case 1'
-                for img in files:
-                    if ('.TIF' in img or '.tif' in img) and '_thumb_' not in img:
-                        print img,
-                        img_codename = img.split(' ')[0].split('_')
-                        prefix = current_location.split('\\')[4:]
-                        color = translator[img_codename[-1]]
-                        name_pattern = ' - '.join(prefix+img_codename[:-1])
-                        current_image = Image.open(os.path.join(current_location, img))
-                        replicas[name_pattern][color] = pre_process(current_image)
-                        print '-', name_pattern, color
-
-        for name_pattern, (w1448, w2561) in replicas.iteritems():
-            # TODO: for yeast, add over-fluorescent cell removing logic on w1448 channel
-            #  A way to do is to project all the non-negative pixel mask onto a single plane
-            # then perform random walker segmentation and use the segmented mask as the reference
-
-            # TODO: normalize 2561 channel to span 0-1, ALWAYS, since it is our detection back-bone
-            print name_pattern
-            try:
-                seg0 = [name_pattern]
-                seg1 = [np.sum(w1448*w1448), np.sum(w2561*w2561), np.sum(w1448*w2561)]
-                seg2 = [np.sum(w2561[w1448 > mcc_cutoff])/np.sum(w2561),
-                        np.sum(w1448[w2561 > mcc_cutoff])/np.sum(w1448)]
-                seg3 = [np.mean(w1448[w2561 > mcc_cutoff]),
-                        np.mean(w2561[w2561 > mcc_cutoff])]
-                results_collector.append(seg0+seg1+seg2+seg3)
-            except Exception as my_exception:
-                print traceback.print_exc(my_exception)
-                sucker_list.append(name_pattern)
-
-        replicas = defaultdict(lambda: [0, 0])
-
-    with open('results-nn.csv', 'wb') as output:
-        csv_writer = writer(output, )
-        csv_writer.writerow(header)
-        for item in results_collector:
-            csv_writer.writerow(item)
-
-    print sucker_list
 
 if __name__ == "__main__":
-    test_yeast()
-    # main_traversal(main_root)
-    # test_mammalians()
-    yeast_traversal()
+    # yeast_traversal()
+    mammalian_traversal()
