@@ -228,22 +228,37 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
 
 def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
 
+    if debug:
+        GFP_collector_1 = np.sum(w1448, axis=0)
+        mCh_collector_1 = np.sum(w2561, axis=0)
+
     # GFP-unhealthy cells detection logic
     if prefilter:
         cancellation_mask = segment_out_ill_cells(name_pattern, w1448, debug)
-        w1448[:, cancellation_mask] = 0
-        w2561[:, cancellation_mask] = 0
+
+        new_w1448 = np.zeros_like(w1448)
+        new_w2561 = np.zeros_like(w2561)
+
+        new_w1448[:, np.logical_not(cancellation_mask)] = w1448[:, np.logical_not(cancellation_mask)]
+        new_w2561[:, np.logical_not(cancellation_mask)] = w2561[:, np.logical_not(cancellation_mask)]
+
+        w1448 = new_w1448
+        w2561 = new_w2561
 
     if debug:
         GFP_collector = np.sum(w1448, axis=0)
         mCh_collector = np.sum(w2561, axis=0)
 
-        plt.title(name_pattern)
+        plt.subplot(221)
+        plt.imshow(GFP_collector_1, cmap='Greens')
 
-        plt.subplot(121)
+        plt.subplot(222)
+        plt.imshow(mCh_collector_1, cmap='Reds')
+
+        plt.subplot(223)
         plt.imshow(GFP_collector, cmap='Greens')
 
-        plt.subplot(122)
+        plt.subplot(224)
         plt.imshow(mCh_collector, cmap='Reds')
 
         plt.savefig('verification_bank/core-%s.png' % name_pattern)
@@ -349,5 +364,5 @@ def yeast_traversal():
 
 
 if __name__ == "__main__":
-    # yeast_traversal()
-    mammalian_traversal()
+    yeast_traversal()
+    # mammalian_traversal()
