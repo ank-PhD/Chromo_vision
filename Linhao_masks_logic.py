@@ -20,8 +20,6 @@ from skimage.morphology import disk
 from skimage.feature import blob_dog, blob_log, blob_doh
 
 
-plt.figure(figsize=(20.0, 15.0))
-
 ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
 main_root = "L:\\Users\\linghao\\Data for quantification"
 scaling_factor = (1.0, 1.0, 3.5)
@@ -110,7 +108,7 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
     return stabilized
 
 
-def segment_out_ill_cells(base, debug=False):
+def segment_out_ill_cells(name_pattern, base, debug=False):
     selem = disk(2)
 
     GFP_collector = np.sum(base, axis=0)
@@ -187,6 +185,9 @@ def segment_out_ill_cells(base, debug=False):
     # <= Stop the wrap here
 
     if debug:
+        plt.figure(figsize=(20.0, 15.0))
+        plt.title(name_pattern)
+
         plt.subplot(241)
         plt.imshow(GFP_collector, interpolation='nearest')
 
@@ -215,7 +216,9 @@ def segment_out_ill_cells(base, debug=False):
         plt.subplot(248)
         plt.imshow(qualifying_GFP)
 
-        plt.show()
+        plt.savefig('verification_bank/%s.png'%name_pattern)
+        # plt.show()
+        plt.clf()
 
     return labels4
 
@@ -224,7 +227,7 @@ def analyze(name_pattern, w1448, w2561, prefilter=True, debug=False):
 
     # GFP-unhealthy cells detection logic
     if prefilter:
-        cancellation_mask = segment_out_ill_cells(w1448, debug)
+        cancellation_mask = segment_out_ill_cells(name_pattern, w1448, debug)
         w1448[:, cancellation_mask] = 0
         w2561[:, cancellation_mask] = 0
 
