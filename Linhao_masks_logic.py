@@ -289,7 +289,8 @@ def analyze(name_pattern, marked_prot, organelle_marker, prefilter=True, debug=F
     seg1 = [np.sum(marked_prot * marked_prot), np.sum(organelle_marker * organelle_marker), np.sum(marked_prot * organelle_marker)]
     seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
             np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
-    seg3 = [np.mean(marked_prot[organelle_marker > mcc_cutoff]), np.mean(organelle_marker[organelle_marker > mcc_cutoff])]
+    seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
+            np.median(organelle_marker[organelle_marker > mcc_cutoff])]
 
     return seg0 + seg1 + seg2 + seg3
 
