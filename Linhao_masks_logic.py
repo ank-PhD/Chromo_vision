@@ -358,7 +358,9 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
         # mitochondria appeared to be well above thershold in practice.
         seg0 = [name_pattern]
-        seg1 = [np.sum(marked_prot * marked_prot), np.sum(organelle_marker * organelle_marker), np.sum(marked_prot * organelle_marker)]
+        seg1 = [np.sum(marked_prot * marked_prot),
+                np.sum(organelle_marker * organelle_marker),
+                np.sum(marked_prot * organelle_marker)]
         seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
                 np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
         seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
@@ -410,7 +412,7 @@ def mammalian_traversal():
 
 
 def yeast_traversal(per_cell):
-    main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast"
+    main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
     sucker_list = []
@@ -435,8 +437,8 @@ def yeast_traversal(per_cell):
                 print name_pattern
                 try:
                     results_collector += analyze(name_pattern, w1448, w2561,
-                                                     segment_out_ill=True, debug=True,
-                                                     per_cell=per_cell)
+                                                 segment_out_ill=True, debug=True,
+                                                 per_cell=per_cell)
                 except Exception as my_exception:
                     print traceback.print_exc(my_exception)
                     sucker_list.append(name_pattern)
