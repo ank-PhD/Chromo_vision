@@ -1,12 +1,12 @@
 import os
-from PIL import Image
+import traceback
 import numpy as np
+from PIL import Image
 from matplotlib import pyplot as plt
 from scipy.ndimage.filters import gaussian_filter
 from scipy import stats
 from collections import defaultdict
 from csv import writer
-import traceback
 from chiffatools.high_level_os_methods import safe_dir_create
 from skimage.segmentation import random_walker
 from skimage.morphology import closing
@@ -28,21 +28,22 @@ green = (0.0, 1.0, 0.0)
 v_min = 0.6
 mcc_cutoff = 0.05
 
+# 0 is the protein marker
+# 1 is the mitochondria marker
+
 translator = {'w1488': 0,
               'w2561': 1,
               'C1': 1,
               'C2': 0}
 
-# 0 is the protein marker
-# 1 is the mitochondria marker
 
 dtype2bits = {'uint8': 8,
               'uint16': 16,
               'uint32': 32}
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
-              'MCC mito in GFP %', 'MCC GFP in mito %',
-              'AQVI GFP', 'AQVI mito']
+          'MCC mito in GFP %', 'MCC GFP in mito %',
+          'AQVI GFP', 'AQVI mito', 'ill', 'cell_no']
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -63,7 +64,8 @@ def tiff_stack_2_np_arr(tiff_stack):
     return np.array(stack)
 
 
-def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
+# TODO: this function does two things. In fact it needs to be refactored to only do one
+def gamma_stabilize_and_smooth(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
     """
     Performs the initial conversion and de-noising of the tiff stack
 
@@ -106,77 +108,95 @@ def pre_process(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
     return stabilized
 
 
-def determine_dynamic_outliers(labels2, GFP_collector):
-    segments = []
-    labels3 = np.zeros_like(labels2).astype(np.float64)
-    qualifying_GFP = GFP_collector > np.median(GFP_collector[GFP_collector > 0])
-    for i in range(1, np.max(labels2)+1):
-        current_mask = labels2 == i
-        coll_sel = GFP_collector[np.logical_and(current_mask, qualifying_GFP)]
+def detect_ill_cells(cell_labels, gfp_collector, debug=False):
+    """
+    Logic that determines outliers that look like dead cells in the gfp channel projection.
+    Requires at least 5 non-dead cells in the image.
 
-        # if debug:
-        #     print coll_sel.shape
-        #     print coll_sel
-        #     plt.subplot(221)
-        #     plt.imshow(current_mask, cmap='gray', interpolation='nearest')
-        #     plt.subplot(222)
-        #     plt.imshow(qualifying_GFP, cmap='gray', interpolation='nearest')
-        #     plt.subplot(223)
-        #     plt.imshow(np.logical_and(current_mask, qualifying_GFP),
-        #                cmap='gray', interpolation='nearest')
-        #     plt.subplot(224)
-        #     plt.imshow(GFP_collector, cmap='gray', interpolation='nearest')
-        #     plt.show()
+    :param cell_labels:
+    :param gfp_collector:
+    :param debug:
+    :return:
+    """
+    cells_average_gfp = []
+    average_gfp_in_cell = np.zeros_like(cell_labels).astype(np.float64)
+    qualifying_gfp = gfp_collector > np.median(gfp_collector[gfp_collector > 0])
 
-        GFP_percentile = np.percentile(coll_sel, 50)
+    for i in range(1, np.max(cell_labels)+1):
+        current_mask = cell_labels == i
+        current_cell_gfp = gfp_collector[np.logical_and(current_mask, qualifying_gfp)]
 
-        GFP_average = np.average(GFP_collector[np.logical_and(current_mask,
-                                                                 GFP_collector>GFP_percentile)])
-        segments.append(GFP_average)
-        labels3[current_mask] = GFP_average
+        if debug:
+            print current_cell_gfp.shape
+            print current_cell_gfp
+            plt.subplot(221)
+            plt.imshow(current_mask, cmap='gray', interpolation='nearest')
+            plt.subplot(222)
+            plt.imshow(qualifying_gfp, cmap='gray', interpolation='nearest')
+            plt.subplot(223)
+            plt.imshow(np.logical_and(current_mask, qualifying_gfp),
+                       cmap='gray', interpolation='nearest')
+            plt.subplot(224)
+            plt.imshow(gfp_collector, cmap='gray', interpolation='nearest')
+            plt.show()
 
-    argsort = np.argsort(np.array(segments))
-    segments = sorted(segments)
+        gfp_percentile = np.percentile(current_cell_gfp, 50)
+        gfp_average = np.average(gfp_collector[np.logical_and(current_mask,
+                                                              gfp_collector > gfp_percentile)])
+        cells_average_gfp.append(gfp_average)
+        average_gfp_in_cell[current_mask] = gfp_average
 
-    support = range(0, len(segments))
-    # requires at least 10 pts to work
-    slope, intercept, _, _, _ = stats.linregress(np.array(support)[1:5],
-                                                 np.array(segments)[1:5])
-    # stderr = np.std(np.array(segments)[1:5])
-    stderr = 0.05/8.
-    predicted = intercept+slope*np.array(support)
-    closure = argsort[np.array(support)[np.array(predicted+stderr*8) < np.array(segments)]]
-    print closure, closure.tolist() != []
-    labels4 = np.zeros_like(labels2).astype(np.uint8)
-    if closure.tolist() != []:
-        print 'enter closure correction'
-        for idx in closure.tolist():
-            labels4[labels2 == idx+1] = 1  # indexing starts from 1, not 0 for the labels
+    arg_sort = np.argsort(np.array(cells_average_gfp))
+    cells_average_gfp = sorted(cells_average_gfp)
+
+    cell_no = range(0, len(cells_average_gfp))
+    # requires at least 5 pts to work
+    slope, intercept, _, _, _ = stats.linregress(np.array(cell_no)[1:5],
+                                                 np.array(cells_average_gfp)[1:5])
+
+    # TODO: hard-coded limits. Need to be removed
+    # std_err = np.std(np.array(cells_average_gfp)[1:5])
+    std_err = 0.05/8.
+
+    non_dying_predicted = intercept + slope * np.array(cell_no)
+    non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted+std_err*8) <
+                                                     np.array(cells_average_gfp)]]
+    # print non_dying_cells, non_dying_cells.tolist() != []
+    non_dying_cells_mask = np.zeros_like(cell_labels).astype(np.uint8)
+
+    if non_dying_cells.tolist() != []:
+        print 'enter non_dying_cells correction'
+        for idx in non_dying_cells.tolist():
+            non_dying_cells_mask[cell_labels == idx + 1] = 1  # indexing starts from 1, not 0 for the labels
             print 'updated %s' % (idx+1)
 
-    return labels4, qualifying_GFP, segments, predicted, labels3, stderr
+    return non_dying_cells_mask, qualifying_gfp, cells_average_gfp,\
+           non_dying_predicted, average_gfp_in_cell, std_err
 
 
 def segment_out_ill_cells(name_pattern, base, debug=False):
     """
-    Logic to segment out overly lumiscent cells
+    Logic to segment out overly gfp luminiscent cells, taken as a proxi for the state of illness
 
     :param name_pattern:
     :param base:
     :param debug:
     :return:
     """
-    selem = disk(2)
+    sel_elem = disk(2)
 
-    GFP_collector = np.sum(base, axis=0)
-    markers = np.zeros(GFP_collector.shape, dtype=np.uint8)
+    gfp_collector = np.sum(base, axis=0)
+    gfp_clustering_markers = np.zeros(gfp_collector.shape, dtype=np.uint8)
+
     # watershed segment
-    markers[GFP_collector > np.mean(GFP_collector)*2] = 2
-    markers[GFP_collector < np.mean(GFP_collector)*0.20] = 1
-    labels = random_walker(GFP_collector, markers, beta=10, mode='bf')
-    # round up the labels and set the background to 0 from 1.
-    labels = closing(labels, selem)
+    gfp_clustering_markers[gfp_collector > np.mean(gfp_collector)*2] = 2
+    gfp_clustering_markers[gfp_collector < np.mean(gfp_collector)*0.20] = 1
+    labels = random_walker(gfp_collector, gfp_clustering_markers, beta=10, mode='bf')
+
+    # round up the labels and set the background to 0 from 1
+    labels = closing(labels, sel_elem)
     labels -= 1
+
     # prepare distances for the watershed
     distance = ndi.distance_transform_edt(labels)
     local_maxi = peak_local_max(distance,
@@ -184,32 +204,34 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
                                 min_distance=10,  # about half of a bud with our size
                                 threshold_abs=10,  # allows to clear the noise
                                 labels=labels)
+
     # we fuse the labels that are close together that escaped the min distance in local_maxi
     local_maxi = ndi.convolve(local_maxi, np.ones((5, 5)), mode='constant', cval=0.0)
+
     # finish the watershed
-    markers2 = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
-    labels2 = watershed(-distance, markers2, mask=labels)
+    expanded_maxi_markers = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
+    cell_markers = watershed(-distance, expanded_maxi_markers, mask=labels)
     # there is still the problem with first element not being labeled properly.
 
     # calculating the excessively luminous outliers
-    labels4, qualifying_GFP, segments, predicted, labels3, stderr = \
-        determine_dynamic_outliers(labels2, GFP_collector)
+    non_dying_cells_mask, qualifying_gfp, segments, predicted, labels3, std_err = \
+        detect_ill_cells(cell_markers, gfp_collector)
 
     if debug:
         plt.figure(figsize=(20.0, 15.0))
         plt.title(name_pattern)
 
         plt.subplot(241)
-        plt.imshow(GFP_collector, interpolation='nearest')
+        plt.imshow(gfp_collector, interpolation='nearest')
 
         plt.subplot(242)
-        plt.imshow(markers, cmap='hot', interpolation='nearest')
+        plt.imshow(gfp_clustering_markers, cmap='hot', interpolation='nearest')
 
         plt.subplot(243)
         plt.imshow(labels, cmap='gray', interpolation='nearest')
 
         plt.subplot(244)
-        plt.imshow(labels2, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.imshow(cell_markers, cmap=plt.cm.spectral, interpolation='nearest')
 
         plt.subplot(245)
         plt.imshow(labels3, cmap='hot', interpolation='nearest')
@@ -218,41 +240,45 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         plt.subplot(246)
         plt.plot(segments, 'ko')
         plt.plot(predicted, 'r')
-        plt.plot(predicted+stderr*8, 'g')  # arbitrary coefficient, but works well
-        plt.plot(predicted-stderr*8, 'g')
+        plt.plot(predicted+std_err*8, 'g')  # arbitrary coefficient, but works well
+        plt.plot(predicted-std_err*8, 'g')
 
         plt.subplot(247)
-        plt.imshow(labels4, cmap='gray', interpolation='nearest')
+        plt.imshow(non_dying_cells_mask, cmap='gray', interpolation='nearest')
 
         plt.subplot(248)
-        plt.imshow(qualifying_GFP)
+        plt.imshow(qualifying_gfp)
 
         plt.savefig('verification_bank/%s.png' % name_pattern)
         # plt.show()
         plt.clf()
 
-    return labels4
+    return non_dying_cells_mask, cell_markers
 
 
-def analyze(name_pattern, marked_prot, organelle_marker, prefilter=True, debug=False):
+def analyze(name_pattern, marked_prot, organelle_marker,
+            segment_out_ill=True, debug=False, per_cell=False):
     """
     Stitches the analysis pipeline together
 
     :param name_pattern:
     :param marked_prot:
     :param organelle_marker:
-    :param prefilter:
+    :param segment_out_ill:
     :param debug:
     :return:
     """
 
+    if per_cell and not segment_out_ill:
+        raise Exception("cannot perform per-cell output without proper segmentation")
+
     if debug:
-        GFP_collector_1 = np.sum(marked_prot, axis=0)
-        mCh_collector_1 = np.sum(organelle_marker, axis=0)
+        gfp_collector_1 = np.sum(marked_prot, axis=0)
+        mch_collector_1 = np.sum(organelle_marker, axis=0)
 
     # GFP-unhealthy cells detection logic
-    if prefilter:
-        cancellation_mask = segment_out_ill_cells(name_pattern, marked_prot, debug)
+    if segment_out_ill:
+        cancellation_mask, cell_markers = segment_out_ill_cells(name_pattern, marked_prot, debug)
 
         new_w1448 = np.zeros_like(marked_prot)
         new_w2561 = np.zeros_like(organelle_marker)
@@ -264,35 +290,81 @@ def analyze(name_pattern, marked_prot, organelle_marker, prefilter=True, debug=F
         organelle_marker = new_w2561
 
     if debug:
-        GFP_collector = np.sum(marked_prot, axis=0)
-        mCh_collector = np.sum(organelle_marker, axis=0)
+        gfp_collector = np.sum(marked_prot, axis=0)
+        mch_collector = np.sum(organelle_marker, axis=0)
 
         plt.subplot(221)
-        plt.imshow(GFP_collector_1, cmap='Greens')
+        plt.imshow(gfp_collector_1, cmap='Greens')
 
         plt.subplot(222)
-        plt.imshow(mCh_collector_1, cmap='Reds')
+        plt.imshow(mch_collector_1, cmap='Reds')
 
         plt.subplot(223)
-        plt.imshow(GFP_collector, cmap='Greens')
+        plt.imshow(gfp_collector, cmap='Greens')
 
         plt.subplot(224)
-        plt.imshow(mCh_collector, cmap='Reds')
+        plt.imshow(mch_collector, cmap='Reds')
 
-        plt.savefig('verification_bank/core-%s.png' % name_pattern)
+        # plt.savefig('verification_bank/core-%s.png' % name_pattern)
         # plt.show()
         plt.clf()
 
-    # TODO: normalize 2561 channel to span 0-1. This is not necessary needed since the mitochondria
-    # appeared to be well above thershold in practice.
-    seg0 = [name_pattern]
-    seg1 = [np.sum(marked_prot * marked_prot), np.sum(organelle_marker * organelle_marker), np.sum(marked_prot * organelle_marker)]
-    seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
-            np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
-    seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
-            np.median(organelle_marker[organelle_marker > mcc_cutoff])]
+    if per_cell:
 
-    return seg0 + seg1 + seg2 + seg3
+        seg_stack = []
+
+        for cell_no in range(1, np.max(cell_markers)+1):
+            current_mask = cell_markers == cell_no
+            current_mask = current_mask[:, :]
+            ill = np.median(cancellation_mask[current_mask])
+
+            _organelle_marker = np.zeros_like(organelle_marker)
+            _organelle_marker[:, current_mask] = organelle_marker[:, current_mask]
+
+            _marked_prot = np.zeros_like(marked_prot)
+            _marked_prot[:, current_mask] = marked_prot[:, current_mask]
+
+            if debug:
+                plt.subplot(221)
+                plt.imshow(current_mask, cmap='Greens')
+
+                plt.subplot(222)
+                mp_2d = np.sum(_marked_prot, axis=0)
+                plt.imshow(mp_2d, cmap='Greens')
+
+                plt.subplot(223)
+                om_2d = np.sum(_organelle_marker, axis=0)
+                plt.imshow(om_2d, cmap='Reds')
+
+                # plt.show()
+                plt.clf()
+
+            seg0 = [name_pattern]
+            seg1 = [np.sum(_marked_prot * _marked_prot),
+                    np.sum(_organelle_marker * _organelle_marker),
+                    np.sum(_marked_prot * _organelle_marker)]
+            seg2 = [np.sum(_organelle_marker[_marked_prot > mcc_cutoff]) / np.sum(
+                _organelle_marker),
+                    np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)]
+            seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
+                    np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
+                    ill, cell_no]
+
+            seg_stack += [seg0 + seg1 + seg2 + seg3]
+
+        return seg_stack
+
+    else:
+        # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
+        # mitochondria appeared to be well above thershold in practice.
+        seg0 = [name_pattern]
+        seg1 = [np.sum(marked_prot * marked_prot), np.sum(organelle_marker * organelle_marker), np.sum(marked_prot * organelle_marker)]
+        seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
+                np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
+        seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
+                np.median(organelle_marker[organelle_marker > mcc_cutoff])]
+
+        return [seg0 + seg1 + seg2 + seg3]
 
 
 def mammalian_traversal():
@@ -315,13 +387,13 @@ def mammalian_traversal():
                     name_pattern = ' - '.join(prefix+img_codename[1:])
                     current_image = Image.open(os.path.join(current_location, img))
                     print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
-                    replicas[name_pattern][color] = pre_process(current_image)
+                    replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
 
             for name_pattern, (w1448, w2561) in replicas.iteritems():
                 print name_pattern
                 try:
                     results_collector.append(analyze(name_pattern, w1448, w2561,
-                                                     prefilter=False, debug=True))
+                                                     segment_out_ill=False, debug=True))
                 except Exception as my_exception:
                     print traceback.print_exc(my_exception)
                     sucker_list.append(name_pattern)
@@ -337,7 +409,7 @@ def mammalian_traversal():
     print sucker_list
 
 
-def yeast_traversal():
+def yeast_traversal(per_cell):
     main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast"
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
@@ -357,13 +429,14 @@ def yeast_traversal():
                     name_pattern = ' - '.join(prefix+img_codename[:-1])
                     current_image = Image.open(os.path.join(current_location, img))
                     print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
-                    replicas[name_pattern][color] = pre_process(current_image)
+                    replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
 
             for name_pattern, (w1448, w2561) in replicas.iteritems():
                 print name_pattern
                 try:
-                    results_collector.append(analyze(name_pattern, w1448, w2561,
-                                                     prefilter=True, debug=True))
+                    results_collector += analyze(name_pattern, w1448, w2561,
+                                                     segment_out_ill=True, debug=True,
+                                                     per_cell=per_cell)
                 except Exception as my_exception:
                     print traceback.print_exc(my_exception)
                     sucker_list.append(name_pattern)
@@ -380,5 +453,5 @@ def yeast_traversal():
 
 
 if __name__ == "__main__":
-    yeast_traversal()
+    yeast_traversal(per_cell=True)
     # mammalian_traversal()
