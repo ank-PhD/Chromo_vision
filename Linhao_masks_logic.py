@@ -14,10 +14,12 @@ from scipy import ndimage as ndi
 from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 from skimage.morphology import disk
+from skimage.morphology import skeletonize, medial_axis
+from skimage.feature import blob_dog, blob_log, blob_doh
 
 
-ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
-main_root = "L:\\Users\\linghao\\Data for quantification"
+# ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
+# main_root = "L:\\Users\\linghao\\Data for quantification"
 
 safe_dir_create('verification_bank')
 scaling_factor = (1.0, 1.0, 3.5)
@@ -43,7 +45,8 @@ dtype2bits = {'uint8': 8,
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
-          'AQVI GFP', 'AQVI mito', 'ill', 'cell_no']
+          'AQVI GFP', 'AQVI mito', 'ill', 'cell_no',
+          'mean width', 'mean length']
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -123,8 +126,12 @@ def detect_ill_cells(cell_labels, gfp_collector, debug=False):
     qualifying_gfp = gfp_collector > np.median(gfp_collector[gfp_collector > 0])
 
     for i in range(1, np.max(cell_labels)+1):
+
         current_mask = cell_labels == i
         current_cell_gfp = gfp_collector[np.logical_and(current_mask, qualifying_gfp)]
+
+        if len(current_cell_gfp) == 0:
+            continue
 
         if debug:
             print current_cell_gfp.shape
@@ -151,12 +158,14 @@ def detect_ill_cells(cell_labels, gfp_collector, debug=False):
 
     cell_no = range(0, len(cells_average_gfp))
     # requires at least 5 pts to work
-    slope, intercept, _, _, _ = stats.linregress(np.array(cell_no)[1:5],
-                                                 np.array(cells_average_gfp)[1:5])
+    regression_base = min(len(cells_average_gfp)-5, 10)
+    slope, intercept, _, _, _ = stats.linregress(np.array(cell_no)[1:regression_base],
+                                                 np.array(cells_average_gfp)[1:regression_base])
 
-    # TODO: hard-coded limits. Need to be removed
     # std_err = np.std(np.array(cells_average_gfp)[1:5])
-    std_err = 0.05/8.
+    std_err = (np.max(np.array(cells_average_gfp)[1:regression_base])
+               - np.min(np.array(cells_average_gfp)[1:regression_base]))/2
+    # std_err = 0.05/8.
 
     non_dying_predicted = intercept + slope * np.array(cell_no)
     non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted+std_err*8) <
@@ -188,7 +197,7 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
     gfp_collector = np.sum(base, axis=0)
     gfp_clustering_markers = np.zeros(gfp_collector.shape, dtype=np.uint8)
 
-    # watershed segment
+    # random walker segment
     gfp_clustering_markers[gfp_collector > np.mean(gfp_collector)*2] = 2
     gfp_clustering_markers[gfp_collector < np.mean(gfp_collector)*0.20] = 1
     labels = random_walker(gfp_collector, gfp_clustering_markers, beta=10, mode='bf')
@@ -210,12 +219,12 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
 
     # finish the watershed
     expanded_maxi_markers = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
-    cell_markers = watershed(-distance, expanded_maxi_markers, mask=labels)
+    segmented_cells = watershed(-distance, expanded_maxi_markers, mask=labels)
     # there is still the problem with first element not being labeled properly.
 
     # calculating the excessively luminous outliers
     non_dying_cells_mask, qualifying_gfp, segments, predicted, labels3, std_err = \
-        detect_ill_cells(cell_markers, gfp_collector)
+        detect_ill_cells(segmented_cells, gfp_collector)
 
     if debug:
         plt.figure(figsize=(20.0, 15.0))
@@ -231,7 +240,7 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         plt.imshow(labels, cmap='gray', interpolation='nearest')
 
         plt.subplot(244)
-        plt.imshow(cell_markers, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.imshow(segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
 
         plt.subplot(245)
         plt.imshow(labels3, cmap='hot', interpolation='nearest')
@@ -253,7 +262,82 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         # plt.show()
         plt.clf()
 
-    return non_dying_cells_mask, cell_markers
+    return non_dying_cells_mask, segmented_cells
+
+
+def compute_mito_fragmentation(name_pattern, mCh_channel, debug=False):
+    """
+
+    :param name_pattern:
+    :param mCh_channel:
+    :param debug:
+    :return:
+    """
+    mch_collector = np.max(mCh_channel, axis=0)  #TODO: check how max affects v.s. sum
+
+    labels = np.zeros(mch_collector.shape, dtype=np.uint8)
+
+    # TODO: adjust the sensitivity here later
+    labels[mch_collector > np.mean(mch_collector)*2] = 1
+
+    # skeleton = skeletonize(labels)
+
+    skeleton, distance = medial_axis(labels, return_distance=True)
+
+    active_threshold = np.mean(mch_collector[labels])*5
+    # print active_threshold
+
+    transform_filter = np.zeros(mch_collector.shape, dtype=np.uint8)
+    transform_filter[np.logical_and(skeleton > 0, mch_collector > active_threshold)] = 1
+
+    skeleton = transform_filter*distance
+
+    # TODO: use adaptative threshold?
+    # http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_thresholding.html#sphx
+    # -glr-auto-examples-xx-applications-plot-thresholding-py
+
+    transform_filter = transform_filter*distance
+
+    segmented_labels, object_no = ndi.label(transform_filter, structure=np.ones((3, 3)))
+    # print segmented_labels.shape, np.min(segmented_labels), np.max(segmented_labels)
+
+    collector = []
+    for contig_no in range(1, object_no+1):
+        vals = skeleton[segmented_labels == contig_no]
+        mean, support = (np.mean(vals), len(vals))
+        if mean < 2 or support < 3:
+            skeleton[segmented_labels == contig_no] = 0
+            transform_filter[segmented_labels == contig_no] = 0
+        else:
+            collector.append([mean, support])
+
+    collector = np.array(collector)
+
+    # raw_input('press enter to continue')
+
+    if debug:
+
+        ax1 = plt.subplot(221)
+        plt.title(name_pattern)
+        plt.imshow(mch_collector, cmap='Reds')
+        plt.colorbar()
+
+        plt.subplot(222, sharex=ax1, sharey=ax1)
+        plt.imshow(labels, cmap='hot', interpolation='nearest')
+
+        plt.subplot(223, sharex=ax1, sharey=ax1)
+        plt.imshow(skeleton, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(labels, [0.5], colors='w')
+
+        plt.subplot(224, sharex=ax1, sharey=ax1)
+        plt.imshow(segmented_labels, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(labels, [0.5], colors='w')
+
+        plt.show()
+
+    return collector
 
 
 def analyze(name_pattern, marked_prot, organelle_marker,
@@ -278,7 +362,7 @@ def analyze(name_pattern, marked_prot, organelle_marker,
 
     # GFP-unhealthy cells detection logic
     if segment_out_ill:
-        cancellation_mask, cell_markers = segment_out_ill_cells(name_pattern, marked_prot, debug)
+        cancellation_mask, segmented_cells = segment_out_ill_cells(name_pattern, marked_prot, debug)
 
         new_w1448 = np.zeros_like(marked_prot)
         new_w2561 = np.zeros_like(organelle_marker)
@@ -313,8 +397,8 @@ def analyze(name_pattern, marked_prot, organelle_marker,
 
         seg_stack = []
 
-        for cell_no in range(1, np.max(cell_markers)+1):
-            current_mask = cell_markers == cell_no
+        for cell_no in range(1, np.max(segmented_cells)+1):
+            current_mask = segmented_cells == cell_no
             current_mask = current_mask[:, :]
             ill = np.median(cancellation_mask[current_mask])
 
@@ -323,6 +407,13 @@ def analyze(name_pattern, marked_prot, organelle_marker,
 
             _marked_prot = np.zeros_like(marked_prot)
             _marked_prot[:, current_mask] = marked_prot[:, current_mask]
+
+            mito_char_collector = compute_mito_fragmentation(name_pattern, _organelle_marker)
+            # print 'mito_char_collector', mito_char_collector
+            if len(mito_char_collector) == 0:
+                mean_width, mean_length = [np.NaN, np.NaN]
+            else:
+                mean_width, mean_length = np.mean(mito_char_collector, axis=0).tolist()
 
             if debug:
                 plt.subplot(221)
@@ -349,14 +440,19 @@ def analyze(name_pattern, marked_prot, organelle_marker,
             seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
                     np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
                     ill, cell_no]
+            seg4 = [mean_width, mean_length]
 
-            seg_stack += [seg0 + seg1 + seg2 + seg3]
+            seg_stack += [seg0 + seg1 + seg2 + seg3 + seg4]
 
         return seg_stack
 
     else:
         # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
         # mitochondria appeared to be well above thershold in practice.
+
+        mito_char_collector = compute_mito_fragmentation(name_pattern, organelle_marker)
+        mean_width, mean_length = np.mean(mito_char_collector, axis=0).tolist()
+
         seg0 = [name_pattern]
         seg1 = [np.sum(marked_prot * marked_prot),
                 np.sum(organelle_marker * organelle_marker),
@@ -365,8 +461,9 @@ def analyze(name_pattern, marked_prot, organelle_marker,
                 np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
         seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
                 np.median(organelle_marker[organelle_marker > mcc_cutoff])]
+        seg4 = [mean_width, mean_length]
 
-        return [seg0 + seg1 + seg2 + seg3]
+        return [seg0 + seg1 + seg2 + seg3 + seg4]
 
 
 def mammalian_traversal():
@@ -412,7 +509,8 @@ def mammalian_traversal():
 
 
 def yeast_traversal(per_cell):
-    main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
+    # main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
+    main_root = "L:\\Users\\jerry\\Image\\ForAndrei"
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
     sucker_list = []
