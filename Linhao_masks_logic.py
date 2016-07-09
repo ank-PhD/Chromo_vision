@@ -16,7 +16,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import disk
 from skimage.morphology import skeletonize, medial_axis
 from skimage.feature import blob_dog, blob_log, blob_doh
-
+from skimage.filters import threshold_otsu, threshold_adaptive
 
 # ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
 # main_root = "L:\\Users\\linghao\\Data for quantification"
@@ -46,7 +46,7 @@ dtype2bits = {'uint8': 8,
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
           'AQVI GFP', 'AQVI mito', 'ill', 'cell_no',
-          'mean width', 'mean length']
+          'mean width', 'mean length', 'percent non-fragmented']
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -192,6 +192,11 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
     :param debug:
     :return:
     """
+
+    # TODO: spearate segmentation from ill cells deletion
+
+    # TODO: use OTSU threshold for GFP thresholding
+
     sel_elem = disk(2)
 
     gfp_collector = np.sum(base, axis=0)
@@ -265,79 +270,148 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
     return non_dying_cells_mask, segmented_cells
 
 
-def compute_mito_fragmentation(name_pattern, mCh_channel, debug=False):
-    """
+def skeletonize_mitochondria(mCh_channel):
 
-    :param name_pattern:
-    :param mCh_channel:
-    :param debug:
-    :return:
-    """
-    mch_collector = np.max(mCh_channel, axis=0)  #TODO: check how max affects v.s. sum
-
+    mch_collector = np.max(mCh_channel, axis=0)  # TODO: check how max affects v.s. sum
     labels = np.zeros(mch_collector.shape, dtype=np.uint8)
 
-    # TODO: adjust the sensitivity here later
-    labels[mch_collector > np.mean(mch_collector)*2] = 1
-
-    # skeleton = skeletonize(labels)
-
-    skeleton, distance = medial_axis(labels, return_distance=True)
-
-    active_threshold = np.mean(mch_collector[labels])*5
-    # print active_threshold
-
-    transform_filter = np.zeros(mch_collector.shape, dtype=np.uint8)
-    transform_filter[np.logical_and(skeleton > 0, mch_collector > active_threshold)] = 1
-
-    skeleton = transform_filter*distance
-
-    # TODO: use adaptative threshold?
+    # thresh = np.max(mch_collector)/2.
+    thresh = threshold_otsu(mch_collector)
+    # TODO: use adaptative threshold? => otsu seems to be sufficient in this case
     # http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_thresholding.html#sphx
     # -glr-auto-examples-xx-applications-plot-thresholding-py
+    #  log-transform? => Nope, does not work
+    # TODO: hessian/laplacian of gaussian blob detection?
 
-    transform_filter = transform_filter*distance
+    labels[mch_collector > thresh] = 1
+    skeleton2 = skeletonize(labels)
+    skeleton, distance = medial_axis(labels, return_distance=True)
+    active_threshold = np.mean(mch_collector[labels]) * 5
 
-    segmented_labels, object_no = ndi.label(transform_filter, structure=np.ones((3, 3)))
-    # print segmented_labels.shape, np.min(segmented_labels), np.max(segmented_labels)
+    # print active_threshold
+    transform_filter = np.zeros(mch_collector.shape, dtype=np.uint8)
+    transform_filter[np.logical_and(skeleton > 0, mch_collector > active_threshold)] = 1
+    skeleton = transform_filter * distance
 
+    skeleton_ma = np.ma.masked_array(skeleton, skeleton > 0)
+    skeleton_convolve = ndi.convolve(skeleton_ma, np.ones((3, 3)), mode='constant', cval=0.0)
+    divider_convolve = ndi.convolve(transform_filter, np.ones((3, 3)), mode='constant', cval=0.0)
+    skeleton_convolve[divider_convolve > 0] = skeleton_convolve[divider_convolve > 0] \
+                                              / divider_convolve[divider_convolve > 0]
+    new_skeleton = np.zeros_like(skeleton)
+    new_skeleton[skeleton2] = skeleton_convolve[skeleton2]
+    skeleton = new_skeleton
+
+    return labels, mch_collector, skeleton, transform_filter
+
+
+def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
+
+    numbered_skeleton, object_no = ndi.label(transform_filter, structure=np.ones((3, 3)))
+
+    # print numbered_skeleton.shape, np.min(numbered_skeleton), np.max(numbered_skeleton)
     collector = []
-    for contig_no in range(1, object_no+1):
-        vals = skeleton[segmented_labels == contig_no]
-        mean, support = (np.mean(vals), len(vals))
-        if mean < 2 or support < 3:
-            skeleton[segmented_labels == contig_no] = 0
-            transform_filter[segmented_labels == contig_no] = 0
+    paint_area = np.zeros_like(numbered_labels)
+    paint_length = np.zeros_like(numbered_labels)
+
+    # TODO: if cell skeleton is inside the numbered_labels contig, paint the whole label with it to get area.
+    # problem: double match
+    # solution: restrict skeleton to one, select numbered_labels on non-nul skeleton, then use the numbered_labels
+
+    for contig_no in range(1, object_no + 1):
+        vals = skeleton[numbered_skeleton == contig_no]
+        current_label = np.max(numbered_labels[numbered_skeleton == contig_no])
+        area, support = (np.sqrt(np.sum((numbered_labels == current_label).astype(np.int8))),
+                         len(vals))
+
+        if area < 3:
+            skeleton[numbered_skeleton == contig_no] = 0
+            transform_filter[numbered_skeleton == contig_no] = 0
+
         else:
-            collector.append([mean, support])
+            paint_area[numbered_labels == current_label] = area
+            paint_length[numbered_labels == current_label] = support
+            collector.append([area, support])
 
     collector = np.array(collector)
 
-    # raw_input('press enter to continue')
+    return collector, paint_length, paint_area
+
+
+def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, transform_filter,
+                               segmented_cells, debug=False):
+
+    numbered_lables, lables_no = ndi.label(labels, structure=np.ones((3, 3)))
+
+    collector, paint_length, paint_area = measure_skeleton_stats(numbered_lables,
+                                                                  skeleton,
+                                                                  transform_filter)
+
+    classification_pad = np.zeros_like(segmented_cells)
+    classification_roll = []
+
+    for i in range(1, np.max(segmented_cells)+1):
+        pre_mask = segmented_cells == i
+        current_mask = np.logical_and(pre_mask, labels > 0)
+        if len(paint_length[current_mask]) == 0:
+            classification_roll.append(-1)
+            classification_pad[pre_mask] = -1
+        else:
+            length = np.mean(np.unique(paint_length[current_mask]))
+            area = np.mean(np.unique(paint_area[current_mask]))
+            if length < 20 or area < 5:
+                classification_pad[pre_mask] = 1
+                classification_roll.append(1)
+            else:
+                classification_pad[pre_mask] = 2
+                classification_roll.append(2)
+
+    if len(collector) == 0:
+        mean_width, mean_length = [np.NaN, np.NaN]
+    else:
+        mean_width, mean_length = np.mean(collector, axis=0).tolist()
 
     if debug:
 
-        ax1 = plt.subplot(221)
+        ax1 = plt.subplot(231)
         plt.title(name_pattern)
         plt.imshow(mch_collector, cmap='Reds')
         plt.colorbar()
+        plt.contour(labels, [0.5], colors='k')
 
-        plt.subplot(222, sharex=ax1, sharey=ax1)
-        plt.imshow(labels, cmap='hot', interpolation='nearest')
-
-        plt.subplot(223, sharex=ax1, sharey=ax1)
+        plt.subplot(232, sharex=ax1, sharey=ax1)
+        plt.title('width ; length - av: %.2f ; %.2f' % (mean_width, mean_length))
         plt.imshow(skeleton, cmap=plt.cm.spectral, interpolation='nearest')
         plt.colorbar()
         plt.contour(labels, [0.5], colors='w')
 
-        plt.subplot(224, sharex=ax1, sharey=ax1)
-        plt.imshow(segmented_labels, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.subplot(233, sharex=ax1, sharey=ax1)
+        plt.imshow(segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(labels, [0.5], colors='w')
+
+        plt.subplot(234, sharex=ax1, sharey=ax1)
+        plt.imshow(numbered_lables, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(labels, [0.5], colors='w')
+
+        plt.subplot(235, sharex=ax1, sharey=ax1)
+        plt.imshow(classification_pad, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(labels, [0.5], colors='w')
+
+        plt.subplot(236, sharex=ax1, sharey=ax1)
+        # TODO: classified as segmented or not
+        plt.imshow(paint_area, cmap='hot', interpolation='nearest')
         plt.colorbar()
         plt.contour(labels, [0.5], colors='w')
 
         plt.show()
 
-    return collector
+    classification_array = np.array(classification_roll)
+    classification_array = classification_array[classification_array > 0] - 1
+
+    return collector, mean_width, mean_length, np.mean(classification_array)
 
 
 def analyze(name_pattern, marked_prot, organelle_marker,
@@ -389,8 +463,16 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         plt.subplot(224)
         plt.imshow(mch_collector, cmap='Reds')
 
-        # plt.savefig('verification_bank/core-%s.png' % name_pattern)
+        plt.savefig('verification_bank/core-%s.png' % name_pattern)
         # plt.show()
+        plt.clf()
+
+    labels, mch_collector, skeleton, transform_filter = skeletonize_mitochondria(organelle_marker)
+
+    if debug:
+        compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, transform_filter,
+                                   segmented_cells, debug=True)
+        plt.savefig('verification_bank/mitochondria-%s.png' % name_pattern)
         plt.clf()
 
     if per_cell:
@@ -408,12 +490,21 @@ def analyze(name_pattern, marked_prot, organelle_marker,
             _marked_prot = np.zeros_like(marked_prot)
             _marked_prot[:, current_mask] = marked_prot[:, current_mask]
 
-            mito_char_collector = compute_mito_fragmentation(name_pattern, _organelle_marker)
-            # print 'mito_char_collector', mito_char_collector
-            if len(mito_char_collector) == 0:
-                mean_width, mean_length = [np.NaN, np.NaN]
-            else:
-                mean_width, mean_length = np.mean(mito_char_collector, axis=0).tolist()
+            _labels = np.zeros_like(labels)
+            _labels[current_mask] = labels[current_mask]
+
+            _mch_collector = np.zeros_like(mch_collector)
+            _mch_collector[current_mask] = mch_collector[current_mask]
+
+            _skeleton = np.zeros_like(skeleton)
+            _skeleton[current_mask] = skeleton[current_mask]
+
+            _transform_filter = np.zeros_like(transform_filter)
+            _transform_filter[current_mask] = transform_filter[current_mask]
+
+            mito_char_collector, mean_width, mean_length, perc_err = compute_mito_fragmentation(
+                name_pattern,
+                _labels, _mch_collector, _skeleton, _transform_filter, segmented_cells)
 
             if debug:
                 plt.subplot(221)
@@ -439,8 +530,9 @@ def analyze(name_pattern, marked_prot, organelle_marker,
                     np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)]
             seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
                     np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
-                    ill, cell_no]
-            seg4 = [mean_width, mean_length]
+                    ill,
+                    cell_no]
+            seg4 = [mean_width, mean_length, perc_err]
 
             seg_stack += [seg0 + seg1 + seg2 + seg3 + seg4]
 
@@ -450,8 +542,9 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
         # mitochondria appeared to be well above thershold in practice.
 
-        mito_char_collector = compute_mito_fragmentation(name_pattern, organelle_marker)
-        mean_width, mean_length = np.mean(mito_char_collector, axis=0).tolist()
+        mito_char_collector, mean_width, mean_length, perc_err = compute_mito_fragmentation(
+            name_pattern,
+            labels, mch_collector, skeleton, transform_filter, segmented_cells)
 
         seg0 = [name_pattern]
         seg1 = [np.sum(marked_prot * marked_prot),
@@ -460,8 +553,10 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
                 np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
         seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
-                np.median(organelle_marker[organelle_marker > mcc_cutoff])]
-        seg4 = [mean_width, mean_length]
+                np.median(organelle_marker[organelle_marker > mcc_cutoff]),
+                'NaN',
+                'NaN']
+        seg4 = [mean_width, mean_length, perc_err]
 
         return [seg0 + seg1 + seg2 + seg3 + seg4]
 
@@ -553,5 +648,5 @@ def yeast_traversal(per_cell):
 
 
 if __name__ == "__main__":
-    yeast_traversal(per_cell=True)
+    yeast_traversal(per_cell=False)
     # mammalian_traversal()
