@@ -46,7 +46,8 @@ dtype2bits = {'uint8': 8,
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
           'AQVI GFP', 'AQVI mito', 'ill', 'cell_no',
-          'mean width', 'mean length', 'percent non-fragmented']
+          'mean width', 'mean length', 'cells with intact mitochondria %',
+          'area of intact mitochondria %']
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -366,6 +367,12 @@ def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, tr
                 classification_pad[pre_mask] = 2
                 classification_roll.append(2)
 
+    intact = np.logical_and(paint_length > 20, paint_area > 5)
+    broken = np.logical_and(np.logical_or(paint_length < 20, paint_area < 5), paint_area > 1)
+
+    mito_summary = np.sum(intact.astype(np.int8)) / \
+                   (np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
+
     if len(collector) == 0:
         mean_width, mean_length = [np.NaN, np.NaN]
     else:
@@ -401,17 +408,16 @@ def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, tr
         plt.contour(labels, [0.5], colors='w')
 
         plt.subplot(236, sharex=ax1, sharey=ax1)
-        # TODO: classified as segmented or not
         plt.imshow(paint_area, cmap='hot', interpolation='nearest')
         plt.colorbar()
         plt.contour(labels, [0.5], colors='w')
 
-        plt.show()
+        # plt.show()
 
     classification_array = np.array(classification_roll)
     classification_array = classification_array[classification_array > 0] - 1
 
-    return collector, mean_width, mean_length, np.mean(classification_array)
+    return collector, [mean_width, mean_length, np.mean(classification_array), mito_summary]
 
 
 def analyze(name_pattern, marked_prot, organelle_marker,
@@ -502,7 +508,7 @@ def analyze(name_pattern, marked_prot, organelle_marker,
             _transform_filter = np.zeros_like(transform_filter)
             _transform_filter[current_mask] = transform_filter[current_mask]
 
-            mito_char_collector, mean_width, mean_length, perc_err = compute_mito_fragmentation(
+            mito_char_collector, seg4 = compute_mito_fragmentation(
                 name_pattern,
                 _labels, _mch_collector, _skeleton, _transform_filter, segmented_cells)
 
@@ -532,7 +538,6 @@ def analyze(name_pattern, marked_prot, organelle_marker,
                     np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
                     ill,
                     cell_no]
-            seg4 = [mean_width, mean_length, perc_err]
 
             seg_stack += [seg0 + seg1 + seg2 + seg3 + seg4]
 
@@ -542,8 +547,7 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
         # mitochondria appeared to be well above thershold in practice.
 
-        mito_char_collector, mean_width, mean_length, perc_err = compute_mito_fragmentation(
-            name_pattern,
+        mito_char_collector, seg4 = compute_mito_fragmentation(name_pattern,
             labels, mch_collector, skeleton, transform_filter, segmented_cells)
 
         seg0 = [name_pattern]
@@ -556,7 +560,6 @@ def analyze(name_pattern, marked_prot, organelle_marker,
                 np.median(organelle_marker[organelle_marker > mcc_cutoff]),
                 'NaN',
                 'NaN']
-        seg4 = [mean_width, mean_length, perc_err]
 
         return [seg0 + seg1 + seg2 + seg3 + seg4]
 
