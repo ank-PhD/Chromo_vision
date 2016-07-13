@@ -18,6 +18,19 @@ from skimage.morphology import skeletonize, medial_axis
 from skimage.feature import blob_dog, blob_log, blob_doh
 from skimage.filters import threshold_otsu, threshold_adaptive
 
+# Logic layers:
+#   1. Traversal
+#   2. Matching of the images to different channels
+#   3. Segmentation of
+#       a. Mitochondria
+#       b. Cells
+#   4. Retrieval of descriptors each surface/volume
+#   5. Classification of a surface/volume
+#       a. with respect to the signal intensity => Cell death
+#       b. with respect to the geometry
+#           i. Area, skeleton, =>  fragmented mitochondria or not
+
+
 # ImageRoot = "L:\\Users\\linghao\\Spinning Disk\\03182016-Ry129-131\\Ry130\\hs30min"
 # main_root = "L:\\Users\\linghao\\Data for quantification"
 
@@ -42,6 +55,7 @@ translator = {'w1488': 0,
 dtype2bits = {'uint8': 8,
               'uint16': 16,
               'uint32': 32}
+
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
@@ -370,8 +384,8 @@ def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, tr
     intact = np.logical_and(paint_length > 20, paint_area > 5)
     broken = np.logical_and(np.logical_or(paint_length < 20, paint_area < 5), paint_area > 1)
 
-    mito_summary = np.sum(intact.astype(np.int8)) / \
-                   (np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
+    mito_summary = float(np.sum(intact.astype(np.int8))) / \
+                   float(np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
 
     if len(collector) == 0:
         mean_width, mean_length = [np.NaN, np.NaN]
@@ -608,7 +622,8 @@ def mammalian_traversal():
 
 def yeast_traversal(per_cell):
     # main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
-    main_root = "L:\\Users\\jerry\\Image\\ForAndrei"
+    # main_root = "L:\\Users\\jerry\\Image\\ForAndrei"
+    main_root = "C:\\Users\\Andrei\\Downloads\\raw data\\fluorescense"
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
     sucker_list = []
