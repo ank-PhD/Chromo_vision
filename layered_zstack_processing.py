@@ -68,15 +68,131 @@ safe_dir_create('verification_bank')
 
 # DEBUG frame with rendering:
 class DebugFrame(object):
-    container_dict = {}
 
-    def render_1(cls):
-        pass
+    def __init__(self):
+        self.name_pattern = None
+        self.gfp_collector = None
+        self.gfp_clustering_markers = None
+        self.labels = None
+        self.segmented_cells_labels = None
 
-    def render_2(cls):
-        pass
+        self.average_gfp_in_cell_mask = None
+        self.cells_average_gfp_list = None
+        self.non_dying_predicted = None
+        self.std_err = None
+        self.non_dying_cells_mask = None
+        self.qualifying_gfp_mask = None
 
-    def render_3(cls):
+        self.gfp_collector_x = None
+        self.mch_collector_x = None
+        self.gfp_collector_1 = None
+        self.mch_collector_1 = None
+
+        self.mch_collector = None
+        self.skeleton = None
+        self.mean_width = None
+        self.mean_length = None
+        self.skeleton_labels = None
+        self.segmented_cells = None
+        self.numbered_lables = None
+        self.classification_pad = None
+        self.paint_area = None
+
+    def render_1(self):
+        plt.figure(figsize=(20.0, 15.0))
+        plt.title(self.name_pattern)
+
+        plt.subplot(241)
+        plt.imshow(self.gfp_collector, interpolation='nearest')
+
+        plt.subplot(242)
+        plt.imshow(self.gfp_clustering_markers, cmap='hot', interpolation='nearest')
+
+        plt.subplot(243)
+        plt.imshow(self.labels, cmap='gray', interpolation='nearest')
+
+        plt.subplot(244)
+        plt.imshow(self.segmented_cells_labels, cmap=plt.cm.spectral, interpolation='nearest')
+
+        if self.std_err is not None:
+
+            plt.subplot(245)
+            plt.imshow(self.average_gfp_in_cell_mask, cmap='hot', interpolation='nearest')
+            plt.colorbar()
+
+            plt.subplot(246)
+            plt.plot(self.cells_average_gfp_list, 'ko')
+            plt.plot(self.non_dying_predicted, 'r')
+            plt.plot(self.non_dying_predicted + self.std_err, 'g')
+            plt.plot(self.non_dying_predicted - self.std_err, 'g')
+
+            plt.subplot(247)
+            plt.imshow(self.non_dying_cells_mask, cmap='gray', interpolation='nearest')
+
+            plt.subplot(248)
+            plt.imshow(self.qualifying_gfp_mask)
+
+        plt.savefig('verification_bank/%s.png' % self.name_pattern)
+        # plt.show()
+        plt.clf()
+
+    def render_2(self):
+
+        plt.subplot(221)
+        plt.imshow(self.gfp_collector_1, cmap='Greens')
+
+        plt.subplot(222)
+        plt.imshow(self.mch_collector_1, cmap='Reds')
+
+        plt.subplot(223)
+        plt.imshow(self.gfp_collector_x, cmap='Greens')
+
+        plt.subplot(224)
+        plt.imshow(self.mch_collector_x, cmap='Reds')
+
+        plt.savefig('verification_bank/core-%s.png' % self.name_pattern)
+        # plt.show()
+        plt.clf()
+
+    def render_3(self):
+        ax1 = plt.subplot(231)
+        plt.title(self.name_pattern)
+        plt.imshow(self.mch_collector, cmap='Reds')
+        plt.colorbar()
+        plt.contour(self.labels, [0.5], colors='k')
+
+        plt.subplot(232, sharex=ax1, sharey=ax1)
+        plt.title('width ; length - av: %.2f ; %.2f' % (self.mean_width, self.mean_length))
+        plt.imshow(self.skeleton, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.skeleton_labels, [0.5], colors='w')
+
+        plt.subplot(233, sharex=ax1, sharey=ax1)
+        plt.imshow(self.segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.skeleton_labels, [0.5], colors='w')
+
+        plt.subplot(234, sharex=ax1, sharey=ax1)
+        plt.imshow(self.numbered_lables, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.skeleton_labels, [0.5], colors='w')
+
+        plt.subplot(235, sharex=ax1, sharey=ax1)
+        plt.imshow(self.classification_pad, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.skeleton_labels, [0.5], colors='w')
+
+        plt.subplot(236, sharex=ax1, sharey=ax1)
+        plt.imshow(self.paint_area, cmap='hot', interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.skeleton_labels, [0.5], colors='w')
+
+        plt.savefig('verification_bank/mitochondria-%s.png' % self.name_pattern)
+        # plt.show()
+        plt.clf()
+
+
+running_debug_frame = DebugFrame()
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -97,7 +213,6 @@ def tiff_stack_2_np_arr(tiff_stack):
     return np.array(stack)
 
 
-# TODO: this function does two things. In fact it needs to be refactored to only do one
 def gamma_stabilize_and_smooth(tiff_stack,
                                alpha_clean=5, smoothing_px=1.5, debug=False):
     """
@@ -106,6 +221,7 @@ def gamma_stabilize_and_smooth(tiff_stack,
     :param tiff_stack:
     :param alpha_clean:
     :param smoothing_px:
+    :param debug:
     :return:
     """
     current_image = tiff_stack_2_np_arr(tiff_stack)
@@ -151,19 +267,18 @@ def detect_ill_cells(cell_labels, gfp_collector):
     :param gfp_collector:
     :return:
     """
-    average_gfp_in_cell_mask, cells_average_gfp_list, qualifying_gfp_mask = extract_average_qualifying_gfp_for_cell_regions(
-        cell_labels, gfp_collector)
-
-    cells_average_gfp_list, non_dying_cells, non_dying_predicted, std_err = detect_upper_outliers(
-        cells_average_gfp_list)
-
+    cells_average_gfp_list = extract_average_qualifying_gfp_for_cell_regions(cell_labels,
+                                                                             gfp_collector)
+    non_dying_cells = detect_upper_outliers(cells_average_gfp_list)
     non_dying_cells_mask = paint_mask(cell_labels, non_dying_cells)
 
-    return non_dying_cells_mask, qualifying_gfp_mask, cells_average_gfp_list,\
-           non_dying_predicted, average_gfp_in_cell_mask, std_err
+    running_debug_frame.non_dying_cells_mask = non_dying_cells_mask
+
+    return non_dying_cells_mask
 
 
 def extract_average_qualifying_gfp_for_cell_regions(cell_labels, gfp_collector):
+
     cells_average_gfp_list = []
     average_gfp_in_cell_mask = np.zeros_like(cell_labels).astype(np.float64)
     qualifying_gfp_mask = gfp_collector > np.median(gfp_collector[gfp_collector > 0])
@@ -182,24 +297,32 @@ def extract_average_qualifying_gfp_for_cell_regions(cell_labels, gfp_collector):
         cells_average_gfp_list.append(gfp_average)
         average_gfp_in_cell_mask[current_mask] = gfp_average
 
-    return average_gfp_in_cell_mask, cells_average_gfp_list, qualifying_gfp_mask
+    running_debug_frame.average_gfp_in_cell_mask = average_gfp_in_cell_mask
+    running_debug_frame.qualifying_gfp_mask = qualifying_gfp_mask
+
+    return cells_average_gfp_list
 
 
-def detect_upper_outliers(cells_average_gfp):
-    arg_sort = np.argsort(np.array(cells_average_gfp))
-    cells_average_gfp = sorted(cells_average_gfp)
-    cell_no = range(0, len(cells_average_gfp))
+def detect_upper_outliers(cells_average_gfp_list):
+    arg_sort = np.argsort(np.array(cells_average_gfp_list))
+    cells_average_gfp_list = sorted(cells_average_gfp_list)
+    cell_no = range(0, len(cells_average_gfp_list))
     # Non-trivial logic selecting the regression basis
-    regression_base = min(len(cells_average_gfp) - 5, 10)
+    regression_base = min(len(cells_average_gfp_list) - 5, 10)
     slope, intercept, _, _, _ = stats.linregress(np.array(cell_no)[1:regression_base],
-                                                 np.array(cells_average_gfp)[1:regression_base])
-    std_err = (np.max(np.array(cells_average_gfp)[1:regression_base]) -
-               np.min(np.array(cells_average_gfp)[1:regression_base])) / 2
+                                                 np.array(cells_average_gfp_list)[1:regression_base])
+    std_err = (np.max(np.array(cells_average_gfp_list)[1:regression_base]) -
+               np.min(np.array(cells_average_gfp_list)[1:regression_base])) / 2
+    std_err *= 8
     non_dying_predicted = intercept + slope * np.array(cell_no)
-    non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted + std_err * 8) <
-                                                 np.array(cells_average_gfp)]]
+    non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted + std_err) <
+                                                 np.array(cells_average_gfp_list)]]
 
-    return cells_average_gfp, non_dying_cells, non_dying_predicted, std_err
+    running_debug_frame.cells_average_gfp_list = cells_average_gfp_list
+    running_debug_frame.non_dying_predicted = non_dying_predicted
+    running_debug_frame.std_err = std_err
+
+    return non_dying_cells
 
 
 def paint_mask(cell_labels, non_dying_cells):
@@ -222,25 +345,26 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
     :param debug:
     :return:
     """
+    gfp_collector, segmented_cells_labels = segment_out_cells(base)
+    non_dying_cells_mask = detect_ill_cells(segmented_cells_labels, gfp_collector)
 
+    return non_dying_cells_mask, segmented_cells_labels
+
+
+def segment_out_cells(base):
     # TODO: spearate segmentation from ill cells deletion
-
     # TODO: use OTSU threshold for GFP thresholding
 
     sel_elem = disk(2)
-
     gfp_collector = np.sum(base, axis=0)
     gfp_clustering_markers = np.zeros(gfp_collector.shape, dtype=np.uint8)
-
     # random walker segment
-    gfp_clustering_markers[gfp_collector > np.mean(gfp_collector)*2] = 2
-    gfp_clustering_markers[gfp_collector < np.mean(gfp_collector)*0.20] = 1
+    gfp_clustering_markers[gfp_collector > np.mean(gfp_collector) * 2] = 2
+    gfp_clustering_markers[gfp_collector < np.mean(gfp_collector) * 0.20] = 1
     labels = random_walker(gfp_collector, gfp_clustering_markers, beta=10, mode='bf')
-
     # round up the labels and set the background to 0 from 1
     labels = closing(labels, sel_elem)
     labels -= 1
-
     # prepare distances for the watershed
     distance = ndi.distance_transform_edt(labels)
     local_maxi = peak_local_max(distance,
@@ -248,76 +372,34 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
                                 min_distance=10,  # about half of a bud with our size
                                 threshold_abs=10,  # allows to clear the noise
                                 labels=labels)
-
     # we fuse the labels that are close together that escaped the min distance in local_maxi
     local_maxi = ndi.convolve(local_maxi, np.ones((5, 5)), mode='constant', cval=0.0)
-
     # finish the watershed
     expanded_maxi_markers = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
     segmented_cells_labels = watershed(-distance, expanded_maxi_markers, mask=labels)
-    # there is still the problem with first element not being labeled properly.
 
-    # calculating the excessively luminous outliers
-    non_dying_cells_mask, qualifying_gfp_mask, cells_average_gfp_list,\
-    non_dying_predicted, average_gfp_in_cell_mask, std_err = \
-        detect_ill_cells(segmented_cells_labels, gfp_collector)
+    # log debugging data
+    running_debug_frame.gfp_collector = gfp_collector
+    running_debug_frame.gfp_clustering_markers = gfp_clustering_markers
+    running_debug_frame.labels = labels
+    running_debug_frame.segmented_cells_labels = segmented_cells_labels
 
-    if debug:
-        plt.figure(figsize=(20.0, 15.0))
-        plt.title(name_pattern)
-
-        plt.subplot(241)
-        plt.imshow(gfp_collector, interpolation='nearest')
-
-        plt.subplot(242)
-        plt.imshow(gfp_clustering_markers, cmap='hot', interpolation='nearest')
-
-        plt.subplot(243)
-        plt.imshow(labels, cmap='gray', interpolation='nearest')
-
-        plt.subplot(244)
-        plt.imshow(segmented_cells_labels, cmap=plt.cm.spectral, interpolation='nearest')
-
-        plt.subplot(245)
-        plt.imshow(average_gfp_in_cell_mask, cmap='hot', interpolation='nearest')
-        plt.colorbar()
-
-        plt.subplot(246)
-        plt.plot(cells_average_gfp_list, 'ko')
-        plt.plot(non_dying_predicted, 'r')
-        plt.plot(non_dying_predicted+std_err*8, 'g')  # arbitrary coefficient, but works well
-        plt.plot(non_dying_predicted-std_err*8, 'g')
-
-        plt.subplot(247)
-        plt.imshow(non_dying_cells_mask, cmap='gray', interpolation='nearest')
-
-        plt.subplot(248)
-        plt.imshow(qualifying_gfp_mask)
-
-        plt.savefig('verification_bank/%s.png' % name_pattern)
-        # plt.show()
-        plt.clf()
-
-    return non_dying_cells_mask, segmented_cells_labels
+    return gfp_collector, segmented_cells_labels
 
 
 def skeletonize_mitochondria(mCh_channel):
 
     mch_collector = np.max(mCh_channel, axis=0)  # TODO: check how max affects v.s. sum
-    labels = np.zeros(mch_collector.shape, dtype=np.uint8)
+    skeleton_labels = np.zeros(mch_collector.shape, dtype=np.uint8)
 
     # thresh = np.max(mch_collector)/2.
     thresh = threshold_otsu(mch_collector)
-    # TODO: use adaptative threshold? => otsu seems to be sufficient in this case
-    # http://scikit-image.org/docs/dev/auto_examples/xx_applications/plot_thresholding.html#sphx
-    # -glr-auto-examples-xx-applications-plot-thresholding-py
-    #  log-transform? => Nope, does not work
-    # TODO: hessian/laplacian of gaussian blob detection?
+    # use adaptative threshold? => otsu seems to be sufficient in this case
 
-    labels[mch_collector > thresh] = 1
-    skeleton2 = skeletonize(labels)
-    skeleton, distance = medial_axis(labels, return_distance=True)
-    active_threshold = np.mean(mch_collector[labels]) * 5
+    skeleton_labels[mch_collector > thresh] = 1
+    skeleton2 = skeletonize(skeleton_labels)
+    skeleton, distance = medial_axis(skeleton_labels, return_distance=True)
+    active_threshold = np.mean(mch_collector[skeleton_labels]) * 5
 
     # print active_threshold
     transform_filter = np.zeros(mch_collector.shape, dtype=np.uint8)
@@ -333,7 +415,7 @@ def skeletonize_mitochondria(mCh_channel):
     new_skeleton[skeleton2] = skeleton_convolve[skeleton2]
     skeleton = new_skeleton
 
-    return labels, mch_collector, skeleton, transform_filter
+    return skeleton_labels, mch_collector, skeleton, transform_filter
 
 
 def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
@@ -344,10 +426,6 @@ def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
     collector = []
     paint_area = np.zeros_like(numbered_labels)
     paint_length = np.zeros_like(numbered_labels)
-
-    # TODO: if cell skeleton is inside the numbered_labels contig, paint the whole label with it to get area.
-    # problem: double match
-    # solution: restrict skeleton to one, select numbered_labels on non-nul skeleton, then use the numbered_labels
 
     for contig_no in range(1, object_no + 1):
         vals = skeleton[numbered_skeleton == contig_no]
@@ -369,21 +447,18 @@ def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
     return collector, paint_length, paint_area
 
 
-def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, transform_filter,
+def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton, transform_filter,
                                segmented_cells, debug=False):
 
-    numbered_lables, lables_no = ndi.label(labels, structure=np.ones((3, 3)))
-
+    numbered_lables, lables_no = ndi.label(skeleton_labels, structure=np.ones((3, 3)))
     collector, paint_length, paint_area = measure_skeleton_stats(numbered_lables,
-                                                                  skeleton,
-                                                                  transform_filter)
-
+                                                                  skeleton, transform_filter)
     classification_pad = np.zeros_like(segmented_cells)
     classification_roll = []
 
     for i in range(1, np.max(segmented_cells)+1):
         pre_mask = segmented_cells == i
-        current_mask = np.logical_and(pre_mask, labels > 0)
+        current_mask = np.logical_and(pre_mask, skeleton_labels > 0)
         if len(paint_length[current_mask]) == 0:
             classification_roll.append(-1)
             classification_pad[pre_mask] = -1
@@ -408,41 +483,15 @@ def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, tr
     else:
         mean_width, mean_length = np.mean(collector, axis=0).tolist()
 
-    if debug:
-
-        ax1 = plt.subplot(231)
-        plt.title(name_pattern)
-        plt.imshow(mch_collector, cmap='Reds')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='k')
-
-        plt.subplot(232, sharex=ax1, sharey=ax1)
-        plt.title('width ; length - av: %.2f ; %.2f' % (mean_width, mean_length))
-        plt.imshow(skeleton, cmap=plt.cm.spectral, interpolation='nearest')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='w')
-
-        plt.subplot(233, sharex=ax1, sharey=ax1)
-        plt.imshow(segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='w')
-
-        plt.subplot(234, sharex=ax1, sharey=ax1)
-        plt.imshow(numbered_lables, cmap=plt.cm.spectral, interpolation='nearest')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='w')
-
-        plt.subplot(235, sharex=ax1, sharey=ax1)
-        plt.imshow(classification_pad, cmap=plt.cm.spectral, interpolation='nearest')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='w')
-
-        plt.subplot(236, sharex=ax1, sharey=ax1)
-        plt.imshow(paint_area, cmap='hot', interpolation='nearest')
-        plt.colorbar()
-        plt.contour(labels, [0.5], colors='w')
-
-        # plt.show()
+    running_debug_frame.mch_collector = mch_collector
+    running_debug_frame.skeleton = skeleton
+    running_debug_frame.mean_width = mean_width
+    running_debug_frame.mean_length = mean_length
+    running_debug_frame.skeleton_labels = skeleton_labels
+    running_debug_frame.segmented_cells = segmented_cells
+    running_debug_frame.numbered_lables = numbered_lables
+    running_debug_frame.classification_pad = classification_pad
+    running_debug_frame.paint_area = paint_area
 
     classification_array = np.array(classification_roll)
     classification_array = classification_array[classification_array > 0] - 1
@@ -462,63 +511,49 @@ def analyze(name_pattern, marked_prot, organelle_marker,
     :param debug:
     :return:
     """
+    running_debug_frame.name_pattern = name_pattern
+    gfp_collector, segmented_cells_labels = segment_out_cells(marked_prot)
 
-    if per_cell and not segment_out_ill:
-        raise Exception("cannot perform per-cell output without proper segmentation")
+    running_debug_frame.gfp_collector_1 = np.sum(marked_prot, axis=0)
+    running_debug_frame.mch_collector_1 = np.sum(organelle_marker, axis=0)
 
-    if debug:
-        gfp_collector_1 = np.sum(marked_prot, axis=0)
-        mch_collector_1 = np.sum(organelle_marker, axis=0)
-
-    # GFP-unhealthy cells detection logic
     if segment_out_ill:
-        cancellation_mask, segmented_cells = segment_out_ill_cells(name_pattern, marked_prot, debug)
+        non_dying_cells_mask = detect_ill_cells(segmented_cells_labels, gfp_collector)
 
         new_w1448 = np.zeros_like(marked_prot)
         new_w2561 = np.zeros_like(organelle_marker)
 
-        new_w1448[:, np.logical_not(cancellation_mask)] = marked_prot[:, np.logical_not(cancellation_mask)]
-        new_w2561[:, np.logical_not(cancellation_mask)] = organelle_marker[:, np.logical_not(cancellation_mask)]
+        new_w1448[:, np.logical_not(non_dying_cells_mask)] = marked_prot[:,
+                                                             np.logical_not(non_dying_cells_mask)]
+        new_w2561[:, np.logical_not(non_dying_cells_mask)] = organelle_marker[:,
+                                                             np.logical_not(non_dying_cells_mask)]
 
         marked_prot = new_w1448
         organelle_marker = new_w2561
 
-    if debug:
-        gfp_collector = np.sum(marked_prot, axis=0)
-        mch_collector = np.sum(organelle_marker, axis=0)
+    running_debug_frame.gfp_collector_x = np.sum(marked_prot, axis=0)
+    running_debug_frame.mch_collector_x = np.sum(organelle_marker, axis=0)
 
-        plt.subplot(221)
-        plt.imshow(gfp_collector_1, cmap='Greens')
-
-        plt.subplot(222)
-        plt.imshow(mch_collector_1, cmap='Reds')
-
-        plt.subplot(223)
-        plt.imshow(gfp_collector, cmap='Greens')
-
-        plt.subplot(224)
-        plt.imshow(mch_collector, cmap='Reds')
-
-        plt.savefig('verification_bank/core-%s.png' % name_pattern)
-        # plt.show()
-        plt.clf()
-
-    labels, mch_collector, skeleton, transform_filter = skeletonize_mitochondria(organelle_marker)
+    # TODO: this twin methods can have their signature significantly simplfiied thanks to the
+    # debug frame
+    skeleton_labels, mch_collector, skeleton, transform_filter = skeletonize_mitochondria(organelle_marker)
 
     if debug:
-        compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, transform_filter,
-                                   segmented_cells, debug=True)
-        plt.savefig('verification_bank/mitochondria-%s.png' % name_pattern)
-        plt.clf()
+        compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton, transform_filter,
+                                   segmented_cells_labels, debug=True)
+
+        running_debug_frame.render_1()
+        running_debug_frame.render_2()
+        running_debug_frame.render_3()
 
     if per_cell:
 
         seg_stack = []
 
-        for cell_no in range(1, np.max(segmented_cells)+1):
-            current_mask = segmented_cells == cell_no
+        for cell_no in range(1, np.max(segmented_cells_labels)+1):
+            current_mask = segmented_cells_labels == cell_no
             current_mask = current_mask[:, :]
-            ill = np.median(cancellation_mask[current_mask])
+            ill = np.median(non_dying_cells_mask[current_mask])
 
             _organelle_marker = np.zeros_like(organelle_marker)
             _organelle_marker[:, current_mask] = organelle_marker[:, current_mask]
@@ -526,8 +561,8 @@ def analyze(name_pattern, marked_prot, organelle_marker,
             _marked_prot = np.zeros_like(marked_prot)
             _marked_prot[:, current_mask] = marked_prot[:, current_mask]
 
-            _labels = np.zeros_like(labels)
-            _labels[current_mask] = labels[current_mask]
+            _labels = np.zeros_like(skeleton_labels)
+            _labels[current_mask] = skeleton_labels[current_mask]
 
             _mch_collector = np.zeros_like(mch_collector)
             _mch_collector[current_mask] = mch_collector[current_mask]
@@ -540,7 +575,7 @@ def analyze(name_pattern, marked_prot, organelle_marker,
 
             mito_char_collector, seg4 = compute_mito_fragmentation(
                 name_pattern,
-                _labels, _mch_collector, _skeleton, _transform_filter, segmented_cells)
+                _labels, _mch_collector, _skeleton, _transform_filter, segmented_cells_labels)
 
             if debug:
                 plt.subplot(221)
@@ -578,7 +613,7 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         # mitochondria appeared to be well above thershold in practice.
 
         mito_char_collector, seg4 = compute_mito_fragmentation(name_pattern,
-            labels, mch_collector, skeleton, transform_filter, segmented_cells)
+            skeleton_labels, mch_collector, skeleton, transform_filter, segmented_cells_labels)
 
         seg0 = [name_pattern]
         seg1 = [np.sum(marked_prot * marked_prot),
