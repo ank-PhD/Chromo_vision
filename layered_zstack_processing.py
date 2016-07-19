@@ -7,7 +7,6 @@ from scipy.ndimage.filters import gaussian_filter
 from scipy import stats
 from collections import defaultdict
 from csv import writer
-from chiffatools.high_level_os_methods import safe_dir_create
 from skimage.segmentation import random_walker
 from skimage.morphology import closing
 from scipy import ndimage as ndi
@@ -15,7 +14,7 @@ from skimage.morphology import watershed
 from skimage.feature import peak_local_max
 from skimage.morphology import disk
 from skimage.morphology import skeletonize, medial_axis
-from skimage.filters import threshold_otsu, threshold_adaptive
+from skimage.filters import threshold_otsu
 
 
 # Logic layers:
@@ -32,35 +31,52 @@ from skimage.filters import threshold_otsu, threshold_adaptive
 #   6. Re-hashing of the file names in order to extract time-stamp
 #   7. Perform time-line tracing and statistics calculation
 
+#   DEBUG: output the graphical representation of what has been done by different cell
 
-safe_dir_create('verification_bank')
+
+# Modul-level user-changeable parameters parameters:
 scaling_factor = (1.0, 1.0, 3.5)
-
-red = (1.0, 0.0, 0.0)
-green = (0.0, 1.0, 0.0)
-
-v_min = 0.6
 mcc_cutoff = 0.05
 
-# 0 is the protein marker
-# 1 is the mitochondria marker
-
+# 0 is the protein of interest marker
+# 1 is the organelle of interest marker
 translator = {'w1488': 0,
               'w2561': 1,
               'C1': 1,
               'C2': 0}
-
-
-dtype2bits = {'uint8': 8,
-              'uint16': 16,
-              'uint32': 32}
-
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
           'AQVI GFP', 'AQVI mito', 'ill', 'cell_no',
           'mean width', 'mean length', 'cells with intact mitochondria %',
           'area of intact mitochondria %']
+
+
+# Support functions and logic:
+dtype2bits = {'uint8': 8,
+              'uint16': 16,
+              'uint32': 32}
+
+
+def safe_dir_create(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+
+safe_dir_create('verification_bank')
+
+
+# DEBUG frame with rendering:
+class DebugFrame(object):
+    container_dict = {}
+
+    def render_1(cls):
+        pass
+
+    def render_2(cls):
+        pass
+
+    def render_3(cls):
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -82,7 +98,8 @@ def tiff_stack_2_np_arr(tiff_stack):
 
 
 # TODO: this function does two things. In fact it needs to be refactored to only do one
-def gamma_stabilize_and_smooth(tiff_stack, alpha_clean=5, smoothing_px=1.5, debug=False):
+def gamma_stabilize_and_smooth(tiff_stack,
+                               alpha_clean=5, smoothing_px=1.5, debug=False):
     """
     Performs the initial conversion and de-noising of the tiff stack
 
@@ -125,76 +142,75 @@ def gamma_stabilize_and_smooth(tiff_stack, alpha_clean=5, smoothing_px=1.5, debu
     return stabilized
 
 
-def detect_ill_cells(cell_labels, gfp_collector, debug=False):
+def detect_ill_cells(cell_labels, gfp_collector):
     """
     Logic that determines outliers that look like dead cells in the gfp channel projection.
     Requires at least 5 non-dead cells in the image.
 
     :param cell_labels:
     :param gfp_collector:
-    :param debug:
     :return:
     """
-    cells_average_gfp = []
-    average_gfp_in_cell = np.zeros_like(cell_labels).astype(np.float64)
-    qualifying_gfp = gfp_collector > np.median(gfp_collector[gfp_collector > 0])
+    average_gfp_in_cell_mask, cells_average_gfp_list, qualifying_gfp_mask = extract_average_qualifying_gfp_for_cell_regions(
+        cell_labels, gfp_collector)
 
-    for i in range(1, np.max(cell_labels)+1):
+    cells_average_gfp_list, non_dying_cells, non_dying_predicted, std_err = detect_upper_outliers(
+        cells_average_gfp_list)
+
+    non_dying_cells_mask = paint_mask(cell_labels, non_dying_cells)
+
+    return non_dying_cells_mask, qualifying_gfp_mask, cells_average_gfp_list,\
+           non_dying_predicted, average_gfp_in_cell_mask, std_err
+
+
+def extract_average_qualifying_gfp_for_cell_regions(cell_labels, gfp_collector):
+    cells_average_gfp_list = []
+    average_gfp_in_cell_mask = np.zeros_like(cell_labels).astype(np.float64)
+    qualifying_gfp_mask = gfp_collector > np.median(gfp_collector[gfp_collector > 0])
+
+    for i in range(1, np.max(cell_labels) + 1):
 
         current_mask = cell_labels == i
-        current_cell_gfp = gfp_collector[np.logical_and(current_mask, qualifying_gfp)]
+        current_cell_gfp = gfp_collector[np.logical_and(current_mask, qualifying_gfp_mask)]
 
         if len(current_cell_gfp) == 0:
             continue
 
-        if debug:
-            print current_cell_gfp.shape
-            print current_cell_gfp
-            plt.subplot(221)
-            plt.imshow(current_mask, cmap='gray', interpolation='nearest')
-            plt.subplot(222)
-            plt.imshow(qualifying_gfp, cmap='gray', interpolation='nearest')
-            plt.subplot(223)
-            plt.imshow(np.logical_and(current_mask, qualifying_gfp),
-                       cmap='gray', interpolation='nearest')
-            plt.subplot(224)
-            plt.imshow(gfp_collector, cmap='gray', interpolation='nearest')
-            plt.show()
-
         gfp_percentile = np.percentile(current_cell_gfp, 50)
         gfp_average = np.average(gfp_collector[np.logical_and(current_mask,
                                                               gfp_collector > gfp_percentile)])
-        cells_average_gfp.append(gfp_average)
-        average_gfp_in_cell[current_mask] = gfp_average
+        cells_average_gfp_list.append(gfp_average)
+        average_gfp_in_cell_mask[current_mask] = gfp_average
 
+    return average_gfp_in_cell_mask, cells_average_gfp_list, qualifying_gfp_mask
+
+
+def detect_upper_outliers(cells_average_gfp):
     arg_sort = np.argsort(np.array(cells_average_gfp))
     cells_average_gfp = sorted(cells_average_gfp)
-
     cell_no = range(0, len(cells_average_gfp))
-    # requires at least 5 pts to work
-    regression_base = min(len(cells_average_gfp)-5, 10)
+    # Non-trivial logic selecting the regression basis
+    regression_base = min(len(cells_average_gfp) - 5, 10)
     slope, intercept, _, _, _ = stats.linregress(np.array(cell_no)[1:regression_base],
                                                  np.array(cells_average_gfp)[1:regression_base])
-
-    # std_err = np.std(np.array(cells_average_gfp)[1:5])
-    std_err = (np.max(np.array(cells_average_gfp)[1:regression_base])
-               - np.min(np.array(cells_average_gfp)[1:regression_base]))/2
-    # std_err = 0.05/8.
-
+    std_err = (np.max(np.array(cells_average_gfp)[1:regression_base]) -
+               np.min(np.array(cells_average_gfp)[1:regression_base])) / 2
     non_dying_predicted = intercept + slope * np.array(cell_no)
-    non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted+std_err*8) <
-                                                     np.array(cells_average_gfp)]]
-    # print non_dying_cells, non_dying_cells.tolist() != []
-    non_dying_cells_mask = np.zeros_like(cell_labels).astype(np.uint8)
+    non_dying_cells = arg_sort[np.array(cell_no)[np.array(non_dying_predicted + std_err * 8) <
+                                                 np.array(cells_average_gfp)]]
 
+    return cells_average_gfp, non_dying_cells, non_dying_predicted, std_err
+
+
+def paint_mask(cell_labels, non_dying_cells):
+    non_dying_cells_mask = np.zeros_like(cell_labels).astype(np.uint8)
     if non_dying_cells.tolist() != []:
         print 'enter non_dying_cells correction'
         for idx in non_dying_cells.tolist():
-            non_dying_cells_mask[cell_labels == idx + 1] = 1  # indexing starts from 1, not 0 for the labels
-            print 'updated %s' % (idx+1)
-
-    return non_dying_cells_mask, qualifying_gfp, cells_average_gfp,\
-           non_dying_predicted, average_gfp_in_cell, std_err
+            non_dying_cells_mask[
+                cell_labels == idx + 1] = 1  # indexing starts from 1, not 0 for the labels
+            print 'updated %s' % (idx + 1)
+    return non_dying_cells_mask
 
 
 def segment_out_ill_cells(name_pattern, base, debug=False):
@@ -238,12 +254,13 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
 
     # finish the watershed
     expanded_maxi_markers = ndi.label(local_maxi, structure=np.ones((3, 3)))[0]
-    segmented_cells = watershed(-distance, expanded_maxi_markers, mask=labels)
+    segmented_cells_labels = watershed(-distance, expanded_maxi_markers, mask=labels)
     # there is still the problem with first element not being labeled properly.
 
     # calculating the excessively luminous outliers
-    non_dying_cells_mask, qualifying_gfp, segments, predicted, labels3, std_err = \
-        detect_ill_cells(segmented_cells, gfp_collector)
+    non_dying_cells_mask, qualifying_gfp_mask, cells_average_gfp_list,\
+    non_dying_predicted, average_gfp_in_cell_mask, std_err = \
+        detect_ill_cells(segmented_cells_labels, gfp_collector)
 
     if debug:
         plt.figure(figsize=(20.0, 15.0))
@@ -259,29 +276,29 @@ def segment_out_ill_cells(name_pattern, base, debug=False):
         plt.imshow(labels, cmap='gray', interpolation='nearest')
 
         plt.subplot(244)
-        plt.imshow(segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.imshow(segmented_cells_labels, cmap=plt.cm.spectral, interpolation='nearest')
 
         plt.subplot(245)
-        plt.imshow(labels3, cmap='hot', interpolation='nearest')
+        plt.imshow(average_gfp_in_cell_mask, cmap='hot', interpolation='nearest')
         plt.colorbar()
 
         plt.subplot(246)
-        plt.plot(segments, 'ko')
-        plt.plot(predicted, 'r')
-        plt.plot(predicted+std_err*8, 'g')  # arbitrary coefficient, but works well
-        plt.plot(predicted-std_err*8, 'g')
+        plt.plot(cells_average_gfp_list, 'ko')
+        plt.plot(non_dying_predicted, 'r')
+        plt.plot(non_dying_predicted+std_err*8, 'g')  # arbitrary coefficient, but works well
+        plt.plot(non_dying_predicted-std_err*8, 'g')
 
         plt.subplot(247)
         plt.imshow(non_dying_cells_mask, cmap='gray', interpolation='nearest')
 
         plt.subplot(248)
-        plt.imshow(qualifying_gfp)
+        plt.imshow(qualifying_gfp_mask)
 
         plt.savefig('verification_bank/%s.png' % name_pattern)
         # plt.show()
         plt.clf()
 
-    return non_dying_cells_mask, segmented_cells
+    return non_dying_cells_mask, segmented_cells_labels
 
 
 def skeletonize_mitochondria(mCh_channel):
