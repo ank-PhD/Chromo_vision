@@ -34,7 +34,7 @@ from skimage.filters import threshold_otsu
 #   DEBUG: output the graphical representation of what has been done by different cell
 
 
-# Modul-level user-changeable parameters parameters:
+# Module-level user-changeable parameters parameters:
 scaling_factor = (1.0, 1.0, 3.5)
 mcc_cutoff = 0.05
 
@@ -44,6 +44,19 @@ translator = {'w1488': 0,
               'w2561': 1,
               'C1': 1,
               'C2': 0}
+
+classes = ['LuciSM', '0718', '0719']
+
+time_stamps = {
+    'beforehs': -30,
+    'hs30min': 0,
+    'rec15min': 15,
+    'rec30min': 30,
+    'rec45min': 45,
+    'rec60min': 60,
+    'rec75min': 75,
+    'rec90min': 90
+}
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
@@ -83,10 +96,10 @@ class DebugFrame(object):
         self.non_dying_cells_mask = None
         self.qualifying_gfp_mask = None
 
-        self.gfp_collector_x = None
-        self.mch_collector_x = None
-        self.gfp_collector_1 = None
-        self.mch_collector_1 = None
+        self.gfp_collector_post = None
+        self.mch_collector_post = None
+        self.gfp_collector_pre = None
+        self.mch_collector_pre = None
 
         self.mch_collector = None
         self.skeleton = None
@@ -139,16 +152,16 @@ class DebugFrame(object):
     def render_2(self):
 
         plt.subplot(221)
-        plt.imshow(self.gfp_collector_1, cmap='Greens')
+        plt.imshow(self.gfp_collector_pre, cmap='Greens')
 
         plt.subplot(222)
-        plt.imshow(self.mch_collector_1, cmap='Reds')
+        plt.imshow(self.mch_collector_pre, cmap='Reds')
 
         plt.subplot(223)
-        plt.imshow(self.gfp_collector_x, cmap='Greens')
+        plt.imshow(self.gfp_collector_post, cmap='Greens')
 
         plt.subplot(224)
-        plt.imshow(self.mch_collector_x, cmap='Reds')
+        plt.imshow(self.mch_collector_post, cmap='Reds')
 
         plt.savefig('verification_bank/core-%s.png' % self.name_pattern)
         # plt.show()
@@ -190,6 +203,11 @@ class DebugFrame(object):
         plt.savefig('verification_bank/mitochondria-%s.png' % self.name_pattern)
         # plt.show()
         plt.clf()
+
+    def dump_debug_frames(self):
+        self.render_2()
+        self.render_1()
+        self.render_3()
 
 
 running_debug_frame = DebugFrame()
@@ -336,21 +354,6 @@ def paint_mask(cell_labels, non_dying_cells):
     return non_dying_cells_mask
 
 
-def segment_out_ill_cells(name_pattern, base, debug=False):
-    """
-    Logic to segment out overly gfp luminiscent cells, taken as a proxi for the state of illness
-
-    :param name_pattern:
-    :param base:
-    :param debug:
-    :return:
-    """
-    gfp_collector, segmented_cells_labels = segment_out_cells(base)
-    non_dying_cells_mask = detect_ill_cells(segmented_cells_labels, gfp_collector)
-
-    return non_dying_cells_mask, segmented_cells_labels
-
-
 def segment_out_cells(base):
     # TODO: spearate segmentation from ill cells deletion
     # TODO: use OTSU threshold for GFP thresholding
@@ -387,9 +390,9 @@ def segment_out_cells(base):
     return gfp_collector, segmented_cells_labels
 
 
-def skeletonize_mitochondria(mCh_channel):
+def skeletonize_mitochondria(mch_channel):
 
-    mch_collector = np.max(mCh_channel, axis=0)  # TODO: check how max affects v.s. sum
+    mch_collector = np.max(mch_channel, axis=0)  # TODO: check how max affects v.s. sum
     skeleton_labels = np.zeros(mch_collector.shape, dtype=np.uint8)
 
     # thresh = np.max(mch_collector)/2.
@@ -409,8 +412,8 @@ def skeletonize_mitochondria(mCh_channel):
     skeleton_ma = np.ma.masked_array(skeleton, skeleton > 0)
     skeleton_convolve = ndi.convolve(skeleton_ma, np.ones((3, 3)), mode='constant', cval=0.0)
     divider_convolve = ndi.convolve(transform_filter, np.ones((3, 3)), mode='constant', cval=0.0)
-    skeleton_convolve[divider_convolve > 0] = skeleton_convolve[divider_convolve > 0] \
-                                              / divider_convolve[divider_convolve > 0]
+    skeleton_convolve[divider_convolve > 0] = skeleton_convolve[divider_convolve > 0] / \
+                                              divider_convolve[divider_convolve > 0]
     new_skeleton = np.zeros_like(skeleton)
     new_skeleton[skeleton2] = skeleton_convolve[skeleton2]
     skeleton = new_skeleton
@@ -447,8 +450,8 @@ def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
     return collector, paint_length, paint_area
 
 
-def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton, transform_filter,
-                               segmented_cells, debug=False):
+def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton,
+                               transform_filter, segmented_cells):
 
     numbered_lables, lables_no = ndi.label(skeleton_labels, structure=np.ones((3, 3)))
     collector, paint_length, paint_area = measure_skeleton_stats(numbered_lables,
@@ -496,55 +499,73 @@ def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, ske
     classification_array = np.array(classification_roll)
     classification_array = classification_array[classification_array > 0] - 1
 
-    return collector, [mean_width, mean_length, np.mean(classification_array), mito_summary]
+    return [mean_width, mean_length, np.mean(classification_array), mito_summary]
 
 
-def analyze(name_pattern, marked_prot, organelle_marker,
-            segment_out_ill=True, debug=False, per_cell=False):
+def _3d_stack_2d_filter(_3d_stack, _2d_filter):
+    new_stack = np.zeros_like(_3d_stack)
+    new_stack[:, _2d_filter] = _3d_stack[:, _2d_filter]
+    return new_stack
+
+
+def extract_statistics(_labels, _marked_prot, _mch_collector, _organelle_marker, _skeleton,
+                       _transform_filter, name_pattern, segmented_cells_labels,
+                       cell_no='NaN', ill='NaN'):
+
+    seg4 = compute_mito_fragmentation(name_pattern, _labels, _mch_collector,
+                                      _skeleton, _transform_filter, segmented_cells_labels)
+
+    seg0 = [name_pattern]
+    seg1 = [np.sum(_marked_prot * _marked_prot),
+            np.sum(_organelle_marker * _organelle_marker),
+            np.sum(_marked_prot * _organelle_marker)]
+    seg2 = [np.sum(_organelle_marker[_marked_prot > mcc_cutoff]) / np.sum(
+        _organelle_marker),
+            np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)]
+    seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
+            np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
+            ill,
+            cell_no]
+
+    return [seg0 + seg1 + seg2 + seg3 + seg4]
+
+
+def analyze_gfp_mch_paired_stacks(name_pattern, gfp_marked_prot, mch_organelle_marker,
+                                  segment_out_ill=True, per_cell=False):
     """
     Stitches the analysis pipeline together
 
     :param name_pattern:
-    :param marked_prot:
-    :param organelle_marker:
+    :param gfp_marked_prot:
+    :param mch_organelle_marker:
     :param segment_out_ill:
-    :param debug:
+    :param per_cell:
     :return:
     """
     running_debug_frame.name_pattern = name_pattern
-    gfp_collector, segmented_cells_labels = segment_out_cells(marked_prot)
+    gfp_collector, segmented_cells_labels = segment_out_cells(gfp_marked_prot)
 
-    running_debug_frame.gfp_collector_1 = np.sum(marked_prot, axis=0)
-    running_debug_frame.mch_collector_1 = np.sum(organelle_marker, axis=0)
+    running_debug_frame.gfp_collector_pre = np.sum(gfp_marked_prot, axis=0)
+    running_debug_frame.mch_collector_pre = np.sum(mch_organelle_marker, axis=0)
 
     if segment_out_ill:
         non_dying_cells_mask = detect_ill_cells(segmented_cells_labels, gfp_collector)
+        gfp_marked_prot = _3d_stack_2d_filter(gfp_marked_prot,
+                                              np.logical_not(non_dying_cells_mask))
+        mch_organelle_marker = _3d_stack_2d_filter(mch_organelle_marker,
+                                                   np.logical_not(non_dying_cells_mask))
 
-        new_w1448 = np.zeros_like(marked_prot)
-        new_w2561 = np.zeros_like(organelle_marker)
+    running_debug_frame.gfp_collector_post = np.sum(gfp_marked_prot, axis=0)
+    running_debug_frame.mch_collector_post = np.sum(mch_organelle_marker, axis=0)
 
-        new_w1448[:, np.logical_not(non_dying_cells_mask)] = marked_prot[:,
-                                                             np.logical_not(non_dying_cells_mask)]
-        new_w2561[:, np.logical_not(non_dying_cells_mask)] = organelle_marker[:,
-                                                             np.logical_not(non_dying_cells_mask)]
+    skeleton_labels, mch_collector, skeleton, transform_filter = \
+        skeletonize_mitochondria(mch_organelle_marker)
 
-        marked_prot = new_w1448
-        organelle_marker = new_w2561
+    # required to properly load the debug state.
+    compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton,
+                               transform_filter, segmented_cells_labels)
 
-    running_debug_frame.gfp_collector_x = np.sum(marked_prot, axis=0)
-    running_debug_frame.mch_collector_x = np.sum(organelle_marker, axis=0)
-
-    # TODO: this twin methods can have their signature significantly simplfiied thanks to the
-    # debug frame
-    skeleton_labels, mch_collector, skeleton, transform_filter = skeletonize_mitochondria(organelle_marker)
-
-    if debug:
-        compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, skeleton, transform_filter,
-                                   segmented_cells_labels, debug=True)
-
-        running_debug_frame.render_1()
-        running_debug_frame.render_2()
-        running_debug_frame.render_3()
+    running_debug_frame.dump_debug_frames()
 
     if per_cell:
 
@@ -553,80 +574,28 @@ def analyze(name_pattern, marked_prot, organelle_marker,
         for cell_no in range(1, np.max(segmented_cells_labels)+1):
             current_mask = segmented_cells_labels == cell_no
             current_mask = current_mask[:, :]
-            ill = np.median(non_dying_cells_mask[current_mask])
 
-            _organelle_marker = np.zeros_like(organelle_marker)
-            _organelle_marker[:, current_mask] = organelle_marker[:, current_mask]
+            if segment_out_ill:
+                ill = np.median(non_dying_cells_mask[current_mask])
+            else:
+                ill = 'NaN'
 
-            _marked_prot = np.zeros_like(marked_prot)
-            _marked_prot[:, current_mask] = marked_prot[:, current_mask]
+            _organelle_marker = _3d_stack_2d_filter(mch_organelle_marker, current_mask)
+            _marked_prot = _3d_stack_2d_filter(gfp_marked_prot, current_mask)
+            _skeleton_labels = _3d_stack_2d_filter(skeleton_labels, current_mask)
+            _mch_collector = _3d_stack_2d_filter(mch_collector, current_mask)
+            _skeleton = _3d_stack_2d_filter(skeleton, current_mask)
+            _transform_filter = _3d_stack_2d_filter(transform_filter, current_mask)
 
-            _labels = np.zeros_like(skeleton_labels)
-            _labels[current_mask] = skeleton_labels[current_mask]
-
-            _mch_collector = np.zeros_like(mch_collector)
-            _mch_collector[current_mask] = mch_collector[current_mask]
-
-            _skeleton = np.zeros_like(skeleton)
-            _skeleton[current_mask] = skeleton[current_mask]
-
-            _transform_filter = np.zeros_like(transform_filter)
-            _transform_filter[current_mask] = transform_filter[current_mask]
-
-            mito_char_collector, seg4 = compute_mito_fragmentation(
-                name_pattern,
-                _labels, _mch_collector, _skeleton, _transform_filter, segmented_cells_labels)
-
-            if debug:
-                plt.subplot(221)
-                plt.imshow(current_mask, cmap='Greens')
-
-                plt.subplot(222)
-                mp_2d = np.sum(_marked_prot, axis=0)
-                plt.imshow(mp_2d, cmap='Greens')
-
-                plt.subplot(223)
-                om_2d = np.sum(_organelle_marker, axis=0)
-                plt.imshow(om_2d, cmap='Reds')
-
-                # plt.show()
-                plt.clf()
-
-            seg0 = [name_pattern]
-            seg1 = [np.sum(_marked_prot * _marked_prot),
-                    np.sum(_organelle_marker * _organelle_marker),
-                    np.sum(_marked_prot * _organelle_marker)]
-            seg2 = [np.sum(_organelle_marker[_marked_prot > mcc_cutoff]) / np.sum(
-                _organelle_marker),
-                    np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)]
-            seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
-                    np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
-                    ill,
-                    cell_no]
-
-            seg_stack += [seg0 + seg1 + seg2 + seg3 + seg4]
-
+            seg_stack += extract_statistics(_skeleton_labels, _marked_prot, _mch_collector,
+                                            _organelle_marker, _skeleton, _transform_filter,
+                                            name_pattern, segmented_cells_labels, cell_no, ill)
         return seg_stack
 
     else:
-        # suggested: normalize 2561 channel to span 0-1. This is not necessary needed since the
-        # mitochondria appeared to be well above thershold in practice.
 
-        mito_char_collector, seg4 = compute_mito_fragmentation(name_pattern,
-            skeleton_labels, mch_collector, skeleton, transform_filter, segmented_cells_labels)
-
-        seg0 = [name_pattern]
-        seg1 = [np.sum(marked_prot * marked_prot),
-                np.sum(organelle_marker * organelle_marker),
-                np.sum(marked_prot * organelle_marker)]
-        seg2 = [np.sum(organelle_marker[marked_prot > mcc_cutoff]) / np.sum(organelle_marker),
-                np.sum(marked_prot[organelle_marker > mcc_cutoff]) / np.sum(marked_prot)]
-        seg3 = [np.median(marked_prot[organelle_marker > mcc_cutoff]),
-                np.median(organelle_marker[organelle_marker > mcc_cutoff]),
-                'NaN',
-                'NaN']
-
-        return [seg0 + seg1 + seg2 + seg3 + seg4]
+        return extract_statistics(skeleton_labels, gfp_marked_prot, mch_collector, mch_organelle_marker,
+                                  skeleton, transform_filter, name_pattern, segmented_cells_labels)
 
 
 def mammalian_traversal():
@@ -641,7 +610,7 @@ def mammalian_traversal():
         color = None
         name_pattern = None
         if files and 'Splitted' in current_location:
-            for img in files:  # TODO: remove the debug flag here
+            for img in files:
                 if '.tif' in img and '_thumb_' not in img:
                     img_codename = img.split('-')
                     prefix = current_location.split('\\')[4:]
@@ -654,8 +623,8 @@ def mammalian_traversal():
             for name_pattern, (w1448, w2561) in replicas.iteritems():
                 print name_pattern
                 try:
-                    results_collector.append(analyze(name_pattern, w1448, w2561,
-                                                     segment_out_ill=False, debug=True))
+                    results_collector.append(analyze_gfp_mch_paired_stacks(name_pattern, w1448, w2561,
+                                                                           segment_out_ill=False))
                 except Exception as my_exception:
                     print traceback.print_exc(my_exception)
                     sucker_list.append(name_pattern)
@@ -686,6 +655,7 @@ def yeast_traversal(per_cell):
         name_pattern = None
         if files:
             for img in files:
+                # travers and match within the current folder => needs to become parametric
                 if '.TIF' in img and '_thumb_' not in img:
                     img_codename = img.split(' ')[0].split('_')
                     prefix = current_location.split('\\')[4:]
@@ -695,12 +665,13 @@ def yeast_traversal(per_cell):
                     print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
                     replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
 
+            # analyze the matched stack
             for name_pattern, (w1448, w2561) in replicas.iteritems():
                 print name_pattern
                 try:
-                    results_collector += analyze(name_pattern, w1448, w2561,
-                                                 segment_out_ill=True, debug=True,
-                                                 per_cell=per_cell)
+                    results_collector += analyze_gfp_mch_paired_stacks(name_pattern, w1448, w2561,
+                                                                       segment_out_ill=True,
+                                                                       per_cell=per_cell)
                 except Exception as my_exception:
                     print traceback.print_exc(my_exception)
                     sucker_list.append(name_pattern)
@@ -714,6 +685,13 @@ def yeast_traversal(per_cell):
             csv_writer.writerow(item)
 
     print sucker_list
+
+
+# TODO: sorting on the CSV writer:
+#   - use comparison classes
+#   - use timestamp identification
+#   - calculate mean value
+#   - calculate population-based standard deviation
 
 
 if __name__ == "__main__":
