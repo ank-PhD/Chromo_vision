@@ -3,12 +3,13 @@
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/lambda_scan_analyzer.py" line="59" />
     <bookmark url="file://$PROJECT_DIR$/lambda_scan_analyzer.py" line="62" />
-    <bookmark url="file://$PROJECT_DIR$/Linhao_masks_logic.py" line="591" />
+    <bookmark url="file://$PROJECT_DIR$/Linhao_masks_logic.py" line="592" />
     <bookmark url="file://$PROJECT_DIR$/Kai_mask_logic.py" line="220" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Linhao_masks_logic.py" afterPath="$PROJECT_DIR$/Linhao_masks_logic.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/layered_zstack_processing.py" afterPath="$PROJECT_DIR$/layered_zstack_processing.py" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -24,9 +25,10 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Chromo_vision$Kai_mask_logic.coverage" NAME="Kai_mask_logic Coverage Results" MODIFIED="1468436383200" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Chromo_vision$Linhao_masks_logic__1_.coverage" NAME="Linhao_masks_logic (1) Coverage Results" MODIFIED="1469134255727" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop" />
     <SUITE FILE_PATH="coverage/Chromo_vision$Linhao_maks_logic.coverage" NAME="Linhao_maks_logic Coverage Results" MODIFIED="1461788374531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Chromo_vision$layered_zstack_processing.coverage" NAME="layered_zstack_processing Coverage Results" MODIFIED="1468964912837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Chromo_vision$Linhao_masks_logic.coverage" NAME="Linhao_masks_logic Coverage Results" MODIFIED="1468783906590" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Chromo_vision$layered_zstack_processing.coverage" NAME="layered_zstack_processing Coverage Results" MODIFIED="1469200049774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Chromo_vision$Linhao_masks_logic.coverage" NAME="Linhao_masks_logic Coverage Results" MODIFIED="1469132820968" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -36,7 +38,7 @@
     <favorites_list name="Chromo_vision" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.475625">
+    <splitter split-orientation="horizontal" split-proportion="0.453125">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="Moving_ball_aligner.py" pinned="false" current-in-tab="false">
@@ -73,11 +75,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Linhao_masks_logic.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Linhao_masks_logic.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Linhao_masks_logic.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="170">
-                  <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+                <state relative-caret-position="546">
+                  <caret line="659" column="37" selection-start-line="659" selection-start-column="37" selection-end-line="659" selection-end-column="37" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
@@ -85,13 +87,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="layered_zstack_processing.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="layered_zstack_processing.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/layered_zstack_processing.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="238">
-                  <caret line="338" column="31" selection-start-line="338" selection-start-column="31" selection-end-line="338" selection-end-column="31" />
+                <state relative-caret-position="10064">
+                  <caret line="609" column="79" selection-start-line="609" selection-start-column="79" selection-end-line="610" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
+                    <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -100,14 +103,15 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="layered_zstack_processing.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/layered_zstack_processing.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2346">
-                  <caret line="658" column="49" selection-start-line="658" selection-start-column="49" selection-end-line="658" selection-end-column="49" />
+                <state relative-caret-position="-314">
+                  <caret line="698" column="0" selection-start-line="698" selection-start-column="0" selection-end-line="698" selection-end-column="0" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
+                    <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -158,6 +162,7 @@
         <option value="$PROJECT_DIR$/Linhao_mitochondria_logic.py" />
         <option value="$PROJECT_DIR$/Kai_mask_logic.py" />
         <option value="$PROJECT_DIR$/Linhao_masks_logic.py" />
+        <option value="$USER_HOME$/Desktop/Linhao_masks_logic.py" />
         <option value="$PROJECT_DIR$/layered_zstack_processing.py" />
       </list>
     </option>
@@ -230,6 +235,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -250,15 +257,13 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/Linhao_masks_logic.py" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -272,26 +277,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.layered_zstack_processing">
-    <configuration default="false" name="lambda_scan_analyzer" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Chromo_vision" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/lambda_scan_analyzer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
     <configuration default="false" name="Linhao_maks_logic" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -360,6 +345,24 @@
       <module name="Chromo_vision" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/layered_zstack_processing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Linhao_masks_logic (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/Desktop" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Chromo_vision" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/Desktop/Linhao_masks_logic.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -573,19 +576,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.lambda_scan_analyzer" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Linhao_maks_logic" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Linhao_masks_logic" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Kai_mask_logic" />
-      <item index="4" class="java.lang.String" itemvalue="Python.layered_zstack_processing" />
+      <item index="0" class="java.lang.String" itemvalue="Python.Linhao_maks_logic" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Linhao_masks_logic" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Kai_mask_logic" />
+      <item index="3" class="java.lang.String" itemvalue="Python.layered_zstack_processing" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Linhao_masks_logic (1)" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.layered_zstack_processing" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Linhao_masks_logic" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Kai_mask_logic" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Linhao_maks_logic" />
-        <item index="4" class="java.lang.String" itemvalue="Python.lambda_scan_analyzer" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Linhao_masks_logic (1)" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Linhao_masks_logic" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Kai_mask_logic" />
+        <item index="4" class="java.lang.String" itemvalue="Python.Linhao_maks_logic" />
       </list>
     </recent_temporary>
   </component>
@@ -602,20 +605,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1390536722246</updated>
-    </task>
-    <task id="LOCAL-00009" summary="corrected connexity detection function">
-      <created>1394122294491</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1394122294491</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Blending z-stacks into mayavi">
-      <created>1397886680353</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1397886680353</updated>
     </task>
     <task id="LOCAL-00011" summary="Added clustring; for Philippe Added the 3D reconstruction of the cell motion.">
       <created>1399500698307</created>
@@ -946,7 +935,21 @@
       <option name="project" value="LOCAL" />
       <updated>1468961960483</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Improved debug management across refactored methods thanks to a dedicated object.">
+      <created>1468969633896</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1468969633896</updated>
+    </task>
+    <task id="LOCAL-00059" summary="finalized the layering of z-stack processing.">
+      <created>1469053556792</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1469053556792</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -973,17 +976,16 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14712153" sideWeight="0.7109005" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16311301" sideWeight="0.69174314" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19274612" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5003018" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08559047" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3284974" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1971831" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40953413" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3284055" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14712153" sideWeight="0.2890995" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16311301" sideWeight="0.3082569" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -993,6 +995,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2665222" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1008,8 +1011,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Z-stack stabilization added, along with re-formating. Next step is the maxima detection." />
-    <MESSAGE value="Finished a more or less robust algorithms for balls detection." />
     <MESSAGE value="Added the algorithms for balls detection and additional final points alignements" />
     <MESSAGE value="Now need to add the visualization of displacement vectors, bright-field stabilization and cell edges recognition." />
     <MESSAGE value="Configured supra_render for Linhao" />
@@ -1033,7 +1034,9 @@
     <MESSAGE value="Added the mito area computation." />
     <MESSAGE value="Finished DHE analysis for Kai and the overview of the pipeline" />
     <MESSAGE value="Started work on the layered pipelineprocessing for Linhao's &amp; Jerry's data" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started work on the layered pipelineprocessing for Linhao's &amp; Jerry's data" />
+    <MESSAGE value="Improved debug management across refactored methods thanks to a dedicated object." />
+    <MESSAGE value="finalized the layering of z-stack processing." />
+    <option name="LAST_COMMIT_MESSAGE" value="finalized the layering of z-stack processing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1042,20 +1045,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rdgen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vol_slicer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="43" column="22" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rdgen.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1231,7 +1220,7 @@
         <state relative-caret-position="153">
           <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1240,7 +1229,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1248,22 +1236,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="30" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/results-nn.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="57" selection-start-line="0" selection-start-column="57" selection-end-line="0" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Anaconda2/Lib/site-packages/numpy/core/_methods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/Linhao_masks_logic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12">
+          <caret line="416" column="0" selection-start-line="416" selection-start-column="0" selection-end-line="416" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Linhao_masks_logic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+        <state relative-caret-position="546">
+          <caret line="659" column="37" selection-start-line="659" selection-start-column="37" selection-end-line="659" selection-end-column="37" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -1272,10 +1272,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/layered_zstack_processing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2346">
-          <caret line="658" column="49" selection-start-line="658" selection-start-column="49" selection-end-line="658" selection-end-column="49" />
+        <state relative-caret-position="-314">
+          <caret line="698" column="0" selection-start-line="698" selection-start-column="0" selection-end-line="698" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+            <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
           </folding>
         </state>
       </provider>

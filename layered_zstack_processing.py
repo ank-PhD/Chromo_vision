@@ -15,6 +15,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import disk
 from skimage.morphology import skeletonize, medial_axis
 from skimage.filters import threshold_otsu
+from scipy.stats import t
 
 
 # Logic layers:
@@ -45,7 +46,7 @@ translator = {'w1488': 0,
               'C1': 1,
               'C2': 0}
 
-classes = ['LuciSM', '0718', '0719']
+classes = ['ry233-1', 'ry233-2']
 
 time_stamps = {
     'beforehs': -30,
@@ -57,6 +58,8 @@ time_stamps = {
     'rec75min': 75,
     'rec90min': 90
 }
+
+time_stamp_coll = time_stamps.keys()
 
 header = ['name pattern', 'GFP', 'mito marker', 'cross',
           'MCC mito in GFP %', 'MCC GFP in mito %',
@@ -147,7 +150,7 @@ class DebugFrame(object):
 
         plt.savefig('verification_bank/%s.png' % self.name_pattern)
         # plt.show()
-        plt.clf()
+        plt.close()
 
     def render_2(self):
 
@@ -165,7 +168,7 @@ class DebugFrame(object):
 
         plt.savefig('verification_bank/core-%s.png' % self.name_pattern)
         # plt.show()
-        plt.clf()
+        plt.close()
 
     def render_3(self):
         ax1 = plt.subplot(231)
@@ -202,7 +205,7 @@ class DebugFrame(object):
 
         plt.savefig('verification_bank/mitochondria-%s.png' % self.name_pattern)
         # plt.show()
-        plt.clf()
+        plt.close()
 
     def dump_debug_frames(self):
         self.render_2()
@@ -211,6 +214,9 @@ class DebugFrame(object):
 
 
 running_debug_frame = DebugFrame()
+
+# debug of failings list:
+sucker_list = []
 
 
 def tiff_stack_2_np_arr(tiff_stack):
@@ -346,11 +352,11 @@ def detect_upper_outliers(cells_average_gfp_list):
 def paint_mask(cell_labels, non_dying_cells):
     non_dying_cells_mask = np.zeros_like(cell_labels).astype(np.uint8)
     if non_dying_cells.tolist() != []:
-        print 'enter non_dying_cells correction'
+        # print 'enter non_dying_cells correction'
         for idx in non_dying_cells.tolist():
             non_dying_cells_mask[
                 cell_labels == idx + 1] = 1  # indexing starts from 1, not 0 for the labels
-            print 'updated %s' % (idx + 1)
+            # print 'updated %s' % (idx + 1)
     return non_dying_cells_mask
 
 
@@ -478,8 +484,11 @@ def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, ske
     intact = np.logical_and(paint_length > 20, paint_area > 5)
     broken = np.logical_and(np.logical_or(paint_length < 20, paint_area < 5), paint_area > 1)
 
-    mito_summary = float(np.sum(intact.astype(np.int8))) / \
-                   float(np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
+    if np.any(intact) or np.any(intact):
+        mito_summary = float(np.sum(intact.astype(np.int8))) / \
+                       float(np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
+    else:
+        mito_summary = np.nan
 
     if len(collector) == 0:
         mean_width, mean_length = [np.NaN, np.NaN]
@@ -508,6 +517,12 @@ def _3d_stack_2d_filter(_3d_stack, _2d_filter):
     return new_stack
 
 
+def _2d_stack_2d_filter(_2d_stack, _2d_filter):
+    new_stack = np.zeros_like(_2d_stack)
+    new_stack[_2d_filter] = _2d_stack[_2d_filter]
+    return new_stack
+
+
 def extract_statistics(_labels, _marked_prot, _mch_collector, _organelle_marker, _skeleton,
                        _transform_filter, name_pattern, segmented_cells_labels,
                        cell_no='NaN', ill='NaN'):
@@ -519,9 +534,19 @@ def extract_statistics(_labels, _marked_prot, _mch_collector, _organelle_marker,
     seg1 = [np.sum(_marked_prot * _marked_prot),
             np.sum(_organelle_marker * _organelle_marker),
             np.sum(_marked_prot * _organelle_marker)]
-    seg2 = [np.sum(_organelle_marker[_marked_prot > mcc_cutoff]) / np.sum(
-        _organelle_marker),
-            np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)]
+
+    if np.sum(_marked_prot) == 0.0:
+        pre_seg2_2 = np.nan
+    else:
+        pre_seg2_2 = np.sum(_marked_prot[_organelle_marker > mcc_cutoff]) / np.sum(_marked_prot)
+
+    if np.sum(_organelle_marker) == 0.0:
+        pre_seg2_1 = np.nan
+    else:
+        pre_seg2_1 = np.sum(_organelle_marker[_marked_prot > mcc_cutoff]) / np.sum(_organelle_marker)
+
+    seg2 = [pre_seg2_1, pre_seg2_2]
+
     seg3 = [np.median(_marked_prot[_organelle_marker > mcc_cutoff]),
             np.median(_organelle_marker[_organelle_marker > mcc_cutoff]),
             ill,
@@ -582,10 +607,10 @@ def analyze_gfp_mch_paired_stacks(name_pattern, gfp_marked_prot, mch_organelle_m
 
             _organelle_marker = _3d_stack_2d_filter(mch_organelle_marker, current_mask)
             _marked_prot = _3d_stack_2d_filter(gfp_marked_prot, current_mask)
-            _skeleton_labels = _3d_stack_2d_filter(skeleton_labels, current_mask)
-            _mch_collector = _3d_stack_2d_filter(mch_collector, current_mask)
-            _skeleton = _3d_stack_2d_filter(skeleton, current_mask)
-            _transform_filter = _3d_stack_2d_filter(transform_filter, current_mask)
+            _skeleton_labels = _2d_stack_2d_filter(skeleton_labels, current_mask)
+            _mch_collector = _2d_stack_2d_filter(mch_collector, current_mask)
+            _skeleton = _2d_stack_2d_filter(skeleton, current_mask)
+            _transform_filter = _2d_stack_2d_filter(transform_filter, current_mask)
 
             seg_stack += extract_statistics(_skeleton_labels, _marked_prot, _mch_collector,
                                             _organelle_marker, _skeleton, _transform_filter,
@@ -598,102 +623,126 @@ def analyze_gfp_mch_paired_stacks(name_pattern, gfp_marked_prot, mch_organelle_m
                                   skeleton, transform_filter, name_pattern, segmented_cells_labels)
 
 
-def mammalian_traversal():
-    main_root = "L:\\Users\\linghao\\Data for quantification\\Mammalian"
+def folder_structure_traversal(main_root, per_cell=False, mammalian=False):
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
-    sucker_list = []
 
     for current_location, sub_directories, files in os.walk(main_root):
         print current_location
         print '\t', files
-        color = None
-        name_pattern = None
-        if files and 'Splitted' in current_location:
-            for img in files:
-                if '.tif' in img and '_thumb_' not in img:
-                    img_codename = img.split('-')
-                    prefix = current_location.split('\\')[4:]
-                    color = translator[img_codename[0]]
-                    name_pattern = ' - '.join(prefix+img_codename[1:])
-                    current_image = Image.open(os.path.join(current_location, img))
-                    print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
-                    replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
 
-            for name_pattern, (w1448, w2561) in replicas.iteritems():
-                print name_pattern
-                try:
-                    results_collector.append(analyze_gfp_mch_paired_stacks(name_pattern, w1448, w2561,
-                                                                           segment_out_ill=False))
-                except Exception as my_exception:
-                    print traceback.print_exc(my_exception)
-                    sucker_list.append(name_pattern)
-
-            replicas = defaultdict(lambda: [0, 0])
-
-    with open('results-nn-mammalian.csv', 'wb') as output:
-        csv_writer = writer(output, )
-        csv_writer.writerow(header)
-        for item in results_collector:
-            csv_writer.writerow(item)
-
-    print sucker_list
-
-
-def yeast_traversal(per_cell):
-    # main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
-    # main_root = "L:\\Users\\jerry\\Image\\ForAndrei"
-    main_root = "L:\\Users\\jerry\\Image\\ForAndrei\\gdnhcl"
-    replicas = defaultdict(lambda: [0, 0])
-    results_collector = []
-    sucker_list = []
-
-    for current_location, sub_directories, files in os.walk(main_root):
-        print current_location
-        print '\t', files
-        color = None
-        name_pattern = None
         if files:
-            for img in files:
-                # travers and match within the current folder => needs to become parametric
-                if '.TIF' in img and '_thumb_' not in img:
-                    img_codename = img.split(' ')[0].split('_')
-                    prefix = current_location.split('\\')[4:]
-                    color = translator[img_codename[-1]]
-                    name_pattern = ' - '.join(prefix+img_codename[:-1])
-                    current_image = Image.open(os.path.join(current_location, img))
-                    print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
-                    replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
-
-            # analyze the matched stack
-            for name_pattern, (w1448, w2561) in replicas.iteritems():
-                print name_pattern
-                try:
-                    results_collector += analyze_gfp_mch_paired_stacks(name_pattern, w1448, w2561,
-                                                                       segment_out_ill=True,
-                                                                       per_cell=per_cell)
-                except Exception as my_exception:
-                    print traceback.print_exc(my_exception)
-                    sucker_list.append(name_pattern)
-
+            pair_channels_in_folder(current_location, files, replicas, mammalian=mammalian)
+            results_collector += analyze_matched_stack(per_cell, replicas, results_collector)
             replicas = defaultdict(lambda: [0, 0])
 
-    with open('results-nn-yeast.csv', 'wb') as output:
+    table_post_processing(results_collector)
+
+    if mammalian:
+        dump_name = 'results-nn-mammalian.csv'
+    else:
+        dump_name = 'results-nn-yeast.csv'
+
+    dump_results_table(results_collector, dump_name)
+
+
+def pair_channels_in_folder(current_location, files, replicas, mammalian=False):
+    for img in files:
+        if ('.TIF' in img or '.tif' in img) and '_thumb_' not in img:
+            prefix = current_location.split('\\')[4:]
+
+            if mammalian:
+                img_codename = img.split('-')
+                color = translator[img_codename[0]]
+                name_pattern = ' - '.join(prefix + img_codename[1:])
+
+            else:
+                img_codename = img.split(' ')[0].split('_')
+                color = translator[img_codename[-1]]
+                name_pattern = ' - '.join(prefix + img_codename[:-1])
+
+            current_image = Image.open(os.path.join(current_location, img))
+            print '%s image was parsed, code: %s %s' % (img, name_pattern, color)
+            replicas[name_pattern][color] = gamma_stabilize_and_smooth(current_image)
+
+
+def analyze_matched_stack(per_cell, replicas, results_collector):
+    results_subcollector = []
+    for name_pattern, (w1448, w2561) in replicas.iteritems():
+        print name_pattern
+        try:
+            results_subcollector += analyze_gfp_mch_paired_stacks(name_pattern, w1448, w2561,
+                                                               segment_out_ill=True,
+                                                               per_cell=per_cell)
+        except Exception as my_exception:
+            print traceback.print_exc(my_exception)
+            sucker_list.append(name_pattern)
+    return results_subcollector
+
+
+def dump_results_table(results_collector, fname):
+    with open(fname, 'wb') as output:
         csv_writer = writer(output, )
         csv_writer.writerow(header)
         for item in results_collector:
             csv_writer.writerow(item)
 
-    print sucker_list
+
+def table_post_processing(results_collector):
+    stats_collector = []
+
+    for line in results_collector:
+        class_name, _time_stamps = classify(line[0])
+        stats_collector.append([class_name, _time_stamps, line[6], line[7]])
+
+    stats_collector = np.array(stats_collector)
+
+    for class_name in classes:
+        class_set_filter = stats_collector[:, 0] == class_name
+        if any(class_set_filter):
+            class_set = stats_collector[class_set_filter, :]
+            final_stats_collector_x = []
+            final_stats_collector_y = []
+            final_stats_collector_e = []
+
+            for time_stamp in time_stamp_coll:
+                time_stamp_filter = class_set[:, 1] == time_stamp
+                if any(time_stamp_filter):
+                    time_stamp_set = class_set[time_stamp_filter, :]
+                    print class_name, time_stamp
+                    print time_stamp_set[:, 2].astype(np.float64)
+                    mean = np.nanmean(time_stamp_set[:, 2].astype(np.float64))
+                    std = np.nanstd(time_stamp_set[:, 2].astype(np.float64))
+                    final_stats_collector_x.append(time_stamps[time_stamp])
+                    final_stats_collector_y.append(mean)
+                    final_stats_collector_e.append(std/np.sqrt(len(time_stamp_set[:, 2]))*1.96)
+
+            plt.errorbar(final_stats_collector_x, final_stats_collector_y, final_stats_collector_e,
+                         label=class_name)
+
+    plt.legend()
+    plt.show()
 
 
-# TODO: sorting on the CSV writer:
-#   - use comparison classes
-#   - use timestamp identification
-#   - calculate mean value
-#   - calculate population-based standard deviation
+
+
+def classify(naming_code):
+    naming_code = str.lower(naming_code)
+    time_stamp = None
+    class_name = 'unclassified'
+
+    for _time_stamp in time_stamps.keys():
+        if _time_stamp in naming_code:
+            time_stamp = _time_stamp
+            break
+
+    for _class_name in classes:
+        if _class_name in naming_code:
+            class_name = _class_name
+
+    return class_name, time_stamp
 
 
 if __name__ == "__main__":
-    yeast_traversal(per_cell=False)
-    # mammalian_traversal()
+    folder_structure_traversal("L:\\Users\\jerry\\Image\\ForAndrei\\07212016gdnhclhs",
+                               per_cell=True)

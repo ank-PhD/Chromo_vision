@@ -383,6 +383,7 @@ def compute_mito_fragmentation(name_pattern, labels, mch_collector, skeleton, tr
     intact = np.logical_and(paint_length > 20, paint_area > 5)
     broken = np.logical_and(np.logical_or(paint_length < 20, paint_area < 5), paint_area > 1)
 
+    # TODO: problem - frequently results in float division by zero error
     mito_summary = float(np.sum(intact.astype(np.int8))) / \
                    float(np.sum(intact.astype(np.int8)) + np.sum(broken.astype(np.int8)))
 
@@ -622,7 +623,7 @@ def mammalian_traversal():
 def yeast_traversal(per_cell):
     # main_root = "L:\\Users\\linghao\\Data for quantification\\Yeast\\NEW data for analysis"
     # main_root = "L:\\Users\\jerry\\Image\\ForAndrei"
-    main_root = "L:\\Users\\jerry\\Image\\ForAndrei\\gdnhcl"
+    main_root = "L:\\Users\\jerry\\Image\\ForAndrei\\07212016gdnhclhs"
     replicas = defaultdict(lambda: [0, 0])
     results_collector = []
     sucker_list = []
@@ -665,5 +666,5 @@ def yeast_traversal(per_cell):
 
 
 if __name__ == "__main__":
-    yeast_traversal(per_cell=False)
+    yeast_traversal(per_cell=True)
     # mammalian_traversal()
