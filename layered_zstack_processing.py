@@ -46,8 +46,10 @@ translator = {'w1488': 0,
               'C1': 1,
               'C2': 0}
 
+# needs to be modified to properly group classes
 classes = ['ry233-1', 'ry233-2']
 
+# translation of file names to time-stamps relative to the heatshock moment
 time_stamps = {
     'beforehs': -30,
     'hs30min': 0,
@@ -361,8 +363,7 @@ def paint_mask(cell_labels, non_dying_cells):
 
 
 def segment_out_cells(base):
-    # TODO: spearate segmentation from ill cells deletion
-    # TODO: use OTSU threshold for GFP thresholding
+    # TODO: try using OTSU for GFP thresholding
 
     sel_elem = disk(2)
     gfp_collector = np.sum(base, axis=0)
@@ -397,8 +398,7 @@ def segment_out_cells(base):
 
 
 def skeletonize_mitochondria(mch_channel):
-
-    mch_collector = np.max(mch_channel, axis=0)  # TODO: check how max affects v.s. sum
+    mch_collector = np.max(mch_channel, axis=0)  # TODO: check max projection v.s. sum
     skeleton_labels = np.zeros(mch_collector.shape, dtype=np.uint8)
 
     # thresh = np.max(mch_collector)/2.
@@ -691,6 +691,8 @@ def dump_results_table(results_collector, fname):
 def table_post_processing(results_collector):
     stats_collector = []
 
+    print '\n Summary of the analysis:'
+
     for line in results_collector:
         class_name, _time_stamps = classify(line[0])
         stats_collector.append([class_name, _time_stamps, line[6], line[7]])
@@ -701,6 +703,7 @@ def table_post_processing(results_collector):
         class_set_filter = stats_collector[:, 0] == class_name
         if any(class_set_filter):
             class_set = stats_collector[class_set_filter, :]
+            print class_name
             final_stats_collector_x = []
             final_stats_collector_y = []
             final_stats_collector_e = []
@@ -709,21 +712,19 @@ def table_post_processing(results_collector):
                 time_stamp_filter = class_set[:, 1] == time_stamp
                 if any(time_stamp_filter):
                     time_stamp_set = class_set[time_stamp_filter, :]
-                    print class_name, time_stamp
-                    print time_stamp_set[:, 2].astype(np.float64)
                     mean = np.nanmean(time_stamp_set[:, 2].astype(np.float64))
-                    std = np.nanstd(time_stamp_set[:, 2].astype(np.float64))
+                    err = np.nanstd(time_stamp_set[:, 2].astype(np.float64)) / \
+                          np.sqrt(len(time_stamp_set[:, 2]))*1.96
+                    print '\t time: %s, mean: %s, err: %s' % (time_stamp, mean, err)
                     final_stats_collector_x.append(time_stamps[time_stamp])
                     final_stats_collector_y.append(mean)
-                    final_stats_collector_e.append(std/np.sqrt(len(time_stamp_set[:, 2]))*1.96)
+                    final_stats_collector_e.append(err)
 
             plt.errorbar(final_stats_collector_x, final_stats_collector_y, final_stats_collector_e,
                          label=class_name)
 
     plt.legend()
     plt.show()
-
-
 
 
 def classify(naming_code):

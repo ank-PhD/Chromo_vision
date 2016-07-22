@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="37525c30-76df-4f39-b6b0-51d45f0c7d31" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Linhao_masks_logic.py" afterPath="$PROJECT_DIR$/Linhao_masks_logic.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/layered_zstack_processing.py" afterPath="$PROJECT_DIR$/layered_zstack_processing.py" />
     </list>
     <ignored path="Chromo_vision.iws" />
@@ -78,8 +77,8 @@
           <file leaf-file-name="Linhao_masks_logic.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Linhao_masks_logic.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="546">
-                  <caret line="659" column="37" selection-start-line="659" selection-start-column="37" selection-end-line="659" selection-end-column="37" />
+                <state relative-caret-position="342">
+                  <caret line="647" column="34" selection-start-line="647" selection-start-column="34" selection-end-line="647" selection-end-column="34" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
@@ -94,7 +93,8 @@
                   <caret line="609" column="79" selection-start-line="609" selection-start-column="79" selection-end-line="610" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
-                    <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
+                    <marker date="1469201747388" expanded="true" signature="12146:12158" ph="..." />
+                    <marker date="1469201747388" expanded="true" signature="23867:23868" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -107,11 +107,11 @@
           <file leaf-file-name="layered_zstack_processing.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/layered_zstack_processing.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-314">
-                  <caret line="698" column="0" selection-start-line="698" selection-start-column="0" selection-end-line="698" selection-end-column="0" />
+                <state relative-caret-position="400">
+                  <caret line="369" column="74" selection-start-line="369" selection-start-column="74" selection-end-line="369" selection-end-column="74" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
-                    <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
+                    <marker date="1469201747388" expanded="true" signature="23867:23868" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -606,13 +606,6 @@
       <option name="presentableId" value="Default" />
       <updated>1390536722246</updated>
     </task>
-    <task id="LOCAL-00011" summary="Added clustring; for Philippe Added the 3D reconstruction of the cell motion.">
-      <created>1399500698307</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1399500698307</updated>
-    </task>
     <task id="LOCAL-00012" summary="Added bi_channel representation for Philippe">
       <created>1400178790434</created>
       <option name="number" value="00012" />
@@ -949,7 +942,14 @@
       <option name="project" value="LOCAL" />
       <updated>1469053556792</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="finished the zstack processing rendering">
+      <created>1469200826003</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1469200826004</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -976,7 +976,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16311301" sideWeight="0.69174314" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07942431" sideWeight="0.69174314" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19274612" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5003018" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -985,7 +985,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40953413" sideWeight="0.49969825" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3284055" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16311301" sideWeight="0.3082569" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07942431" sideWeight="0.3082569" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39911798" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1011,7 +1011,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added the algorithms for balls detection and additional final points alignements" />
     <MESSAGE value="Now need to add the visualization of displacement vectors, bright-field stabilization and cell edges recognition." />
     <MESSAGE value="Configured supra_render for Linhao" />
     <MESSAGE value="Added philippe ball detector debugging routines and better name parsing" />
@@ -1036,7 +1035,8 @@
     <MESSAGE value="Started work on the layered pipelineprocessing for Linhao's &amp; Jerry's data" />
     <MESSAGE value="Improved debug management across refactored methods thanks to a dedicated object." />
     <MESSAGE value="finalized the layering of z-stack processing." />
-    <option name="LAST_COMMIT_MESSAGE" value="finalized the layering of z-stack processing." />
+    <MESSAGE value="finished the zstack processing rendering" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished the zstack processing rendering" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1262,8 +1262,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Linhao_masks_logic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="659" column="37" selection-start-line="659" selection-start-column="37" selection-end-line="659" selection-end-column="37" />
+        <state relative-caret-position="342">
+          <caret line="647" column="34" selection-start-line="647" selection-start-column="34" selection-end-line="647" selection-end-column="34" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -1272,11 +1272,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/layered_zstack_processing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-314">
-          <caret line="698" column="0" selection-start-line="698" selection-start-column="0" selection-end-line="698" selection-end-column="0" />
+        <state relative-caret-position="400">
+          <caret line="369" column="74" selection-start-line="369" selection-start-column="74" selection-end-line="369" selection-end-column="74" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1469199443013" expanded="true" signature="23806:23807" ph="..." />
+            <marker date="1469201747388" expanded="true" signature="23867:23868" ph="..." />
           </folding>
         </state>
       </provider>
