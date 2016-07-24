@@ -16,6 +16,8 @@ from skimage.morphology import disk
 from skimage.morphology import skeletonize, medial_axis
 from skimage.filters import threshold_otsu
 from scipy.stats import t
+from scipy.stats import ttest_ind
+from itertools import combinations
 
 
 # Logic layers:
@@ -47,7 +49,7 @@ translator = {'w1488': 0,
               'C2': 0}
 
 # needs to be modified to properly group classes
-classes = ['ry233-1', 'ry233-2']
+classes = ['ry233-1', 'ry233-2', 'ry130-1', 'ry130-2']
 
 # translation of file names to time-stamps relative to the heatshock moment
 time_stamps = {
@@ -82,6 +84,11 @@ def safe_dir_create(path):
 
 
 safe_dir_create('verification_bank')
+
+
+def rm_nans(np_array):
+    fltr = np.logical_not(np.isnan(np_array))
+    return np_array[fltr]
 
 
 # DEBUG frame with rendering:
@@ -636,12 +643,18 @@ def folder_structure_traversal(main_root, per_cell=False, mammalian=False):
             results_collector += analyze_matched_stack(per_cell, replicas, results_collector)
             replicas = defaultdict(lambda: [0, 0])
 
-    table_post_processing(results_collector)
+    # table_post_processing(results_collector)
+
+    name_mod = 'yeast'
+    per_cell_name = 'full_image'
 
     if mammalian:
-        dump_name = 'results-nn-mammalian.csv'
-    else:
-        dump_name = 'results-nn-yeast.csv'
+        name_mod = 'mammalian'
+
+    if per_cell:
+        per_cell_name = 'per_cell'
+
+    dump_name = 'results-nn-%s-%s.csv' % (per_cell_name, name_mod)
 
     dump_results_table(results_collector, dump_name)
 
@@ -707,7 +720,7 @@ def table_post_processing(results_collector):
             final_stats_collector_x = []
             final_stats_collector_y = []
             final_stats_collector_e = []
-
+            raw_times = {}
             for time_stamp in time_stamp_coll:
                 time_stamp_filter = class_set[:, 1] == time_stamp
                 if any(time_stamp_filter):
@@ -715,10 +728,26 @@ def table_post_processing(results_collector):
                     mean = np.nanmean(time_stamp_set[:, 2].astype(np.float64))
                     err = np.nanstd(time_stamp_set[:, 2].astype(np.float64)) / \
                           np.sqrt(len(time_stamp_set[:, 2]))*1.96
+                    raw_times[time_stamp] = rm_nans(time_stamp_set[:, 2].astype(np.float64))
                     print '\t time: %s, mean: %s, err: %s' % (time_stamp, mean, err)
                     final_stats_collector_x.append(time_stamps[time_stamp])
                     final_stats_collector_y.append(mean)
                     final_stats_collector_e.append(err)
+
+            time_translator = dict([(item, i) for i, item in enumerate(sorted(raw_times.keys()))])
+
+            samples_n = len(raw_times.keys())
+            print samples_n
+            p_val_array = np.array((samples_n, samples_n))
+
+            for time1, time2 in combinations(sorted(raw_times.keys()), 2):
+                print time1, time2
+                print time_translator[time1], time_translator[time2]
+                print ttest_ind(raw_times[time1], raw_times[time2])
+                _, p_val = ttest_ind(raw_times[time1], raw_times[time2])
+                p_val_array[time_translator[time1], time_translator[time2]] = p_val
+
+            print p_val_array
 
             plt.errorbar(final_stats_collector_x, final_stats_collector_y, final_stats_collector_e,
                          label=class_name)
@@ -745,5 +774,5 @@ def classify(naming_code):
 
 
 if __name__ == "__main__":
-    folder_structure_traversal("L:\\Users\\jerry\\Image\\ForAndrei\\07212016gdnhclhs",
+    folder_structure_traversal("L:\\Users\\jerry\\Image\\ForAndrei\\SSA1mito",
                                per_cell=True)
