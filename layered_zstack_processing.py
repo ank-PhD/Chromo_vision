@@ -117,11 +117,12 @@ class DebugFrame(object):
         self.skeleton = None
         self.mean_width = None
         self.mean_length = None
-        self.skeleton_labels = None
+        self.mito_binary_mask = None
         self.segmented_cells = None
         self.numbered_lables = None
         self.classification_pad = None
         self.paint_area = None
+        self.numbered_skeleton_label = None
 
     def render_1(self):
         plt.figure(figsize=(20.0, 15.0))
@@ -162,6 +163,7 @@ class DebugFrame(object):
         plt.close()
 
     def render_2(self):
+        plt.figure(figsize=(20.0, 15.0))
 
         plt.subplot(221)
         plt.imshow(self.gfp_collector_pre, cmap='Greens')
@@ -180,6 +182,8 @@ class DebugFrame(object):
         plt.close()
 
     def render_3(self):
+        plt.figure(figsize=(20.0, 15.0))
+
         ax1 = plt.subplot(231)
         plt.title(self.name_pattern)
         plt.imshow(self.mch_collector, cmap='Reds')
@@ -190,27 +194,28 @@ class DebugFrame(object):
         plt.title('width ; length - av: %.2f ; %.2f' % (self.mean_width, self.mean_length))
         plt.imshow(self.skeleton, cmap=plt.cm.spectral, interpolation='nearest')
         plt.colorbar()
-        plt.contour(self.skeleton_labels, [0.5], colors='w')
+        plt.contour(self.mito_binary_mask, [0.5], colors='w')
 
         plt.subplot(233, sharex=ax1, sharey=ax1)
         plt.imshow(self.segmented_cells, cmap=plt.cm.spectral, interpolation='nearest')
         plt.colorbar()
-        plt.contour(self.skeleton_labels, [0.5], colors='w')
+        plt.contour(self.mito_binary_mask, [0.5], colors='w')
 
         plt.subplot(234, sharex=ax1, sharey=ax1)
+        # numbered_skeleton_label ?
         plt.imshow(self.numbered_lables, cmap=plt.cm.spectral, interpolation='nearest')
         plt.colorbar()
-        plt.contour(self.skeleton_labels, [0.5], colors='w')
+        plt.contour(self.mito_binary_mask, [0.5], colors='w')
 
         plt.subplot(235, sharex=ax1, sharey=ax1)
-        plt.imshow(self.classification_pad, cmap=plt.cm.spectral, interpolation='nearest')
-        plt.colorbar()
-        plt.contour(self.skeleton_labels, [0.5], colors='w')
-
-        plt.subplot(236, sharex=ax1, sharey=ax1)
         plt.imshow(self.paint_area, cmap='hot', interpolation='nearest')
         plt.colorbar()
-        plt.contour(self.skeleton_labels, [0.5], colors='w')
+        plt.contour(self.mito_binary_mask, [0.5], colors='w')
+
+        plt.subplot(236, sharex=ax1, sharey=ax1)
+        plt.imshow(self.classification_pad, cmap=plt.cm.spectral, interpolation='nearest')
+        plt.colorbar()
+        plt.contour(self.mito_binary_mask, [0.5], colors='w')
 
         plt.savefig('verification_bank/mitochondria-%s.png' % self.name_pattern)
         # plt.show()
@@ -459,6 +464,7 @@ def measure_skeleton_stats(numbered_labels, skeleton, transform_filter):
             collector.append([area, support])
 
     collector = np.array(collector)
+    running_debug_frame.numbered_skeleton_label = numbered_labels
 
     return collector, paint_length, paint_area
 
@@ -506,7 +512,7 @@ def compute_mito_fragmentation(name_pattern, skeleton_labels, mch_collector, ske
     running_debug_frame.skeleton = skeleton
     running_debug_frame.mean_width = mean_width
     running_debug_frame.mean_length = mean_length
-    running_debug_frame.skeleton_labels = skeleton_labels
+    running_debug_frame.mito_binary_mask = skeleton_labels
     running_debug_frame.segmented_cells = segmented_cells
     running_debug_frame.numbered_lables = numbered_lables
     running_debug_frame.classification_pad = classification_pad
@@ -775,4 +781,4 @@ def classify(naming_code):
 
 if __name__ == "__main__":
     folder_structure_traversal("L:\\Users\\jerry\\Image\\ForAndrei\\SSA1mito",
-                               per_cell=True)
+                               per_cell=False)
